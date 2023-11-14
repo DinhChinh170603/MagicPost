@@ -3,13 +3,13 @@ import Home from "./pages/Home";
 import Posts from "./pages/Posts";
 import Post from "./pages/Post";
 import NotFound from "./pages/NotFound";
-import Navbar from "./navs/NavBar";
+import Sidebar from "./navs/Sidebar";
 function App() {
   return (
     <BrowserRouter>
       <div className="flex">
         <div className="flex-1">
-          <Navbar />
+          <Sidebar />
         </div>
         <div className="flex-[5]">
           <Routes>
