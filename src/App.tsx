@@ -3,15 +3,23 @@ import Home from "./pages/Home";
 import Posts from "./pages/Posts";
 import Post from "./pages/Post";
 import NotFound from "./pages/NotFound";
+import Navbar from "./navs/NavBar";
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route index element={<Home />}></Route>
-        <Route path="/posts" element={<Posts />}></Route>
-        <Route path="/posts/:id" element={<Post />}></Route>
-        <Route path="*" element={<NotFound />}></Route>
-      </Routes>
+      <div className="flex">
+        <div className="flex-1">
+          <Navbar />
+        </div>
+        <div className="flex-[5]">
+          <Routes>
+            <Route index element={<Home />}></Route>
+            <Route path="/posts" element={<Posts />}></Route>
+            <Route path="/posts/:id" element={<Post />}></Route>
+            <Route path="*" element={<NotFound />}></Route>
+          </Routes>
+        </div>
+      </div>
     </BrowserRouter>
   );
 }
