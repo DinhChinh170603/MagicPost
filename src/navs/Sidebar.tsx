@@ -34,7 +34,7 @@ const Sidebar = () => {
         Post
       </NavLink>
       <NavLink
-        to="/logout"
+        to="/login"
         end
         className="mt-auto w-[80%] rounded-lg bg-slate-800 p-3 text-center text-xl font-bold text-white"
       >
