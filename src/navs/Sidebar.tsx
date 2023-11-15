@@ -41,7 +41,7 @@ const Sidebar = () => {
         >
           Logout
         </NavLink>
-        <div className="flex w-[80%] justify-start gap-3">
+        <NavLink to="/users/0" end className="flex w-[80%] justify-start gap-3">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShN0nuLT7HIpIANuDi6wbMKpeuCgZsl2PtAA&usqp=CAU"
             alt=""
@@ -51,7 +51,7 @@ const Sidebar = () => {
             <h1 className="text-lg font-bold">User</h1>
             <p>Role</p>
           </span>
-        </div>
+        </NavLink>
       </div>
     </div>
   );
