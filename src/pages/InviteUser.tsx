@@ -9,12 +9,11 @@ export default function InviteUser() {
   const [role, setRole] = useState("");
   const [fullName, setFullName] = useState("");
   const [departmentId, setDepartmentId] = useState("");
-  const [avatar, setAvatar] = useState<File>();
   const [dob, setDob] = useState("");
   const [loading, setLoading] = useState(false);
 
   const onFinish = () => {
-    if (!email || !role || !fullName || !avatar || !dob) {
+    if (!email || !role || !fullName || !dob) {
       toast.error("Please fill out every fields");
       return;
     }
@@ -23,7 +22,6 @@ export default function InviteUser() {
     formData.append("role", role);
     formData.append("fullName", fullName);
     formData.append("departmentId", "4");
-    formData.append("avatar", avatar!);
     formData.append("dob", dob);
 
     setLoading(true);
@@ -86,12 +84,14 @@ export default function InviteUser() {
                 setDob("");
                 return;
               }
-              const date = `${value.date()}/${value.month() + 1}/${value.year()}`
-              console.log(date)
+              const date = `${value.date()}/${
+                value.month() + 1
+              }/${value.year()}`;
+              console.log(date);
               setDob(date);
             }}
           />
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <input
               id="avatar"
               type="file"
@@ -124,7 +124,7 @@ export default function InviteUser() {
               id="avatarPreview"
               className="mt-4 hidden h-[200px] w-[200px] rounded-full"
             />
-          </div>
+          </div> */}
           <Button
             type="primary"
             className="mt-4 bg-blue-300 text-black"

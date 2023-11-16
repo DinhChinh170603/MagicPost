@@ -1,8 +1,12 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// const baseURL = "http://127.0.0.1:8080/api";
+const baseURL = "https://magicpost.onrender.com/api";
+
 const service = axios.create({
-  baseURL: "http://127.0.0.1:8080/api",
+  baseURL: baseURL,
+  // timeout: 10000,
 });
 
 service.interceptors.request.use(
