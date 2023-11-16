@@ -51,6 +51,13 @@ const Sidebar = () => {
       >
         Post
       </NavLink>
+      <NavLink
+        to="/invite"
+        end
+        className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
+      >
+        Invite
+      </NavLink>
       <div className="mt-auto flex w-full flex-col items-center gap-3">
         <div
           onClick={() => logout()}
@@ -58,11 +65,11 @@ const Sidebar = () => {
         >
           Logout
         </div>
-        <NavLink to="/users/0" end className="flex w-[80%] gap-3">
-          <IcBaselineAccountCircle width={50} height={50} />
+        <NavLink to="/users/0" end className="flex w-[80%] items-center gap-3">
+          <IcBaselineAccountCircle fontSize={60} />
           <span className="block w-full">
             <h1 className="text-lg font-bold">{userFullname}</h1>
-            <p>{userRole}</p>
+            <p className="text-sm">{userRole}</p>
           </span>
         </NavLink>
       </div>

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "../assets/logo.jpg";
 import service from "../helpers/service";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
+import { Input } from "antd"
 
 export default function Login() {
   const [email, setEmail] = React.useState("");
@@ -25,6 +26,8 @@ export default function Login() {
         if (res.data.status === 200) {
           localStorage.setItem("jwtToken", res.data.results);
           window.location.href = "/";
+        } else {
+          toast.error(res.data.message);
         }
       })
       .catch((err) => {
@@ -43,17 +46,19 @@ export default function Login() {
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-4">
           <span className="text-3xl font-bold">Login</span>
-          <input
+          <Input
             className="w-[40%] rounded-lg border border-solid border-gray-500 p-3"
             type="text"
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
+          <Input.Password
             className="w-[40%] rounded-lg border border-solid border-gray-500 p-3"
-            type="password"
             placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              console.log(password);
+            }}
           />
           <button
             className="w-[40%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold"

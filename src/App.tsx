@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import User from "./pages/User";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import InviteUser from "./pages/InviteUser";
 function App() {
   const getPage = (children: React.ReactNode) => {
     return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/posts" element={getPage(<Posts />)}></Route>
           <Route path="/posts/:id" element={getPage(<Post />)}></Route>
           <Route path="/users/:id" element={getPage(<User />)}></Route>
+          <Route path="/invite" element={getPage(<InviteUser />)}></Route>
           <Route path="*" element={getPage(<NotFound />)}></Route>
         </Routes>
       </BrowserRouter>
