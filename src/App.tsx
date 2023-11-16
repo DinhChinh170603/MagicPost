@@ -9,6 +9,12 @@ import User from "./pages/User";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InviteUser from "./pages/InviteUser";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 function App() {
   const getPage = (children: React.ReactNode) => {
     return (
@@ -22,18 +28,20 @@ function App() {
   };
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={getPage(<Home />)}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/posts" element={getPage(<Posts />)}></Route>
-          <Route path="/posts/:id" element={getPage(<Post />)}></Route>
-          <Route path="/users/:id" element={getPage(<User />)}></Route>
-          <Route path="/invite" element={getPage(<InviteUser />)}></Route>
-          <Route path="*" element={getPage(<NotFound />)}></Route>
-        </Routes>
-      </BrowserRouter>
-      <ToastContainer />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <BrowserRouter>
+          <Routes>
+            <Route index element={getPage(<Home />)}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/posts" element={getPage(<Posts />)}></Route>
+            <Route path="/posts/:id" element={getPage(<Post />)}></Route>
+            <Route path="/users/:id" element={getPage(<User />)}></Route>
+            <Route path="/invite" element={getPage(<InviteUser />)}></Route>
+            <Route path="*" element={getPage(<NotFound />)}></Route>
+          </Routes>
+        </BrowserRouter>
+        <ToastContainer />
+      </LocalizationProvider>
     </>
   );
 }

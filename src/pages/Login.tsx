@@ -1,14 +1,24 @@
-import React, { useEffect } from "react";
-import logo from "../assets/logo.jpg";
-import service from "../helpers/service";
+import React from "react";
 import { toast } from "react-toastify";
+import logo from "../assets/logo.jpg";
 import Loading from "../helpers/Loading";
-import { Input } from "antd"
+import service from "../helpers/service";
+import {
+  IconButton,
+  InputAdornment,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const login = () => {
     if (!email || !password) {
@@ -37,6 +47,12 @@ export default function Login() {
       });
   };
 
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      login();
+    }
+  };
+
   return (
     <>
       {loading && <Loading />}
@@ -46,19 +62,33 @@ export default function Login() {
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-4">
           <span className="text-3xl font-bold">Login</span>
-          <Input
-            className="w-[40%] rounded-lg border border-solid border-gray-500 p-3"
+          <TextField
+            className="w-[40%]"
             type="text"
-            placeholder="Email"
+            label="Email"
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={onKeyDown}
           />
-          <Input.Password
-            className="w-[40%] rounded-lg border border-solid border-gray-500 p-3"
-            placeholder="Password"
-            onChange={(e) => {
-              setPassword(e.target.value);
-              console.log(password);
+          <TextField
+            className="w-[40%]"
+            id="outlined-adornment-password"
+            type={showPassword ? "text" : "password"}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={onKeyDown}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
             }}
+            label="Password"
           />
           <button
             className="w-[40%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold"

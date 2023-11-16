@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Input, Select, DatePicker, Button } from "antd";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
+import { Button, MenuItem, Select, TextField } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
 
 export default function InviteUser() {
   const [email, setEmail] = useState("");
@@ -42,13 +43,6 @@ export default function InviteUser() {
       });
   };
 
-  const roleOptions = [
-    { value: "GATHER_MANAGER", label: "Gather Manager" },
-    { value: "GATHER_EMPLOYEE", label: "Gather Employee" },
-    { value: "EXCHANGE_MANAGER", label: "Exchange Manager" },
-    { value: "EXCHANGE_EMPLOYEE", label: "Exchange Employee" },
-  ];
-
   return (
     <>
       {loading && <Loading />}
@@ -56,41 +50,48 @@ export default function InviteUser() {
         <div className="text-3xl font-bold">Invite User</div>
         <div className="w-[60%] self-center">
           <div className="mt-4 flex gap-4">
-            <Input
+            <TextField
               className="flex-1"
-              placeholder="Email"
+              required
+              label="Email"
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Select
+            <TextField
+              label="Role"
+              select
               className="flex-1"
-              options={roleOptions}
-              placeholder="Role"
               onChange={(value) => setRole(value)}
-            />
+            >
+              <MenuItem value="GATHER_MANAGER">Gather Manager</MenuItem>
+              <MenuItem value="GATHER_EMPLOYEE">Gather Employee</MenuItem>
+              <MenuItem value="EXCHANGE_MANAGER">Exchange Manager</MenuItem>
+              <MenuItem value="EXCHANGE_EMPLOYEE">Exchange Employee</MenuItem>
+            </TextField>
           </div>
           <div className="mt-4 flex gap-4">
-            <Input
+            <TextField
               className="flex-1"
-              placeholder="Full Name"
+              label="Full Name"
               onChange={(e) => setFullName(e.target.value)}
             />
           </div>
-          <DatePicker
-            className="mt-4"
-            placeholder="Date of Birth"
-            format={"DD/MM/YYYY"}
-            onChange={(value) => {
-              if (!value) {
-                setDob("");
-                return;
-              }
-              const date = `${value.date()}/${
-                value.month() + 1
-              }/${value.year()}`;
-              console.log(date);
-              setDob(date);
-            }}
-          />
+          <div className="mt-4">
+            <DatePicker
+              className="mt-4"
+              label="Date of Birth"
+              format={"DD/MM/YYYY"}
+              onChange={(value) => console.log(value)}
+            />
+          </div>
+          <div className="mt-4">
+            <Button
+              variant="contained"
+              onClick={onFinish}
+              style={{ display: "block" }}
+            >
+              Submit
+            </Button>
+          </div>
           {/* <div className="mt-4">
             <input
               id="avatar"
@@ -125,13 +126,6 @@ export default function InviteUser() {
               className="mt-4 hidden h-[200px] w-[200px] rounded-full"
             />
           </div> */}
-          <Button
-            type="primary"
-            className="mt-4 bg-blue-300 text-black"
-            onClick={onFinish}
-          >
-            Submit
-          </Button>
         </div>
       </div>
     </>
