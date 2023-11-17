@@ -82,7 +82,14 @@ export default function InviteUser() {
               label="Date of Birth"
               format={"DD/MM/YYYY"}
               onChange={(value) => {
-                setDob(value.$D + "-" + (value.$M + 1) + "-" + value.$y);
+                setDob(
+                  value.$D +
+                    "-" +
+                    (value.$M + 1 < 10 ? "0" : "") +
+                    (value.$M + 1) +
+                    "-" +
+                    value.$y,
+                );
               }}
             />
           </div>
