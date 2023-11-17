@@ -31,7 +31,7 @@ export default function InviteUser() {
       .post("/leader/invite", formData)
       .then((res) => {
         setLoading(false);
-        if (res.data.status === 200) {
+        if (res.data.status === 201) {
           toast.success(res.data.message);
         } else {
           toast.error(res.data.message);
@@ -59,8 +59,9 @@ export default function InviteUser() {
             <TextField
               label="Role"
               select
+              defaultValue={""}
               className="flex-1"
-              onChange={(value) => setRole(value)}
+              onChange={(e) => setRole(e.target.value)}
             >
               <MenuItem value="GATHER_MANAGER">Gather Manager</MenuItem>
               <MenuItem value="GATHER_EMPLOYEE">Gather Employee</MenuItem>
@@ -80,7 +81,9 @@ export default function InviteUser() {
               className="mt-4"
               label="Date of Birth"
               format={"DD/MM/YYYY"}
-              onChange={(value) => console.log(value)}
+              onChange={(value) => {
+                setDob(value.$D + "-" + (value.$M + 1) + "-" + value.$y);
+              }}
             />
           </div>
           <div className="mt-4">
