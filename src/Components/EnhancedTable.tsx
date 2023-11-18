@@ -17,6 +17,21 @@ const columns = [
     key: "location",
     sorter: sortByString("location"),
     width: "30%",
+    filters: [
+      {
+        text: "London",
+        value: "London",
+      },
+      {
+        text: "Paris",
+        value: "Paris",
+      },
+      {
+        text: "Hà Nội",
+        value: "Hà Nội",
+      }
+    ],
+    onFilter: (value, record) => record.location.indexOf(value) === 0,
   },
 ];
 
