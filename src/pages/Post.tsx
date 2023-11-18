@@ -1,5 +1,5 @@
 import React from 'react'
-import EnhancedTable from '../Components/EnhancedTable'
+import EnhancedTable from '../components/EnhancedTable'
 
 export default function Post() {
   return (
