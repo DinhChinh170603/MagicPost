@@ -45,7 +45,7 @@ export default function EnhancedTable() {
   }, []);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-gray-300">
+    <div className="">
       <Table
         className="w-[80%]"
         columns={columns}
