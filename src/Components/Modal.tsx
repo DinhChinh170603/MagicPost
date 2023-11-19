@@ -15,7 +15,7 @@ const Modal: React.FC = () => {
       </Button>
       <AntModal
         style={{ top: 30 }}
-        visible={modalOpen}
+        open={modalOpen}
         onOk={() => setModalOpen(false)}
         onCancel={() => setModalOpen(false)}
       >
