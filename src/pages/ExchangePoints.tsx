@@ -4,7 +4,7 @@ import service from "../helpers/service";
 import { Table } from "antd";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
-import Modal from "../Components/Modal";
+import Modal from "../components/Modal";
 
 const columns = [
   {
