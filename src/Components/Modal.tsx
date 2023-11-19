@@ -6,7 +6,12 @@ import { Button, Modal as AntModal } from "antd";
 import { TextField } from "@mui/material";
 import { Select } from 'antd';
 
-const Modal: React.FC = () => {
+interface ModalProps {
+  onSubmit: () => void;
+  apiEndpoint: string;
+}
+
+const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -19,14 +24,14 @@ const Modal: React.FC = () => {
 
   const onFinish = () => {
     if (!name || !location) {
-      toast.error("Please fill out every fields");
+      toast.error("Please fill out every field");
       return;
     }
 
     setLoading(true);
 
     service
-      .post("/leader/exchange-point", {
+      .post(apiEndpoint, {
         name: name,
         location: location,
       })
@@ -36,6 +41,7 @@ const Modal: React.FC = () => {
           console.log("OK");
           toast.success(res.data.message);
           setModalOpen(false);
+          onSubmit(); // to update the table by callback
         } else {
           toast.error(res.data.message);
         }
