@@ -38,18 +38,18 @@ const Sidebar = () => {
         Home
       </NavLink>
       <NavLink
-        to="/posts"
+        to="/exchange-points"
         end
         className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
       >
-        Posts
+        Exchange Points
       </NavLink>
       <NavLink
-        to="/posts/0"
+        to="/gather-points"
         end
         className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
       >
-        Post
+        Gather Points
       </NavLink>
       <NavLink
         to="/invite"

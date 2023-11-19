@@ -44,7 +44,7 @@ const pagination = {
   showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
 };
 
-export default function Posts() {
+export default function ExchangePoints() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
