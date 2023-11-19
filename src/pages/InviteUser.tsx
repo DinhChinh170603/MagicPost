@@ -91,6 +91,10 @@ export default function InviteUser() {
       toast.error("Please fill out every fields");
       return;
     }
+    if (emailError || fullNameError || roleError) {
+      toast.error("Please check your input");
+      return;
+    }
     const formData = new FormData();
     formData.append("email", email);
     formData.append("role", role);
