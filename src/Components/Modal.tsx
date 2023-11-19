@@ -56,6 +56,7 @@ const Modal: React.FC = () => {
         style={{ top: 30 }}
         visible={modalOpen}
         onOk={onFinish}
+        open={modalOpen}
         onCancel={() => setModalOpen(false)}
       >
         <div className="text-2xl font-bold">Fill out this form</div>
