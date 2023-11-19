@@ -65,7 +65,6 @@ export default function ExchangePoints() {
         if (res.data.status !== 200) {
           toast.error(res.data.message);
           setLoading(false);
-
           return;
         }
         setData(res.data.results);

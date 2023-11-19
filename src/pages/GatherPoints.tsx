@@ -66,7 +66,6 @@ export default function GatherPoints() {
         if (res.data.status !== 200) {
           toast.error(res.data.message);
           setLoading(false);
-
           return;
         }
         setData(res.data.results);
