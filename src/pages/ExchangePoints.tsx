@@ -5,6 +5,7 @@ import { Table } from "antd";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import Modal from "../components/Modal";
+import { Link } from "react-router-dom";
 
 const columns = [
   {
@@ -12,14 +13,24 @@ const columns = [
     dataIndex: "name",
     key: "name",
     sorter: sortByString("name"),
-    width: "30%",
+    width: "15%",
+  },
+  {
+    title: "Manager",
+    dataIndex: "manager",
+    key: "manager",
+    sorter: (a, b) => sortByString(a.manager?.fullName, b.manager?.fullName),
+    width: "20%",
+    render: (text, record) => {
+      return record.manager ? record.manager.fullName : "";
+    },
   },
   {
     title: "Location",
     dataIndex: "location",
     key: "location",
     sorter: sortByString("location"),
-    width: "30%",
+    width: "15%",
     filters: [
       {
         text: "Hải Phòng",
@@ -44,10 +55,26 @@ const columns = [
     ],
     onFilter: (value, record) => record.location.indexOf(value) === 0,
   },
+  {
+    title: "Link with Gather",
+    dataIndex: "linkedGatherPoints",
+    key: "linkedGatherPoints",
+    // sorter: sortByString("linkedGatherPoints"),
+    width: "20%",
+    render: (text, record) => {
+      return record.linkedGatherPoint ? (
+        <Link /* to={`/your-route/${record.linkedGatherPoint.id}`} */>
+          {record.linkedGatherPoint.name}
+        </Link>
+      ) : (
+        ""
+      );
+    },
+  },
 ];
 
 const pagination = {
-  hideOnSinglePage: true,
+  hideOnSinglePage: false,
   pageSize: 10,
   showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
 };
@@ -68,7 +95,6 @@ export default function ExchangePoints() {
           return;
         }
         setData(res.data.results);
-        console.log(res.data.results);
         setLoading(false);
       })
       .catch((err) => {
@@ -91,11 +117,12 @@ export default function ExchangePoints() {
           <Modal onSubmit={handleModalSubmit} apiEndpoint="/leader/exchange-point"/>
         </div>
         <Table
-          className="w-[80%]"
+          className="w-[80%] custom-table-class overflow-auto"
           columns={columns}
           dataSource={data}
           rowKey={(record) => String(record.id)}
           pagination={pagination}
+          scroll={{ y: '50vh' }}
         />
       </div>
     </>

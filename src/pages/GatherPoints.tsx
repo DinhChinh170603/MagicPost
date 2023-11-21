@@ -5,6 +5,7 @@ import { Table } from "antd";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import Modal from "../components/Modal";
+import { Link } from "react-router-dom";
 
 const columns = [
   {
@@ -12,14 +13,24 @@ const columns = [
     dataIndex: "name",
     key: "name",
     sorter: sortByString("name"),
-    width: "30%",
+    width: "15%",
+  },
+  {
+    title: "Manager",
+    dataIndex: "manager",
+    key: "manager",
+    sorter: (a, b) => sortByString(a.manager?.fullName, b.manager?.fullName),
+    width: "20%",
+    render: (text, record) => {
+      return record.manager ? record.manager.fullName : "";
+    },
   },
   {
     title: "Location",
     dataIndex: "location",
     key: "location",
     sorter: sortByString("location"),
-    width: "30%",
+    width: "15%",
     filters: [
       {
         text: "Hải Phòng",
@@ -44,10 +55,23 @@ const columns = [
     ],
     onFilter: (value, record) => record.location.indexOf(value) === 0,
   },
+  {
+    title: "Link with Exchange",
+    dataIndex: "linkedExchangePoints",
+    key: "linkedExchangePoints",
+    width: "20%",
+    render: (text, record) => {
+      return record.linkedExchangePoints.map((exchangePoint) => (
+        <Link key={exchangePoint.id}>
+          {exchangePoint.name}<br />
+        </Link>
+      ));
+    },
+  },
 ];
 
 const pagination = {
-  hideOnSinglePage: true,
+  hideOnSinglePage: false,
   pageSize: 10,
   showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
 };
@@ -65,11 +89,11 @@ export default function GatherPoints() {
       .then((res) => {
         if (res.data.status !== 200) {
           toast.error(res.data.message);
+          console.log(res.data.results);
           setLoading(false);
           return;
         }
         setData(res.data.results);
-        console.log(res.data.results);
         setLoading(false);
       })
       .catch((err) => {
@@ -91,11 +115,12 @@ export default function GatherPoints() {
           <Modal onSubmit={handleModalSubmit} apiEndpoint="/leader/gather-point" />
         </div>
         <Table
-          className="w-[80%]"
+          className="w-[80%] overflow-auto"
           columns={columns}
           dataSource={data}
           rowKey={(record) => String(record.id)}
           pagination={pagination}
+          scroll={{ y: '50vh' }}
         />
       </div>
     </>

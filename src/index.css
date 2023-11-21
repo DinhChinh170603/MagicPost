@@ -2,10 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-body, html {
-    font-family: Roboto;
+body,
+html {
+  font-family: Roboto;
 }
 
 .ant-btn-primary {
-    background-color: #ff9c6e;
+  background-color: #ff9c6e;
 }
+
+/* .custom-table-class tbody {
+  max-height: calc(50vh - 2.5em);
+  width: 100%;
+} */

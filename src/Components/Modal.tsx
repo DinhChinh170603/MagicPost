@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import { Button, Modal as AntModal } from "antd";
+import { Button, Select, Modal as AntModal } from "antd";
 import { TextField } from "@mui/material";
-import { Select } from 'antd';
 
 interface ModalProps {
   onSubmit: () => void;
