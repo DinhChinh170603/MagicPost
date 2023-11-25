@@ -59,7 +59,7 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
       </Button>
       <AntModal
         style={{ top: 30 }}
-        visible={modalOpen}
+        open={modalOpen}
         onOk={onFinish}
         open={modalOpen}
         onCancel={() => setModalOpen(false)}

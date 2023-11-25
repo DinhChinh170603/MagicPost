@@ -1,81 +1,57 @@
-import React, { useEffect, useState } from "react";
-import { sortByString } from "../helpers/helpers";
-import service from "../helpers/service";
-import { Table } from "antd";
-import { toast } from "react-toastify";
-import Loading from "../helpers/Loading";
-import Modal from "../components/Modal";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams,
+} from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import Modal from "../components/Modal";
+import Loading from "../helpers/Loading";
+import service from "../helpers/service";
 
-const columns = [
+const columns: GridColDef[] = [
   {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    sorter: sortByString("name"),
-    width: "15%",
+    field: "name",
+    headerName: "Name",
+    flex: 1,
   },
   {
-    title: "Manager",
-    dataIndex: "manager",
-    key: "manager",
-    sorter: (a, b) => sortByString(a.manager?.fullName, b.manager?.fullName),
-    width: "20%",
-    render: (text, record) => {
-      return record.manager ? record.manager.fullName : "";
+    field: "manager",
+    headerName: "Manager",
+    valueGetter: (params: GridValueGetterParams) => {
+      return params.row.manager?.fullName;
     },
+    flex: 1,
   },
   {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
-    sorter: sortByString("location"),
-    width: "15%",
-    filters: [
-      {
-        text: "Hải Phòng",
-        value: "Hải Phòng",
-      },
-      {
-        text: "Vinh",
-        value: "Vinh",
-      },
-      {
-        text: "Hà Nội",
-        value: "Hà Nội",
-      },
-      {
-        text: "Biên Hòa",
-        value: "Biên Hòa",
-      },
-      {
-        text: "Hồ Chí Minh",
-        value: "Hồ Chí Minh",
-      },
-    ],
-    onFilter: (value, record) => record.location.indexOf(value) === 0,
+    field: "location",
+    headerName: "Location",
+    flex: 1,
   },
   {
-    title: "Link with Exchange",
-    dataIndex: "linkedExchangePoints",
-    key: "linkedExchangePoints",
-    width: "20%",
-    render: (text, record) => {
-      return record.linkedExchangePoints.map((exchangePoint) => (
-        <Link key={exchangePoint.id}>
-          {exchangePoint.name}<br />
-        </Link>
+    field: "linkedExchangePoints",
+    headerName: "Linked Exchange Points",
+    renderCell: (params: GridRenderCellParams) => {
+      return params.row.linkedExchangePoints.map((point) => (
+        <>
+          <Link key={point.id} to={`/exchange-points/${point.id}`}>
+            {point.name}
+            <br />
+          </Link>
+        </>
       ));
     },
+    flex: 1,
   },
 ];
 
 const pagination = {
-  hideOnSinglePage: false,
-  pageSize: 10,
-  showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+  paginationModel: {
+    pageSize: 5,
+  },
 };
-
 
 export default function GatherPoints() {
   const [data, setData] = useState([]);
@@ -111,17 +87,26 @@ export default function GatherPoints() {
     <>
       {loading && <Loading />}
       <div className="flex h-screen w-full flex-col items-center justify-center gap-3 bg-lime-100">
-        <div className="flex w-[80%] justify-start">
-          <Modal onSubmit={handleModalSubmit} apiEndpoint="/leader/gather-point" />
+        <div className="w-[80%]">
+          <div className="flex justify-start">
+            <Modal
+              onSubmit={handleModalSubmit}
+              apiEndpoint="/leader/exchange-point"
+            />
+          </div>
+          <DataGrid
+            classes={{
+              root: "bg-white",
+              columnHeader: "bg-slate-300",
+            }}
+            columns={columns}
+            rows={data}
+            initialState={{ pagination }}
+            autoHeight
+            getRowId={(row) => row.id}
+            isRowSelectable={() => false}
+          />
         </div>
-        <Table
-          className="w-[80%] overflow-auto"
-          columns={columns}
-          dataSource={data}
-          rowKey={(record) => String(record.id)}
-          pagination={pagination}
-          scroll={{ y: '50vh' }}
-        />
       </div>
     </>
   );
