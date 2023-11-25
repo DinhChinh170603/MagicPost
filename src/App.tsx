@@ -12,15 +12,59 @@ import InviteUser from "./pages/InviteUser";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ConfigProvider } from "antd";
+import Topbar from "./components/Topbar";
+import { useEffect, useState } from "react";
+import { useWindowSize } from "@uidotdev/usehooks";
+import { Backdrop } from "@mui/material";
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [inMobileMode, setInMobileMode] = useState(false);
+
+  const { width } = useWindowSize();
+
+  useEffect(() => {
+    if (width === null) {
+      return;
+    }
+
+    if (width < 768) {
+      setIsSidebarOpen(false);
+      setInMobileMode(true);
+    }
+
+    if (width >= 768) {
+      setIsSidebarOpen(true);
+      setInMobileMode(false);
+    }
+  }, [width]);
+
   const getPage = (children: React.ReactNode) => {
     return (
-      <div className="flex">
-        <div className="h-screen">
-          <Sidebar />
+      <>
+        {inMobileMode && (
+          <Backdrop
+            sx={{ color: "#fff", zIndex: 2 }}
+            open={isSidebarOpen}
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        <div className="flex">
+          <div className={`h-screen ${inMobileMode ? "absolute z-10" : ""}`}>
+            <Sidebar isSidebarOpen={isSidebarOpen} />
+          </div>
+
+          <div className="relative flex flex-1 flex-col">
+            <div className="relative">
+              <Topbar
+                isSidebarOpen={isSidebarOpen}
+                setIsSidebarOpen={setIsSidebarOpen}
+                isInMobileMode={inMobileMode}
+              />
+            </div>
+            <div className="flex-1">{children}</div>
+          </div>
         </div>
-        <div className="flex-1">{children}</div>
-      </div>
+      </>
     );
   };
   return (
