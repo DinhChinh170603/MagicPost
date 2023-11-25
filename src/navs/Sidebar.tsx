@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { IcBaselineAccountCircle } from "../assets/icons/IcBaselineAccountCircle";
 import service from "../helpers/service";
+import { Button } from "@mui/material";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 const Sidebar = () => {
   const activeStyle =
@@ -11,6 +13,10 @@ const Sidebar = () => {
 
   const [userFullname, setUserFullname] = useState();
   const [userRole, setUserRole] = useState();
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const { width } = useWindowSize();
 
   const logout = () => {
     localStorage.removeItem("jwtToken");
@@ -26,7 +32,11 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-3 py-3">
+    <div
+      className={`flex h-full flex-col items-center gap-3 py-3 transition-all duration-300 ${
+        isSidebarOpen ? "w-64" : "w-0"
+      }`}
+    >
       <div>
         <h1 className="text-3xl font-bold">Magic Post</h1>
       </div>
@@ -58,6 +68,12 @@ const Sidebar = () => {
       >
         Invite
       </NavLink>
+
+      {width < 768 && (
+        <Button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+          Toggle Sidebar
+        </Button>
+      )}
       <div className="mt-auto flex w-full flex-col items-center gap-3">
         <div
           onClick={() => logout()}

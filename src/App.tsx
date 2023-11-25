@@ -16,10 +16,10 @@ function App() {
   const getPage = (children: React.ReactNode) => {
     return (
       <div className="flex">
-        <div className="h-screen flex-1">
+        <div className="h-screen">
           <Sidebar />
         </div>
-        <div className="flex-[5]">{children}</div>
+        <div className="flex-1">{children}</div>
       </div>
     );
   };
@@ -38,8 +38,14 @@ function App() {
             <Routes>
               <Route index element={getPage(<Home />)}></Route>
               <Route path="/login" element={<Login />}></Route>
-              <Route path="/exchange-points" element={getPage(<ExchangePoints />)}></Route>
-              <Route path="/gather-points" element={getPage(<GatherPoints />)}></Route>
+              <Route
+                path="/exchange-points"
+                element={getPage(<ExchangePoints />)}
+              ></Route>
+              <Route
+                path="/gather-points"
+                element={getPage(<GatherPoints />)}
+              ></Route>
               <Route path="/users/:id" element={getPage(<User />)}></Route>
               <Route path="/invite" element={getPage(<InviteUser />)}></Route>
               <Route path="*" element={getPage(<NotFound />)}></Route>
