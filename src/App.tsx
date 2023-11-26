@@ -16,6 +16,8 @@ import InviteUser from "./pages/InviteUser";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import User from "./pages/User";
+import GatherPointDetail from "./pages/GatherPointDetail";
+import ExchangePointDetail from "./pages/ExchangePointDetail";
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const inMobileMode = useMediaQuery("(max-width: 768px)");
@@ -90,6 +92,8 @@ function App() {
                 path="/gather-points"
                 element={getPage(<GatherPoints />)}
               ></Route>
+              <Route path="/gather-points/:id" element={<GatherPointDetail />}></Route>
+              <Route path="/exchange-points/:id" element={<ExchangePointDetail />}></Route>
               <Route path="/users/:id" element={getPage(<User />)}></Route>
               <Route path="/invite" element={getPage(<InviteUser />)}></Route>
               <Route path="*" element={getPage(<NotFound />)}></Route>
