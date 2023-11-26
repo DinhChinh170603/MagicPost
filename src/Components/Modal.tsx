@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
@@ -15,11 +15,23 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
   const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState("");
+  const [manager, setManager] = useState("");
   const [location, setLocation] = useState("");
+
+  const [isExchangePoint, setIsExchangePoint] = useState(false);
+  
 
   const handleChange = (value: string) => {
     setLocation(value);
   };
+
+  useEffect(() => {
+    if (apiEndpoint === "/leader/exchange-point") {
+      setIsExchangePoint(true);
+    } else {
+      setIsExchangePoint(false);
+    }
+  }, [apiEndpoint]);
 
   const onFinish = () => {
     if (!name || !location) {
@@ -32,6 +44,9 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
     service
       .post(apiEndpoint, {
         name: name,
+        manager: {
+          fullName: manager,
+        },
         location: location,
       })
       .then((res) => {
@@ -59,7 +74,7 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
       </Button>
       <AntModal
         style={{ top: 30 }}
-        open={modalOpen}
+        visible={modalOpen}
         onOk={onFinish}
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
@@ -72,6 +87,15 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
             label="Name"
             onChange={(e) => setName(e.target.value)}
           />
+          {isExchangePoint ? (
+            <TextField
+            className="w-[60%]"
+            required
+            label="Manager"
+            onChange={(e) => setManager(e.target.value)}
+          />
+          ) : null}
+          
           {/* <TextField
             className="w-[60%]"
             required
@@ -80,7 +104,7 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
           /> */}
           <Select
             defaultValue="Location"
-            className="w-[60%] h-15"
+            className="w-[60%] h-10"
             onChange={handleChange}
             options={[
               { value: "Hà Nội", label: "Hà Nội" },

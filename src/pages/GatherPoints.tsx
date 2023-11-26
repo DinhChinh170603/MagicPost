@@ -1,57 +1,57 @@
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import Modal from "../components/Modal";
-import Loading from "../helpers/Loading";
+import React, { useEffect, useState } from "react";
+import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
+import { Table } from "antd";
+import { toast } from "react-toastify";
+import Loading from "../helpers/Loading";
+import Modal from "../components/Modal";
 
-const columns: GridColDef[] = [
+const columns = [
   {
-    field: "name",
-    headerName: "Name",
-    flex: 1,
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    sorter: sortByString("name"),
+    width: "30%",
   },
   {
-    field: "manager",
-    headerName: "Manager",
-    valueGetter: (params: GridValueGetterParams) => {
-      return params.row.manager?.fullName;
-    },
-    flex: 1,
-  },
-  {
-    field: "location",
-    headerName: "Location",
-    flex: 1,
-  },
-  {
-    field: "linkedExchangePoints",
-    headerName: "Linked Exchange Points",
-    renderCell: (params: GridRenderCellParams) => {
-      return params.row.linkedExchangePoints.map((point) => (
-        <>
-          <Link key={point.id} to={`/exchange-points/${point.id}`}>
-            {point.name}
-            <br />
-          </Link>
-        </>
-      ));
-    },
-    flex: 1,
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+    sorter: sortByString("location"),
+    width: "30%",
+    filters: [
+      {
+        text: "Hải Phòng",
+        value: "Hải Phòng",
+      },
+      {
+        text: "Vinh",
+        value: "Vinh",
+      },
+      {
+        text: "Hà Nội",
+        value: "Hà Nội",
+      },
+      {
+        text: "Biên Hòa",
+        value: "Biên Hòa",
+      },
+      {
+        text: "Hồ Chí Minh",
+        value: "Hồ Chí Minh",
+      },
+    ],
+    onFilter: (value, record) => record.location.indexOf(value) === 0,
   },
 ];
 
 const pagination = {
-  paginationModel: {
-    pageSize: 5,
-  },
+  hideOnSinglePage: true,
+  pageSize: 10,
+  showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
 };
+
 
 export default function GatherPoints() {
   const [data, setData] = useState([]);
@@ -65,11 +65,12 @@ export default function GatherPoints() {
       .then((res) => {
         if (res.data.status !== 200) {
           toast.error(res.data.message);
-          console.log(res.data.results);
           setLoading(false);
+
           return;
         }
         setData(res.data.results);
+        console.log(res.data.results);
         setLoading(false);
       })
       .catch((err) => {
@@ -87,26 +88,16 @@ export default function GatherPoints() {
     <>
       {loading && <Loading />}
       <div className="flex h-screen w-full flex-col items-center justify-center gap-3 bg-lime-100">
-        <div className="w-[80%]">
-          <div className="flex justify-start">
-            <Modal
-              onSubmit={handleModalSubmit}
-              apiEndpoint="/leader/exchange-point"
-            />
-          </div>
-          <DataGrid
-            classes={{
-              root: "bg-white",
-              columnHeader: "bg-slate-300",
-            }}
-            columns={columns}
-            rows={data}
-            initialState={{ pagination }}
-            autoHeight
-            getRowId={(row) => row.id}
-            isRowSelectable={() => false}
-          />
+        <div className="flex w-[80%] justify-start">
+          <Modal onSubmit={handleModalSubmit} apiEndpoint="/leader/gather-point" />
         </div>
+        <Table
+          className="w-[80%]"
+          columns={columns}
+          dataSource={data}
+          rowKey={(record) => String(record.id)}
+          pagination={pagination}
+        />
       </div>
     </>
   );
