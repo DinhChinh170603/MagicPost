@@ -15,7 +15,7 @@ import { ConfigProvider } from "antd";
 import Topbar from "./components/Topbar";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { Backdrop } from "@mui/material";
+import { Backdrop, Drawer } from "@mui/material";
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [inMobileMode, setInMobileMode] = useState(false);
@@ -41,16 +41,26 @@ function App() {
   const getPage = (children: React.ReactNode) => {
     return (
       <>
-        {inMobileMode && (
+        {/* {inMobileMode && (
           <Backdrop
             sx={{ color: "#fff", zIndex: 2 }}
             open={isSidebarOpen}
             onClick={() => setIsSidebarOpen(false)}
           />
-        )}
+        )} */}
         <div className="flex">
-          <div className={`h-screen ${inMobileMode ? "absolute z-10" : ""}`}>
-            <Sidebar isSidebarOpen={isSidebarOpen} />
+          <div>
+            {inMobileMode ? (
+              <Drawer
+                open={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+                anchor="left"
+              >
+                <Sidebar isSidebarOpen={isSidebarOpen} />
+              </Drawer>
+            ) : (
+              <Sidebar isSidebarOpen={isSidebarOpen} />
+            )}
           </div>
 
           <div className="relative flex flex-1 flex-col">

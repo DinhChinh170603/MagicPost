@@ -11,6 +11,10 @@ html {
   background-color: #ff9c6e;
 }
 
+.ant-drawer-menu .ant-menu-item:hover {
+  color: inherit;
+}
+
 /* .custom-table-class tbody {
   max-height: calc(50vh - 2.5em);
   width: 100%;

@@ -19,69 +19,53 @@ const Sidebar = (props) => {
   useEffect(() => {
     service.get("/users/me").then((res) => {
       console.log(res.data.results.fullName);
-      setUserFullname(res.data.results.fullName);
-      setUserRole(res.data.results.role);
     });
   }, []);
 
   return (
-    <div
-      className={`flex h-full flex-col items-center gap-3 overflow-y-auto bg-white py-3 transition-all duration-300 ${
-        isSidebarOpen ? "w-64" : "w-0"
-      }`}
-    >
-      {isSidebarOpen && (
-        <>
-          <div>
-            <h1 className="text-3xl font-bold">Magic Post</h1>
-          </div>
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              isActive ? activeStyle : inactiveStyle
-            }
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/exchange-points"
-            end
-            className={({ isActive }) =>
-              isActive ? activeStyle : inactiveStyle
-            }
-          >
-            Exchange Points
-          </NavLink>
-          <NavLink
-            to="/gather-points"
-            end
-            className={({ isActive }) =>
-              isActive ? activeStyle : inactiveStyle
-            }
-          >
-            Gather Points
-          </NavLink>
-          <NavLink
-            to="/invite"
-            end
-            className={({ isActive }) =>
-              isActive ? activeStyle : inactiveStyle
-            }
-          >
-            Invite
-          </NavLink>
+    <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto bg-white py-3">
+      <>
+        <div>
+          <h1 className="text-3xl font-bold">Magic Post</h1>
+        </div>
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
+        >
+          Home
+        </NavLink>
+        <NavLink
+          to="/exchange-points"
+          end
+          className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
+        >
+          Exchange Points
+        </NavLink>
+        <NavLink
+          to="/gather-points"
+          end
+          className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
+        >
+          Gather Points
+        </NavLink>
+        <NavLink
+          to="/invite"
+          end
+          className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
+        >
+          Invite
+        </NavLink>
 
-          <div className="mt-auto flex w-full flex-col items-center gap-3">
-            <div
-              onClick={() => logout()}
-              className="mt-auto w-[80%] cursor-pointer rounded-lg bg-slate-800 p-3 text-center text-xl font-bold text-white"
-            >
-              Logout
-            </div>
+        <div className="mt-auto flex w-full flex-col items-center gap-3">
+          <div
+            onClick={() => logout()}
+            className="mt-auto w-[80%] cursor-pointer rounded-lg bg-slate-800 p-3 text-center text-xl font-bold text-white"
+          >
+            Logout
           </div>
-        </>
-      )}
+        </div>
+      </>
     </div>
   );
 };
