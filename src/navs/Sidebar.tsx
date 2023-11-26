@@ -23,7 +23,7 @@ const Sidebar = (props) => {
   }, []);
 
   return (
-    <div className="flex h-full w-64 w-64 flex-col items-center gap-3 overflow-y-auto bg-white py-3">
+    <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto bg-white py-3">
       <>
         <div>
           <h1 className="text-3xl font-bold">Magic Post</h1>
