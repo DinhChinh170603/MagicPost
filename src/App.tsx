@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import InviteUser from "./pages/InviteUser";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, Drawer } from "antd";
 import Topbar from "./components/Topbar";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "@uidotdev/usehooks";
@@ -41,16 +41,29 @@ function App() {
   const getPage = (children: React.ReactNode) => {
     return (
       <>
-        {inMobileMode && (
+        {/* {inMobileMode && (
           <Backdrop
             sx={{ color: "#fff", zIndex: 2 }}
             open={isSidebarOpen}
             onClick={() => setIsSidebarOpen(false)}
           />
-        )}
+        )} */}
         <div className="flex">
-          <div className={`h-screen ${inMobileMode ? "absolute z-10" : ""}`}>
-            <Sidebar isSidebarOpen={isSidebarOpen} />
+          <div className={`h-screen`}>
+            {inMobileMode ? (
+              //make drawer fit inside content
+              <Drawer
+                open={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+                closable={false}
+                placement="left"
+                width={"19rem"}
+              >
+                <Sidebar isSidebarOpen={isSidebarOpen} />
+              </Drawer>
+            ) : (
+              <Sidebar isSidebarOpen={isSidebarOpen} />
+            )}
           </div>
 
           <div className="relative flex flex-1 flex-col">
