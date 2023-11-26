@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import { Button, MenuItem, Select, TextField } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+// import { Button, MenuItem, Select, TextField } from "@mui/material";
+// import { DatePicker } from "@mui/x-date-pickers";
 import axios from "axios";
+import { Button, DatePicker, Form, Input, Select } from "antd";
+
+const { Option } = Select;
 
 export default function InviteUser() {
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [departmentId, setDepartmentId] = useState("");
-  const [dob, setDob] = useState("");
+  const [form] = Form.useForm();
+
   const [loading, setLoading] = useState(false);
 
   const [exchangePointsList, setExchangePointsList] = useState([]);
@@ -21,10 +21,6 @@ export default function InviteUser() {
   const [noManagerGatherPointsList, setNoManagerGatherPointsList] = useState(
     [],
   );
-
-  const [emailError, setEmailError] = useState(false);
-  const [fullNameError, setFullNameError] = useState(false);
-  const [roleError, setRoleError] = useState(false);
 
   const [roleDepartmentList, setRoleDepartmentList] = useState([]);
 
@@ -87,20 +83,13 @@ export default function InviteUser() {
   };
 
   const onFinish = () => {
-    if (!email || !role || !fullName || !dob) {
-      toast.error("Please fill out every fields");
-      return;
-    }
-    if (emailError || fullNameError || roleError) {
-      toast.error("Please check your input");
-      return;
-    }
+    const { email, role, fullName, departmentId, dob } = form.getFieldsValue();
     const formData = new FormData();
     formData.append("email", email);
     formData.append("role", role);
     formData.append("fullName", fullName);
     formData.append("departmentId", departmentId);
-    formData.append("dob", dob);
+    formData.append("dob", dob.format("DD-MM-YYYY"));
 
     setLoading(true);
 
@@ -121,146 +110,103 @@ export default function InviteUser() {
   };
 
   return (
-    <>
+    <Form
+      form={form}
+      onFinish={onFinish}
+      layout="vertical"
+      initialValues={{ role: "", departmentId: "" }}
+    >
       {loading && <Loading />}
       <div className="flex h-screen w-full flex-col bg-orange-100 p-5">
         <div className="text-3xl font-bold">Invite User</div>
         <div className="w-[60%] self-center">
           <div className="mt-4 flex gap-4">
-            <TextField
-              className="flex-1"
-              required
+            <Form.Item
+              className="w-full"
+              name="email"
               label="Email"
-              error={emailError}
-              onBlur={() => {
-                if (email === "" || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-                  setEmailError(true);
-                } else {
-                  setEmailError(false);
-                }
-              }}
-              helperText= { emailError && "Please enter a valid email" }
-              onChange={(e) => setEmail(e.target.value)}
-            />
+              rules={[
+                { required: true, message: "Please enter an email" },
+                {
+                  type: "email",
+                  message: "Please enter a valid email",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
           </div>
-          <div className="mt-4 flex gap-4">
-            <TextField
+          <div className="flex gap-4">
+            <Form.Item
+              className="flex-1"
+              name="role"
               label="Role"
-              select
-              defaultValue={""}
-              className="flex-1"
-              required
-              error={roleError}
-              onBlur={() => {
-                if (role === "") {
-                  setRoleError(true);
-                } else {
-                  setRoleError(false);
-                }
-              }}
-              helperText= { roleError && "Please select a role" }
-              onChange={(e) => handleRoleSelection(e.target.value)}
+              rules={[{ required: true, message: "Please select a role" }]}
             >
-              <MenuItem value="GATHER_MANAGER">Gather Manager</MenuItem>
-              <MenuItem value="GATHER_EMPLOYEE">Gather Employee</MenuItem>
-              <MenuItem value="EXCHANGE_MANAGER">Exchange Manager</MenuItem>
-              <MenuItem value="EXCHANGE_EMPLOYEE">Exchange Employee</MenuItem>
-            </TextField>
-            <TextField
+              <Select onChange={handleRoleSelection}>
+                <Option value="GATHER_MANAGER">Gather Manager</Option>
+                <Option value="GATHER_EMPLOYEE">Gather Employee</Option>
+                <Option value="EXCHANGE_MANAGER">Exchange Manager</Option>
+                <Option value="EXCHANGE_EMPLOYEE">Exchange Employee</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              className="flex-1"
+              name="departmentId"
               label="Department"
-              select
-              disabled={role === ""}
-              defaultValue={""}
-              className="flex-1"
-              onChange={(e) => setDepartmentId(e.target.value)}
+              dependencies={["role"]}
+              rules={[
+                { required: true, message: "Please select a department" },
+              ]}
             >
-              {roleDepartmentList.map((department) => (
-                <MenuItem key={department.id} value={department.id}>
-                  {department.name}
-                </MenuItem>
-              ))}
-            </TextField>
+              <Select disabled={!form.getFieldValue("role")}>
+                {/* Replace roleDepartmentList with your actual data */}
+                {roleDepartmentList.map((department) => (
+                  <Option key={department.id} value={department.id}>
+                    {department.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
           </div>
-          <div className="mt-4 flex gap-4">
-            <TextField
-              className="flex-1"
+          <div className="flex gap-4">
+            <Form.Item
+              className="w-full"
+              name="fullName"
               label="Full Name"
-              required
-              error={fullNameError}
-              onBlur={() => {
-                if (fullName === "") {
-                  setFullNameError(true);
-                } else {
-                  setFullNameError(false);
-                }
-              }}
-              helperText= { fullNameError && "Please enter a full name" }
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </div>
-          <div className="mt-4">
-            <DatePicker
-              className="mt-4"
-              label="Date of Birth"
-              format={"DD/MM/YYYY"}
-              disableFuture
-              onChange={(value) => {
-                setDob(
-                  value.$D +
-                    "-" +
-                    (value.$M + 1 < 10 ? "0" : "") +
-                    (value.$M + 1) +
-                    "-" +
-                    value.$y,
-                );
-              }}
-            />
-          </div>
-          <div className="mt-4">
-            <Button
-              variant="contained"
-              onClick={onFinish}
-              style={{ display: "block" }}
+              rules={[{ required: true, message: "Please enter a full name" }]}
             >
+              <Input />
+            </Form.Item>
+          </div>
+          <div className="mt-4">
+            <Form.Item
+              name="dob"
+              label="Date of Birth"
+              rules={[
+                {
+                  type: "object",
+                  required: true,
+                  message: "Please select a date of birth",
+                },
+              ]}
+            >
+              <DatePicker
+                className="w-64"
+                format="DD/MM/YYYY"
+                disabledDate={(current) =>
+                  current && current.valueOf() > Date.now()
+                }
+              />
+            </Form.Item>
+          </div>
+          <div className="mt-4">
+            <Button type="primary" htmlType="submit">
               Submit
             </Button>
           </div>
-          {/* <div className="mt-4">
-            <input
-              id="avatar"
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={(e) => {
-                if (e.target.files) {
-                  setAvatar(e.target.files[0]);
-                  const reader = new FileReader();
-                  reader.readAsDataURL(e.target.files[0]);
-                  reader.onload = () => {
-                    const preview = document.getElementById("avatarPreview");
-                    if (preview) {
-                      preview.src = reader.result as string;
-                      preview.classList.remove("hidden");
-                    }
-                  };
-                } else {
-                  setAvatar(undefined);
-                }
-              }}
-            />
-            <label
-              htmlFor="avatar"
-              className="cursor-pointer rounded-lg bg-orange-400 px-3 py-2"
-            >
-              Upload Avatar
-            </label>
-            <img
-              id="avatarPreview"
-              className="mt-4 hidden h-[200px] w-[200px] rounded-full"
-            />
-          </div> */}
         </div>
       </div>
-    </>
+    </Form>
   );
 }
