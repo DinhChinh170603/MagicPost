@@ -59,7 +59,6 @@ export default function InviteUser() {
   }, []);
 
   const handleRoleSelection = (value: string) => {
-    setRole(value);
     switch (value) {
       case "GATHER_MANAGER":
         setRoleDepartmentList(noManagerGatherPointsList);

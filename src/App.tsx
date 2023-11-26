@@ -39,7 +39,7 @@ function App() {
           />
         )} */}
         <div className="flex">
-          <div>
+          <div className="h-screen">
             {inMobileMode ? (
               <Drawer
                 open={isSidebarOpen}
