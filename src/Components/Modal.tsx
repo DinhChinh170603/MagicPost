@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import { Button, Select, Modal as AntModal } from "antd";
+import { Button, Select, Modal as AntModal, Input, Typography } from "antd";
 import { TextField } from "@mui/material";
 
 interface ModalProps {
@@ -19,7 +19,6 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
   const [location, setLocation] = useState("");
 
   const [isExchangePoint, setIsExchangePoint] = useState(false);
-  
 
   const handleChange = (value: string) => {
     setLocation(value);
@@ -74,47 +73,47 @@ const Modal: React.FC<ModalProps> = ({ onSubmit, apiEndpoint }) => {
       </Button>
       <AntModal
         style={{ top: 30 }}
-        visible={modalOpen}
         onOk={onFinish}
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
       >
         <div className="text-2xl font-bold">Fill out this form</div>
         <div className="mt-4 flex flex-col gap-4">
-          <TextField
-            className="w-[60%]"
-            required
-            label="Name"
-            onChange={(e) => setName(e.target.value)}
-          />
-          {isExchangePoint ? (
-            <TextField
-            className="w-[60%]"
-            required
-            label="Manager"
-            onChange={(e) => setManager(e.target.value)}
-          />
-          ) : null}
-          
-          {/* <TextField
-            className="w-[60%]"
-            required
-            label="Location"
-            onChange={(e) => setLocation(e.target.value)}
-          /> */}
-          <Select
-            defaultValue="Location"
-            className="w-[60%] h-10"
-            onChange={handleChange}
-            options={[
-              { value: "Hà Nội", label: "Hà Nội" },
-              { value: "Hải Phòng", label: "Hải Phòng" },
-              { value: "Vinh", label: "Vinh" },
-              { value: "Biên Hòa", label: "Biên Hòa" },
-              { value: "Đà Nẵng", label: "Đà Nẵng" },
-              { value: "Hồ Chí Minh", label: "Hồ Chí Minh" },
-            ]}
-          />
+          <div className="flex flex-col gap-2">
+            <Typography.Text className="font-bold">Name</Typography.Text>
+            <Input
+              className="w-[60%]"
+              required
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          {isExchangePoint && (
+            <div className="flex flex-col gap-2">
+              <Typography.Text className="font-bold">Manager</Typography.Text>
+              <Input
+                className="w-[60%]"
+                required
+                onChange={(e) => setManager(e.target.value)}
+              />
+            </div>
+          )}
+
+          <div className="flex flex-col gap-2">
+            <Typography.Text className="font-bold">Location</Typography.Text>
+            <Select
+              defaultValue="Location"
+              className="h-10 w-[60%]"
+              onChange={handleChange}
+              options={[
+                { value: "Hà Nội", label: "Hà Nội" },
+                { value: "Hải Phòng", label: "Hải Phòng" },
+                { value: "Vinh", label: "Vinh" },
+                { value: "Biên Hòa", label: "Biên Hòa" },
+                { value: "Đà Nẵng", label: "Đà Nẵng" },
+                { value: "Hồ Chí Minh", label: "Hồ Chí Minh" },
+              ]}
+            />
+          </div>
         </div>
       </AntModal>
     </>

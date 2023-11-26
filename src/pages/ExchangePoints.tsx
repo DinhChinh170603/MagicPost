@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { Table } from "antd";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import Modal from "../components/Modal";
+import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-import { Table } from "antd";
-import { toast } from "react-toastify";
-import Loading from "../helpers/Loading";
-import Modal from "../components/Modal";
-import { Link } from "react-router-dom";
 
 const columns = [
   {
@@ -19,7 +19,7 @@ const columns = [
     title: "Manager",
     dataIndex: "manager",
     key: "manager",
-    sorter: (a, b) => sortByString(a.manager?.fullName, b.manager?.fullName),
+    sorter: sortByString("manager"),
     width: "20%",
     render: (text, record) => {
       return record.manager ? record.manager.fullName : "";
@@ -63,7 +63,7 @@ const columns = [
     width: "20%",
     render: (text, record) => {
       return record.linkedGatherPoint ? (
-        <Link /* to={`/your-route/${record.linkedGatherPoint.id}`} */>
+        <Link to={`/gather-points/${record.linkedGatherPoint.id}`}>
           {record.linkedGatherPoint.name}
         </Link>
       ) : (
@@ -75,7 +75,7 @@ const columns = [
 
 const pagination = {
   hideOnSinglePage: false,
-  pageSize: 10,
+  pageSize: 5,
   showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
 };
 export default function ExchangePoints() {
@@ -107,7 +107,6 @@ export default function ExchangePoints() {
   };
   return (
     <>
-      {loading && <Loading />}
       <div className="flex h-screen w-full flex-col items-center justify-center gap-3 bg-lime-100">
         <div className="flex w-[80%] justify-start">
           <Modal
@@ -115,13 +114,15 @@ export default function ExchangePoints() {
             apiEndpoint="/leader/exchange-point"
           />
         </div>
-        <Table
-          className="custom-table-class w-[80%] overflow-auto"
-          columns={columns}
-          dataSource={data}
-          rowKey={(record) => String(record.id)}
-          pagination={pagination}
-        />
+        <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
+          <Table
+            className="w-[80%]"
+            columns={columns}
+            dataSource={data}
+            rowKey={(record) => String(record.id)}
+            pagination={pagination}
+          />
+        </SkeletonTable>
       </div>
     </>
   );

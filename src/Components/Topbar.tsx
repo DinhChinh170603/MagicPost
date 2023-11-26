@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import MenuIcon from "@mui/icons-material/Menu";
-import { IconButton } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import { IconButton } from "@mui/material";
+import PropTypes from "prop-types";
+import { useState } from "react";
 
 export default function Topbar(props) {
   const { isSidebarOpen, setIsSidebarOpen, isInMobileMode } = props;
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
   return (
-    <div className="absolute left-0 top-0 flex h-16 w-full items-center gap-8 bg-red-300 px-10">
+    <div className="absolute left-0 top-0 z-10 flex h-16 w-full items-center gap-8 bg-[rgba(255,255,255,0.5)] px-10">
       {isInMobileMode && (
         <div className="-ml-8">
           <IconButton

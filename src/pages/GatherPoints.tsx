@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { Table } from "antd";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Modal from "../components/Modal";
+import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-import { Table } from "antd";
-import { toast } from "react-toastify";
-import Loading from "../helpers/Loading";
-import Modal from "../components/Modal";
 
 const columns = [
   {
@@ -48,10 +48,10 @@ const columns = [
 
 const pagination = {
   hideOnSinglePage: true,
-  pageSize: 10,
-  showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+  pageSize: 5,
+  showTotal: (total: number, range: number[]) =>
+    `${range[0]}-${range[1]} of ${total} items`,
 };
-
 
 export default function GatherPoints() {
   const [data, setData] = useState([]);
@@ -86,18 +86,22 @@ export default function GatherPoints() {
 
   return (
     <>
-      {loading && <Loading />}
       <div className="flex h-screen w-full flex-col items-center justify-center gap-3 bg-lime-100">
         <div className="flex w-[80%] justify-start">
-          <Modal onSubmit={handleModalSubmit} apiEndpoint="/leader/gather-point" />
+          <Modal
+            onSubmit={handleModalSubmit}
+            apiEndpoint="/leader/gather-point"
+          />
         </div>
-        <Table
-          className="w-[80%]"
-          columns={columns}
-          dataSource={data}
-          rowKey={(record) => String(record.id)}
-          pagination={pagination}
-        />
+        <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
+          <Table
+            className="w-[80%]"
+            columns={columns}
+            dataSource={data}
+            rowKey={(record) => String(record.id)}
+            pagination={pagination}
+          />
+        </SkeletonTable>
       </div>
     </>
   );

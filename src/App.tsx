@@ -1,42 +1,32 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import ExchangePoints from "./pages/ExchangePoints";
-import GatherPoints from "./pages/GatherPoints";
-import NotFound from "./pages/NotFound";
-import Sidebar from "./navs/Sidebar";
-import Login from "./pages/Login";
-import User from "./pages/User";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import InviteUser from "./pages/InviteUser";
+import { Drawer } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useMediaQuery, useWindowSize } from "@uidotdev/usehooks";
 import { ConfigProvider } from "antd";
-import Topbar from "./components/Topbar";
 import { useEffect, useState } from "react";
-import { useWindowSize } from "@uidotdev/usehooks";
-import { Backdrop, Drawer } from "@mui/material";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Topbar from "./components/Topbar";
+import Sidebar from "./navs/Sidebar";
+import ExchangePoints from "./pages/ExchangePoints";
+import GatherPoints from "./pages/GatherPoints";
+import Home from "./pages/Home";
+import InviteUser from "./pages/InviteUser";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import User from "./pages/User";
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [inMobileMode, setInMobileMode] = useState(false);
-
-  const { width } = useWindowSize();
+  const inMobileMode = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
-    if (width === null) {
-      return;
-    }
-
-    if (width < 768) {
+    if (inMobileMode) {
       setIsSidebarOpen(false);
-      setInMobileMode(true);
-    }
-
-    if (width >= 768) {
+    } else {
       setIsSidebarOpen(true);
-      setInMobileMode(false);
     }
-  }, [width]);
+  }, [inMobileMode]);
 
   const getPage = (children: React.ReactNode) => {
     return (
@@ -56,10 +46,10 @@ function App() {
                 onClose={() => setIsSidebarOpen(false)}
                 anchor="left"
               >
-                <Sidebar isSidebarOpen={isSidebarOpen} />
+                <Sidebar />
               </Drawer>
             ) : (
-              <Sidebar isSidebarOpen={isSidebarOpen} />
+              <Sidebar />
             )}
           </div>
 
