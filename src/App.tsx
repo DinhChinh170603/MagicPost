@@ -11,11 +11,11 @@ import "react-toastify/dist/ReactToastify.css";
 import InviteUser from "./pages/InviteUser";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { ConfigProvider, Drawer } from "antd";
+import { ConfigProvider } from "antd";
 import Topbar from "./components/Topbar";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { Backdrop } from "@mui/material";
+import { Backdrop, Drawer } from "@mui/material";
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [inMobileMode, setInMobileMode] = useState(false);
@@ -49,15 +49,12 @@ function App() {
           />
         )} */}
         <div className="flex">
-          <div className={`h-screen`}>
+          <div>
             {inMobileMode ? (
-              //make drawer fit inside content
               <Drawer
                 open={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
-                closable={false}
-                placement="left"
-                width={"19rem"}
+                anchor="left"
               >
                 <Sidebar isSidebarOpen={isSidebarOpen} />
               </Drawer>
