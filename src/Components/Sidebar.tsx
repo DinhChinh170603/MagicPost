@@ -1,9 +1,8 @@
-import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import service from "../helpers/service";
 
-const Sidebar = (props) => {
+const Sidebar = () => {
   const activeStyle =
     "w-[80%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold";
   const inactiveStyle =
