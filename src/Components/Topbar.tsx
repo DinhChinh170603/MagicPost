@@ -8,6 +8,13 @@ import { useState } from "react";
 export default function Topbar(props) {
   const { isSidebarOpen, setIsSidebarOpen, isInMobileMode } = props;
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
+
+  // const history = useHistory();
+
+  // const handleProfileLinkClick = () => {
+  //   history.push(); // Bạn cần thay thế `:id` bằng ID thực tế của người dùng
+  // };
+
   return (
     <div className="absolute left-0 top-0 z-10 flex h-16 w-full items-center gap-8 bg-[rgba(255,255,255,0.5)] px-10">
       {isInMobileMode && (
