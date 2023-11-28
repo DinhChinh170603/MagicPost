@@ -1,31 +1,19 @@
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Form, Input } from "antd";
 import React from "react";
 import { toast } from "react-toastify";
 import logo from "../assets/logo.jpg";
-import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import {
-  IconButton,
-  InputAdornment,
-  OutlinedInput,
-  TextField,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function Login() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
 
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const login = () => {
-    if (!email || !password) {
-      toast.error("Please enter email and password");
-      return;
-    }
+  const onFinish = () => {
     setLoading(true);
+
+    const { email, password } = form.getFieldsValue();
+
     service
       .post("/authenticate", {
         email,
@@ -49,55 +37,58 @@ export default function Login() {
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      login();
+      onFinish();
     }
   };
 
   return (
-    <>
-      {loading && <Loading />}
-      <div className="flex h-screen w-full">
-        <div className="flex flex-1 flex-col items-center justify-center bg-gray-300">
-          <img src={logo} className="h-[50%] w-[50%]" alt="logo" />
-        </div>
-        <div className="flex flex-1 flex-col items-center justify-center gap-4">
-          <span className="text-3xl font-bold">Login</span>
-          <TextField
-            className="w-[40%]"
-            type="text"
-            label="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            onKeyDown={onKeyDown}
+    <Form form={form} onFinish={onFinish} className="flex h-screen w-full">
+      <div className="flex flex-1 flex-col items-center justify-center bg-gray-300">
+        <img src={logo} className="h-[50%] w-[50%]" alt="logo" />
+      </div>
+
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <span className="mb-4 text-3xl font-bold">Login</span>
+
+        <Form.Item
+          name="email"
+          className="w-[40%]"
+          rules={[
+            { required: true, message: "Please enter your email!" },
+            { type: "email", message: "Please enter a valid email!" },
+          ]}
+        >
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Email"
+            className="py-2"
           />
-          <TextField
-            className="w-[40%]"
-            id="outlined-adornment-password"
-            type={showPassword ? "text" : "password"}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={onKeyDown}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            label="Password"
+        </Form.Item>
+
+        {/* Password Field */}
+        <Form.Item
+          name="password"
+          className="w-[40%]"
+          rules={[{ required: true, message: "Please enter your password!" }]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            placeholder="Password"
+            className="py-2"
           />
-          <button
-            className="w-[40%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold"
-            onClick={() => login()}
+        </Form.Item>
+
+        <Form.Item className="w-[20%]">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-full"
+            loading={loading}
           >
             Login
-          </button>
-        </div>
+          </Button>
+        </Form.Item>
       </div>
-    </>
+    </Form>
   );
 }

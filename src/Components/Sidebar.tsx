@@ -1,24 +1,10 @@
-import PropTypes from "prop-types";
-import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import service from "../helpers/service";
 
-const Sidebar = (props) => {
+const Sidebar = () => {
   const activeStyle =
-    "w-[80%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold";
+    "w-[80%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold transition-all duration-100";
   const inactiveStyle =
-    "w-[80%] rounded-lg p-3 text-center text-xl font-bold hover:bg-orange-200";
-
-  const logout = () => {
-    localStorage.removeItem("jwtToken");
-    window.location.href = "/login";
-  };
-
-  useEffect(() => {
-    service.get("/users/me").then((res) => {
-      console.log(res.data.results.fullName);
-    });
-  }, []);
+    "w-[80%] rounded-lg p-3 text-center text-xl font-bold transition-all duration-100 hover:bg-orange-200";
 
   return (
     <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto bg-white py-3">
@@ -54,15 +40,6 @@ const Sidebar = (props) => {
         >
           Invite
         </NavLink>
-
-        <div className="mt-auto flex w-full flex-col items-center gap-3">
-          <div
-            onClick={() => logout()}
-            className="mt-auto w-[80%] cursor-pointer rounded-lg bg-slate-800 p-3 text-center text-xl font-bold text-white"
-          >
-            Logout
-          </div>
-        </div>
       </>
     </div>
   );

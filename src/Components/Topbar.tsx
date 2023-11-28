@@ -2,10 +2,56 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { IconButton } from "@mui/material";
+import { Avatar, Dropdown, MenuProps } from "antd";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import service from "../helpers/service";
+import { toast } from "react-toastify";
 
 export default function Topbar(props) {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<any>();
+
+  const logout = () => {
+    localStorage.removeItem("jwtToken");
+    window.location.href = "/login";
+  };
+
+  useEffect(() => {
+    service
+      .get("/users/me")
+      .then((res) => {
+        if (res.data.status === 200) {
+          setUser(res.data.results);
+        } else {
+          toast.error("Failed to fetch user data");
+        }
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  }, []);
+
+  const userMenuItems: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <span className="font-[430]">Profile</span>,
+      onClick: () => {
+        navigate("/users/" + user.id);
+      },
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "2",
+      label: <span className="font-[430]">Logout</span>,
+      onClick: logout,
+      danger: true,
+    },
+  ];
+
   const { isSidebarOpen, setIsSidebarOpen, isInMobileMode } = props;
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
 
@@ -33,20 +79,30 @@ export default function Topbar(props) {
           sx={{ color: "black", fontSize: "2rem" }}
         />
         <div className="relative">
-          <div onClick={() => setIsOpenUserMenu(!isOpenUserMenu)}>
-            <AccountCircleIcon
-              className="cursor-pointer"
-              sx={{ color: "black", fontSize: "2rem" }}
-            />
-          </div>
-          <div
-            className={`absolute -bottom-16 -left-16 bg-white p-3 transition-all duration-1000 ${
-              isOpenUserMenu ? "visible opacity-100" : "hidden opacity-0"
-            }`}
+          <Dropdown
+            menu={{ items: userMenuItems }}
+            trigger={["click"]}
+            placement="bottomRight"
+            overlayStyle={{
+              minWidth: "7rem",
+              textAlign: "center",
+            }}
           >
-            <div>Profile</div>
-            <div>Logout</div>
-          </div>
+            <div onClick={() => setIsOpenUserMenu(!isOpenUserMenu)}>
+              {user && user.avatar ? (
+                <Avatar
+                  src={user.avatar}
+                  size={45}
+                  className="cursor-pointer"
+                />
+              ) : (
+                <AccountCircleIcon
+                  className="cursor-pointer"
+                  sx={{ color: "black", fontSize: 45 }}
+                />
+              )}
+            </div>
+          </Dropdown>
         </div>
       </div>
     </div>
