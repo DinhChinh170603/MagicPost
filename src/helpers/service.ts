@@ -16,10 +16,7 @@ service.interceptors.request.use(
       config.headers!.Authorization = jwtToken;
     }
     return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
+  }
 );
 
 service.interceptors.response.use(
@@ -37,10 +34,7 @@ service.interceptors.response.use(
     }
 
     return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
+  }
 );
 
 export default service;

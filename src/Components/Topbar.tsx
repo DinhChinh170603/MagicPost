@@ -2,20 +2,43 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { IconButton } from "@mui/material";
-import { Dropdown, MenuProps } from "antd";
+import { Avatar, Dropdown, MenuProps } from "antd";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import service from "../helpers/service";
+import { toast } from "react-toastify";
 
 export default function Topbar(props) {
   const navigate = useNavigate();
+  const [user, setUser] = useState<any>();
+
+  const logout = () => {
+    localStorage.removeItem("jwtToken");
+    window.location.href = "/login";
+  };
+
+  useEffect(() => {
+    service
+      .get("/users/me")
+      .then((res) => {
+        if (res.data.status === 200) {
+          setUser(res.data.results);
+        } else {
+          toast.error("Failed to fetch user data");
+        }
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  }, []);
 
   const userMenuItems: MenuProps["items"] = [
     {
       key: "1",
-      label: "Profile",
+      label: <span className="font-[430]">Profile</span>,
       onClick: () => {
-        navigate("/users/0");
+        navigate("/users/" + user.id);
       },
     },
     {
@@ -23,11 +46,9 @@ export default function Topbar(props) {
     },
     {
       key: "2",
-      label: "Logout",
-      onClick: () => {
-        localStorage.removeItem("jwtToken");
-        window.location.href = "/login";
-      },
+      label: <span className="font-[430]">Logout</span>,
+      onClick: logout,
+      danger: true,
     },
   ];
 
@@ -55,12 +76,25 @@ export default function Topbar(props) {
           <Dropdown
             menu={{ items: userMenuItems }}
             trigger={["click"]}
+            placement="bottomRight"
+            overlayStyle={{
+              minWidth: "7rem",
+              textAlign: "center",
+            }}
           >
             <div onClick={() => setIsOpenUserMenu(!isOpenUserMenu)}>
-              <AccountCircleIcon
-                className="cursor-pointer"
-                sx={{ color: "black", fontSize: "2rem" }}
-              />
+              {user && user.avatar ? (
+                <Avatar
+                  src={user.avatar}
+                  size={45}
+                  className="cursor-pointer"
+                />
+              ) : (
+                <AccountCircleIcon
+                  className="cursor-pointer"
+                  sx={{ color: "black", fontSize: 45 }}
+                />
+              )}
             </div>
           </Dropdown>
         </div>
