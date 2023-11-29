@@ -79,6 +79,7 @@ function App() {
             colorPrimary: "#fa541c",
             fontSize: 16,
             controlItemBgHover: "rgba(147, 147, 147, 0.6)",
+            colorBorder: "rgba(147, 147, 147, 0.4)",
           },
         }}
       >
