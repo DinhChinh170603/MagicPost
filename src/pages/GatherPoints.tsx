@@ -1,50 +1,11 @@
-import { Table } from "antd";
+import { Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Modal from "../components/Modal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    sorter: sortByString("name"),
-    width: "30%",
-  },
-  {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
-    sorter: sortByString("location"),
-    width: "30%",
-    filters: [
-      {
-        text: "Hải Phòng",
-        value: "Hải Phòng",
-      },
-      {
-        text: "Vinh",
-        value: "Vinh",
-      },
-      {
-        text: "Hà Nội",
-        value: "Hà Nội",
-      },
-      {
-        text: "Biên Hòa",
-        value: "Biên Hòa",
-      },
-      {
-        text: "Hồ Chí Minh",
-        value: "Hồ Chí Minh",
-      },
-    ],
-    onFilter: (value, record) => record.location.indexOf(value) === 0,
-  },
-];
+import { useNavigate } from "react-router-dom";
 
 const pagination = {
   hideOnSinglePage: true,
@@ -54,9 +15,76 @@ const pagination = {
 };
 
 export default function GatherPoints() {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalFinished, setModalFinished] = useState(false);
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      sorter: sortByString("name"),
+      width: "15%",
+    },
+    {
+      title: "Manager",
+      dataIndex: "manager",
+      key: "manager",
+      sorter: (a, b) => sortByString(a.manager?.fullName, b.manager?.fullName),
+      width: "20%",
+      render: (text, record) => {
+        return record.manager ? record.manager.fullName : "";
+      },
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+      sorter: sortByString("location"),
+      width: "20%",
+      filters: [
+        {
+          text: "Hải Phòng",
+          value: "Hải Phòng",
+        },
+        {
+          text: "Vinh",
+          value: "Vinh",
+        },
+        {
+          text: "Hà Nội",
+          value: "Hà Nội",
+        },
+        {
+          text: "Biên Hòa",
+          value: "Biên Hòa",
+        },
+        {
+          text: "Hồ Chí Minh",
+          value: "Hồ Chí Minh",
+        },
+      ],
+      onFilter: (value, record) => record.location.indexOf(value) === 0,
+    },
+    {
+      title: 'Linked Exchange Points',
+      dataIndex: 'linkedExchangePoints',
+      key: 'linkedExchangePoints',
+      render: (linkedExchangePoints) => (
+        <span>
+          {linkedExchangePoints.map((exchangePoint) => (
+            <Tag key={exchangePoint.id} onClick={() => {
+              navigate(`/exchange-points/${exchangePoint.id}`, {
+                state: { exchangePoint: exchangePoint },
+              });
+            }}>{exchangePoint.name}</Tag>
+          ))}
+        </span>
+      ),
+    },
+  ];
 
   useEffect(() => {
     setLoading(true);
