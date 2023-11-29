@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import service from "../helpers/service";
 import { toast } from "react-toastify";
 
-export default function Topbar(props) {
+export default function Topbar(props: any) {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>();
 
