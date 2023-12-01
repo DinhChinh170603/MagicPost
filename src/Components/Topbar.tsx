@@ -55,7 +55,7 @@ export default function Topbar(props: any) {
   const { isSidebarOpen, setIsSidebarOpen, isInMobileMode } = props;
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
   return (
-    <div className="absolute left-0 top-0 z-10 flex h-16 w-full items-center gap-8 bg-[rgba(255,255,255,0.5)] px-10">
+    <div className="sticky top-0 z-10 flex w-full items-center gap-8 self-start border-b-2 border-slate-200 bg-[rgba(255,255,255,0.95)] px-10 py-2">
       {isInMobileMode && (
         <div className="-ml-8">
           <IconButton

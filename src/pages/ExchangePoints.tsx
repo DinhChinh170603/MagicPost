@@ -27,7 +27,7 @@ export default function ExchangePoints() {
       key: "manager",
       sorter: sortByString("manager"),
       width: "20%",
-      render: (text, record) => {
+      render: (text: string, record: any) => {
         return record.manager ? record.manager.fullName : "";
       },
     },
@@ -59,7 +59,8 @@ export default function ExchangePoints() {
           value: "Hồ Chí Minh",
         },
       ],
-      onFilter: (value, record) => record.location.indexOf(value) === 0,
+      onFilter: (value: any, record: any) =>
+        record.location.indexOf(value) === 0,
     },
     {
       title: "Link with Gather",
@@ -67,7 +68,7 @@ export default function ExchangePoints() {
       key: "linkedGatherPoints",
       // sorter: sortByString("linkedGatherPoints"),
       width: "20%",
-      render: (text, record) => {
+      render: (text: string, record: any) => {
         return record.linkedGatherPoint ? (
           <div
             onClick={() => {
@@ -88,7 +89,8 @@ export default function ExchangePoints() {
   const pagination = {
     hideOnSinglePage: false,
     pageSize: 5,
-    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+    showTotal: (total: number, range: number[]) =>
+      `${range[0]}-${range[1]} of ${total} items`,
   };
 
   useEffect(() => {
@@ -116,7 +118,7 @@ export default function ExchangePoints() {
   };
   return (
     <>
-      <div className="flex h-screen w-full flex-col items-center justify-center gap-3 bg-lime-100">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-3">
         <div className="flex w-[80%] justify-start">
           <Modal
             onSubmit={handleModalSubmit}

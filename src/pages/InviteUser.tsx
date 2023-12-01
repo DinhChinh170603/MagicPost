@@ -37,12 +37,12 @@ export default function InviteUser() {
           setGatherPointsList(res2.data.results);
           setNoManagerExchangePointsList(
             res1.data.results.filter(
-              (exchangePoint) => exchangePoint.manager === null,
+              (exchangePoint: any) => exchangePoint.manager === null,
             ),
           );
           setNoManagerGatherPointsList(
             res2.data.results.filter(
-              (gatherPoint) => gatherPoint.manager === null,
+              (gatherPoint: any) => gatherPoint.manager === null,
             ),
           );
           setLoading(false);
@@ -116,7 +116,7 @@ export default function InviteUser() {
       initialValues={{ role: "", departmentId: "" }}
     >
       {loading && <Loading />}
-      <div className="flex h-screen w-full flex-col bg-orange-100 p-5">
+      <div className="flex h-full w-full flex-col p-5">
         <div className="text-3xl font-bold">Invite User</div>
         <div className="w-[60%] self-center">
           <div className="mt-4 flex gap-4">
@@ -160,7 +160,7 @@ export default function InviteUser() {
             >
               <Select disabled={!form.getFieldValue("role")}>
                 {/* Replace roleDepartmentList with your actual data */}
-                {roleDepartmentList.map((department) => (
+                {roleDepartmentList.map((department: any) => (
                   <Option key={department.id} value={department.id}>
                     {department.name}
                   </Option>

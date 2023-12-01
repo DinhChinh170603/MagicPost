@@ -32,9 +32,9 @@ export default function GatherPoints() {
       title: "Manager",
       dataIndex: "manager",
       key: "manager",
-      sorter: (a, b) => sortByString(a.manager?.fullName, b.manager?.fullName),
+      sorter: sortByString("manager"),
       width: "20%",
-      render: (text, record) => {
+      render: (text: string, record: any) => {
         return record.manager ? record.manager.fullName : "";
       },
     },
@@ -66,20 +66,26 @@ export default function GatherPoints() {
           value: "Hồ Chí Minh",
         },
       ],
-      onFilter: (value, record) => record.location.indexOf(value) === 0,
+      onFilter: (value: any, record: any) =>
+        record.location.indexOf(value) === 0,
     },
     {
-      title: 'Linked Exchange Points',
-      dataIndex: 'linkedExchangePoints',
-      key: 'linkedExchangePoints',
-      render: (linkedExchangePoints) => (
+      title: "Linked Exchange Points",
+      dataIndex: "linkedExchangePoints",
+      key: "linkedExchangePoints",
+      render: (linkedExchangePoints: any) => (
         <span>
-          {linkedExchangePoints.map((exchangePoint) => (
-            <Tag key={exchangePoint.id} onClick={() => {
-              navigate(`/exchange-points/${exchangePoint.id}`, {
-                state: { exchangePoint: exchangePoint },
-              });
-            }}>{exchangePoint.name}</Tag>
+          {linkedExchangePoints.map((exchangePoint: any) => (
+            <Tag
+              key={exchangePoint.id}
+              onClick={() => {
+                navigate(`/exchange-points/${exchangePoint.id}`, {
+                  state: { exchangePoint: exchangePoint },
+                });
+              }}
+            >
+              {exchangePoint.name}
+            </Tag>
           ))}
         </span>
       ),
@@ -114,7 +120,7 @@ export default function GatherPoints() {
 
   return (
     <>
-      <div className="flex h-screen w-full flex-col items-center justify-center gap-3 bg-lime-100">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-lime-100">
         <div className="flex w-[80%] justify-start">
           <Modal
             onSubmit={handleModalSubmit}

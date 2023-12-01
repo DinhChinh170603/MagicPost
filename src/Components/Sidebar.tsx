@@ -7,7 +7,7 @@ const Sidebar = () => {
     "w-[80%] rounded-lg p-3 text-center text-xl font-bold transition-all duration-100 hover:bg-orange-200";
 
   return (
-    <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto bg-white py-3">
+    <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto border-r-2 border-slate-200 bg-gray-300 py-3">
       <>
         <div>
           <h1 className="text-3xl font-bold">Magic Post</h1>

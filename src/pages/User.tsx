@@ -12,7 +12,7 @@ export default function User() {
   const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
 
   const [nowpassword, setNowpassword] = useState("");
   const [newpassword, setNewpassword] = useState("");
@@ -96,7 +96,7 @@ export default function User() {
   return (
     <>
       {loading && <Loading />}
-      <div className="flex h-screen w-full items-center justify-center bg-gray-300">
+      <div className="flex h-full w-full items-center justify-center">
         <div className="flex h-[70%] w-[80%]">
           <div className="w-1/4 border border-black p-4">
             <div className="flex flex-col items-center">

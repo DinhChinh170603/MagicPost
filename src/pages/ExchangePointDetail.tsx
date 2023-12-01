@@ -1,10 +1,9 @@
 import { Skeleton, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
-import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-import { useLocation } from "react-router-dom";
 
 const pagination = {
   hideOnSinglePage: true,
@@ -39,9 +38,9 @@ export default function ExchangePointDetail() {
       });
   }, [exchangePoint.id]);
 
-  const renderIdsColumn = (ids) => (
+  const renderIdsColumn = (ids: any) => (
     <>
-      {ids.map((id) => (
+      {ids.map((id: any) => (
         <Tag key={id}>{id}</Tag>
       ))}
     </>
@@ -64,7 +63,7 @@ export default function ExchangePointDetail() {
       title: "Sent Packages IDs",
       dataIndex: "sentPackagesIds",
       key: "sentPackagesIds",
-      render: (sentPackagesIds) =>
+      render: (sentPackagesIds: any) =>
         loading ? (
           <Skeleton active paragraph={{ rows: 1 }} />
         ) : (
@@ -75,7 +74,7 @@ export default function ExchangePointDetail() {
       title: "Received Packages IDs",
       dataIndex: "receivedPackagesIds",
       key: "receivedPackagesIds",
-      render: (receivedPackagesIds) =>
+      render: (receivedPackagesIds: any) =>
         loading ? (
           <Skeleton active paragraph={{ rows: 1 }} />
         ) : (
@@ -86,7 +85,7 @@ export default function ExchangePointDetail() {
 
   return (
     <>
-      <div className="flex h-screen bg-lime-100">
+      <div className="flex h-full">
         <div className="mx-auto flex w-full max-w-screen-xl flex-col p-10">
           <div className="pb-10">
             <h3 className="text-3xl font-bold">
@@ -104,7 +103,7 @@ export default function ExchangePointDetail() {
                 className="w-full"
                 columns={columns}
                 dataSource={data}
-                rowKey={(record) => String(record.id)}
+                rowKey={(record: any) => String(record.id)}
                 pagination={pagination}
               />
             </SkeletonTable>

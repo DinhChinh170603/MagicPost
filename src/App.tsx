@@ -41,29 +41,25 @@ function App() {
             onClick={() => setIsSidebarOpen(false)}
           />
         )} */}
-        <div className="flex">
-          <div className="h-screen">
-            {inMobileMode ? (
-              <Drawer
-                open={isSidebarOpen}
-                onClose={() => setIsSidebarOpen(false)}
-                anchor="left"
-              >
-                <Sidebar />
-              </Drawer>
-            ) : (
+        <div className="flex h-screen">
+          {inMobileMode ? (
+            <Drawer
+              open={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              anchor="left"
+            >
               <Sidebar />
-            )}
-          </div>
+            </Drawer>
+          ) : (
+            <Sidebar />
+          )}
 
-          <div className="relative flex flex-1 flex-col">
-            <div className="relative">
-              <Topbar
-                isSidebarOpen={isSidebarOpen}
-                setIsSidebarOpen={setIsSidebarOpen}
-                isInMobileMode={inMobileMode}
-              />
-            </div>
+          <div className="relative flex flex-1 flex-col overflow-y-auto">
+            <Topbar
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+              isInMobileMode={inMobileMode}
+            />
             <div className="flex-1">{children}</div>
           </div>
         </div>
