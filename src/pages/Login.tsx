@@ -36,7 +36,7 @@ export default function Login() {
   };
 
   return (
-    <Form form={form} onFinish={onFinish} className="flex h-full w-full">
+    <Form form={form} onFinish={onFinish} className="flex h-screen w-full">
       <div className="flex flex-1 flex-col items-center justify-center bg-gray-300">
         <img src={logo} className="h-[50%] w-[50%]" alt="logo" />
       </div>
