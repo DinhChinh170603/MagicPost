@@ -39,7 +39,9 @@ export default function User() {
         .post("/avatar", formData)
         .then((res) => {
           if (res.data.status === 200) {
-            toast.success(res.data.message);
+            toast.success(
+              "Your avatar has been changed successfully!",
+            );
             window.location.reload();
             setLoading(false);
           } else {
@@ -97,7 +99,7 @@ export default function User() {
   return (
     <>
       <div className="flex h-full w-full items-center justify-center">
-        <div className="flex h-[70%] w-[80%]">
+        <div className="flex h-[80%] w-[80%]">
           <div className="w-1/4 border border-black p-4">
             <div className="flex flex-col items-center">
               <div className="mx-auto mb-5 mt-10">
@@ -144,10 +146,10 @@ export default function User() {
           <div className="flex-1 border border-black p-4">
             <Form form={form} onFinish={onFinish}>
               {activeTab === "account" && (
-                <div className="ml-10 mt-5 flex flex-col gap-5">
+                <div className="ml-10 mt-5 flex flex-col gap-3">
                   <div className="text-3xl font-bold">Account Settings</div>
                   <Form.Item
-                    className="w-[50%]"
+                    className="mt-5 w-[50%]"
                     name="fullName"
                     label="Full Name"
                     labelCol={{ span: 24 }}

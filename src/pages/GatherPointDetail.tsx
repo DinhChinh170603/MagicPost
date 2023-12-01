@@ -4,6 +4,9 @@ import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Badge, Descriptions } from 'antd';
+import type { DescriptionsProps } from 'antd';
 
 const pagination = {
   hideOnSinglePage: true,
@@ -14,6 +17,7 @@ const pagination = {
 
 export default function GatherPointDetail() {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const { gatherPoint } = state;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -38,48 +42,81 @@ export default function GatherPointDetail() {
       });
   }, [gatherPoint.id]);
 
-  const renderIdsColumn = (ids: any) => (
-    <>
-      {ids.map((id: any) => (
-        <Tag key={id}>{id}</Tag>
-      ))}
-    </>
-  );
+  const items: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'ID',
+      children: gatherPoint.id,
+      span: 3,
+    },
+    {
+      key: '2',
+      label: "GatherPoint's name",
+      children: gatherPoint.name,
+      span: 1,
+    },
+    {
+      key: '3',
+      label: 'Location',
+      children: gatherPoint.location,
+      span: 3,
+    },
+    {
+      key: '4',
+      label: 'Managed by',
+      children: gatherPoint.manager.fullName,
+      span: 1,
+    },
+    {
+      key: '5',
+      label: 'Email',
+      children: gatherPoint.manager.email,
+      span: 2,
+    },
+  ];
 
   const columns = [
-    // {
-    //   title: "Sent Packages IDs",
-    //   dataIndex: "sentPackagesIds",
-    //   key: "sentPackagesIds",
-    //   render: (sentPackagesIds) =>
-    //     loading ? (
-    //       <Skeleton active paragraph={{ rows: 1 }} />
-    //     ) : (
-    //       renderIdsColumn(sentPackagesIds)
-    //     ),
-    //   width: "15%",
-    // },
     {
       title: "Sent Packages IDs",
       dataIndex: "sentPackagesIds",
       key: "sentPackagesIds",
-      render: (sentPackagesIds: any) =>
-        loading ? (
-          <Skeleton active paragraph={{ rows: 1 }} />
-        ) : (
-          renderIdsColumn(sentPackagesIds)
+        render: (sentPackagesIds: any) => (
+          <span>
+            {sentPackagesIds.map((packagesIds: any) => (
+              <Tag
+                key={packagesIds.id}
+                onClick={() => {
+                  navigate(`/package/${packagesIds.id}`, {
+                    state: { packagesIds: packagesIds },
+                  });
+                }}
+              >
+                {packagesIds.id}
+              </Tag>
+            ))}
+          </span>
         ),
     },
     {
       title: "Received Packages IDs",
       dataIndex: "receivedPackagesIds",
       key: "receivedPackagesIds",
-      render: (receivedPackagesIds: any) =>
-        loading ? (
-          <Skeleton active paragraph={{ rows: 1 }} />
-        ) : (
-          renderIdsColumn(receivedPackagesIds)
-        ),
+      render: (receivedPackagesIds: any) => (
+        <span>
+          {receivedPackagesIds.map((packagesIds: any) => (
+            <Tag
+              key={packagesIds.id}
+              onClick={() => {
+                navigate(`/package/${packagesIds.id}`, {
+                  state: { packagesIds: packagesIds },
+                });
+              }}
+            >
+              {packagesIds.id}
+            </Tag>
+          ))}
+        </span>
+      ),
     },
   ];
 
@@ -88,16 +125,9 @@ export default function GatherPointDetail() {
       <div className="flex h-full">
         <div className="mx-auto flex w-full max-w-screen-xl flex-col p-10">
           <div className="pb-10">
-            <h3 className="text-3xl font-bold">
-              GatherPoint's name: {gatherPoint.name}
-            </h3>
-            <p className="text-1xl">
-              Managed by: {gatherPoint.manager.fullName}
-              <span className="mx-2">|</span>
-              Location: {gatherPoint.location}
-            </p>
+            <Descriptions title="GatherPointDetail" bordered items={items} />
           </div>
-          <div className="relative flex-grow bg-lime-100">
+          {/* <div className="relative flex-grow bg-lime-100">
             <SkeletonTable loading={loading} columns={columns}>
               <Table
                 className="w-full"
@@ -107,7 +137,7 @@ export default function GatherPointDetail() {
                 pagination={pagination}
               />
             </SkeletonTable>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

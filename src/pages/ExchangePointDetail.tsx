@@ -4,6 +4,9 @@ import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
+import { useNavigate } from "react-router-dom";
+import { Badge, Descriptions } from 'antd';
+import type { DescriptionsProps } from 'antd';
 
 const pagination = {
   hideOnSinglePage: true,
@@ -14,6 +17,7 @@ const pagination = {
 
 export default function ExchangePointDetail() {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const { exchangePoint } = state;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -38,48 +42,81 @@ export default function ExchangePointDetail() {
       });
   }, [exchangePoint.id]);
 
-  const renderIdsColumn = (ids: any) => (
-    <>
-      {ids.map((id: any) => (
-        <Tag key={id}>{id}</Tag>
-      ))}
-    </>
-  );
+  const items: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'ID',
+      children: exchangePoint.id,
+      span: 3,
+    },
+    {
+      key: '2',
+      label: "GatherPoint's name",
+      children: exchangePoint.name,
+      span: 1,
+    },
+    {
+      key: '3',
+      label: 'Location',
+      children: exchangePoint.location,
+      span: 3,
+    },
+    {
+      key: '4',
+      label: 'Managed by',
+      children: exchangePoint.manager.fullName,
+      span: 1,
+    },
+    {
+      key: '5',
+      label: 'Email',
+      children: exchangePoint.manager.email,
+      span: 2,
+    },
+  ];
 
   const columns = [
-    // {
-    //   title: "Sent Packages IDs",
-    //   dataIndex: "sentPackagesIds",
-    //   key: "sentPackagesIds",
-    //   render: (sentPackagesIds) =>
-    //     loading ? (
-    //       <Skeleton active paragraph={{ rows: 1 }} />
-    //     ) : (
-    //       renderIdsColumn(sentPackagesIds)
-    //     ),
-    //   width: "15%",
-    // },
     {
       title: "Sent Packages IDs",
       dataIndex: "sentPackagesIds",
       key: "sentPackagesIds",
-      render: (sentPackagesIds: any) =>
-        loading ? (
-          <Skeleton active paragraph={{ rows: 1 }} />
-        ) : (
-          renderIdsColumn(sentPackagesIds)
+        render: (sentPackagesIds: any) => (
+          <span>
+            {sentPackagesIds.map((packagesIds: any) => (
+              <Tag
+                key={packagesIds.id}
+                onClick={() => {
+                  navigate(`/package/${packagesIds.id}`, {
+                    state: { packagesIds: packagesIds },
+                  });
+                }}
+              >
+                {packagesIds.id}
+              </Tag>
+            ))}
+          </span>
         ),
     },
     {
       title: "Received Packages IDs",
       dataIndex: "receivedPackagesIds",
       key: "receivedPackagesIds",
-      render: (receivedPackagesIds: any) =>
-        loading ? (
-          <Skeleton active paragraph={{ rows: 1 }} />
-        ) : (
-          renderIdsColumn(receivedPackagesIds)
-        ),
+      render: (receivedPackagesIds: any) => (
+        <span>
+          {receivedPackagesIds.map((packagesIds: any) => (
+            <Tag
+              key={packagesIds.id}
+              onClick={() => {
+                navigate(`/package/${packagesIds.id}`, {
+                  state: { packagesIds: packagesIds },
+                });
+              }}
+            >
+              {packagesIds.id}
+            </Tag>
+          ))}
+        </span>
+      ),
     },
   ];
 
@@ -88,14 +125,7 @@ export default function ExchangePointDetail() {
       <div className="flex h-full">
         <div className="mx-auto flex w-full max-w-screen-xl flex-col p-10">
           <div className="pb-10">
-            <h3 className="text-3xl font-bold">
-              ExchangePoint's name: {exchangePoint.name}
-            </h3>
-            <p className="text-1xl">
-              Managed by: {exchangePoint.manager.fullName}
-              <span className="mx-2">|</span>
-              Location: {exchangePoint.location}
-            </p>
+            <Descriptions title="GatherPointDetail" bordered items={items} />
           </div>
           <div className="relative flex-grow bg-lime-100">
             <SkeletonTable loading={loading} columns={columns}>
