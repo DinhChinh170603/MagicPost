@@ -34,13 +34,6 @@ function App() {
   const getPage = (children: React.ReactNode) => {
     return (
       <>
-        {/* {inMobileMode && (
-          <Backdrop
-            sx={{ color: "#fff", zIndex: 2 }}
-            open={isSidebarOpen}
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )} */}
         <div className="flex h-screen">
           {inMobileMode ? (
             <Drawer

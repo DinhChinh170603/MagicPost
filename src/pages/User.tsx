@@ -1,11 +1,10 @@
-import { Button, Form, Input, Avatar } from "antd";
-import React, { useEffect, useState } from "react";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Avatar, Button, Form, Input } from "antd";
+import { useEffect, useState } from "react";
+import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "react-toastify";
 import service from "../helpers/service";
-import { MdOutlineEdit } from "react-icons/md";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 // import UploadAvatar from "../components/UploadAvatar";
-import Loading from "../helpers/Loading";
 
 export default function User() {
   const [activeTab, setActiveTab] = useState("account");
@@ -13,10 +12,6 @@ export default function User() {
 
   const [form] = Form.useForm();
   const [data, setData] = useState<any>({});
-
-  const [nowpassword, setNowpassword] = useState("");
-  const [newpassword, setNewpassword] = useState("");
-  const [confirmpassword, setConfirmpassword] = useState("");
 
   const activeStyle =
     "w-[80%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold cursor-pointer transition-all duration-100";
@@ -57,20 +52,26 @@ export default function User() {
           setLoading(false);
         });
     } else if (activeTab === "password") {
+      const { curPassword, newPassword, confirmPassword } =
+        form.getFieldsValue();
       setLoading(true);
-      if (newpassword !== confirmpassword) {
+      if (newPassword !== confirmPassword) {
         toast.error("Passwords do not match");
         return;
       }
       service
         .patch("/password", {
-          oldPassword: nowpassword,
-          newPassword: newpassword,
+          oldPassword: curPassword,
+          newPassword: newPassword,
         })
         .then((res) => {
           if (res.data.status === 200) {
-            toast.success(res.data.message);
-            logout();
+            toast.success(
+              "Password changed successfully! Now you will be redirected to login page.",
+            );
+            setInterval(() => {
+              logout();
+            }, 3000);
             setLoading(false);
           } else {
             toast.error(res.data.message);
@@ -95,7 +96,6 @@ export default function User() {
 
   return (
     <>
-      {loading && <Loading />}
       <div className="flex h-full w-full items-center justify-center">
         <div className="flex h-[70%] w-[80%]">
           <div className="w-1/4 border border-black p-4">
@@ -142,10 +142,10 @@ export default function User() {
             </div>
           </div>
           <div className="flex-1 border border-black p-4">
-            {activeTab === "account" && (
-              <div className="ml-10 mt-5 flex flex-col gap-5">
-                <div className="text-3xl font-bold">Account Settings</div>
-                <Form form={form} onFinish={onFinish}>
+            <Form form={form} onFinish={onFinish}>
+              {activeTab === "account" && (
+                <div className="ml-10 mt-5 flex flex-col gap-5">
+                  <div className="text-3xl font-bold">Account Settings</div>
                   <Form.Item
                     className="w-[50%]"
                     name="fullName"
@@ -182,68 +182,70 @@ export default function User() {
                       Cancel
                     </Button>
                   </div>
-                </Form>
-              </div>
-            )}
-            {activeTab === "password" && (
-              <div className="ml-10 mt-5 flex flex-col gap-2">
-                <div className="mb-3 text-3xl font-bold">Password Settings</div>
-                <Form.Item
-                  className="w-[50%]"
-                  name="nowpassword"
-                  label="Now Password"
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    { required: true, message: "Please enter Now Password" },
-                  ]}
-                >
-                  <Input.Password
-                    onChange={(e) => setNowpassword(e.target.value)}
-                  />
-                </Form.Item>
-                <Form.Item
-                  className="w-[50%]"
-                  name="newpassword"
-                  label="New Password"
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    { required: true, message: "Please enter New Password" },
-                  ]}
-                >
-                  <Input.Password
-                    onChange={(e) => setNewpassword(e.target.value)}
-                  />
-                </Form.Item>
-                <Form.Item
-                  className="w-[50%]"
-                  name="confirmpassword"
-                  label="Confirm Password"
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter Confirm Password",
-                    },
-                  ]}
-                >
-                  <Input.Password
-                    onChange={(e) => setConfirmpassword(e.target.value)}
-                  />
-                </Form.Item>
-                <div className="flex gap-4">
-                  <Button
-                    className="h-10 w-20"
-                    type="primary"
-                    onClick={onFinish}
-                  >
-                    Save
-                  </Button>
-                  <Button className="h-10 w-20" type="default">
-                    Cancel
-                  </Button>
                 </div>
-              </div>
-            )}
+              )}
+              {activeTab === "password" && (
+                <div className="ml-10 mt-5 flex flex-col gap-2">
+                  <div className="mb-3 text-3xl font-bold">
+                    Password Settings
+                  </div>
+                  <Form.Item
+                    className="w-[50%]"
+                    name="curPassword"
+                    label="Current password"
+                    labelCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter current password",
+                      },
+                    ]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
+                  <Form.Item
+                    className="w-[50%]"
+                    name="newPassword"
+                    label="New Password"
+                    labelCol={{ span: 24 }}
+                    rules={[
+                      { required: true, message: "Please enter new password" },
+                    ]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
+                  <Form.Item
+                    className="w-[50%]"
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    labelCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please re-enter new password",
+                      },
+                    ]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
+                  <div className="flex gap-4">
+                    <Form.Item>
+                      <Button
+                        className="h-10 w-20"
+                        type="primary"
+                        htmlType="submit"
+                        loading={loading}
+                      >
+                        Save
+                      </Button>
+                    </Form.Item>
+                    <Button className="h-10 w-20" type="default">
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </Form>
           </div>
         </div>
       </div>
