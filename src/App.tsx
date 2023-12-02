@@ -87,11 +87,11 @@ function App() {
               ></Route>
               <Route
                 path="/gather-points/:id"
-                element={<GatherPointDetail />}
+                element={getPage(<GatherPointDetail />)}
               ></Route>
               <Route
                 path="/exchange-points/:id"
-                element={<ExchangePointDetail />}
+                element={getPage(<ExchangePointDetail />)}
               ></Route>
               <Route path="/users/:id" element={getPage(<User />)}></Route>
               <Route path="/invite" element={getPage(<InviteUser />)}></Route>
