@@ -97,6 +97,7 @@ export default function ExchangePoints() {
     setLoading(true);
     service
       .get("/leader/exchange-points")
+      // .get("/gth-manager/exchange-points")
       .then((res) => {
         if (res.data.status !== 200) {
           toast.error(res.data.message);

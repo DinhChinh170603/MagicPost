@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
+import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Badge, Descriptions } from 'antd';
@@ -19,28 +20,35 @@ export default function GatherPointDetail() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { gatherPoint } = state;
-  const [data, setData] = useState([]);
+
+  const [sentPackages, setSentPackages] = useState([]);
+  const [receivedPackages, setReceivedPackages] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    service
-      .get(`/leader/gather-point?id=` + gatherPoint.id)
-      .then((res) => {
-        if (res.data.status !== 200) {
-          toast.error(res.data.message);
+    axios
+      .all([
+        service.get(`/leader/gather-points-sent/${gatherPoint.id}`),
+        service.get(`/leader/gather-points-received/${gatherPoint.id}`),
+      ])
+      .then(
+        axios.spread((res1, res2) => {
+          setSentPackages(res1.data.results);
+          setReceivedPackages(res2.data.results);
           setLoading(false);
-
-          return;
-        }
-        setData(res.data.results);
-        console.log(res.data.results);
-        setLoading(false);
-      })
+        }),
+        () => {
+          setLoading(false);
+          toast.error("Something went wrong");
+        },
+      )
       .catch((err) => {
-        console.log(err);
+        setLoading(false);
+        toast.error(err.response.data.message);
       });
-  }, [gatherPoint.id]);
+  }, []);
 
   const items: DescriptionsProps['items'] = [
     {
@@ -97,27 +105,27 @@ export default function GatherPointDetail() {
           </span>
         ),
     },
-    {
-      title: "Received Packages IDs",
-      dataIndex: "receivedPackagesIds",
-      key: "receivedPackagesIds",
-      render: (receivedPackagesIds: any) => (
-        <span>
-          {receivedPackagesIds.map((packagesIds: any) => (
-            <Tag
-              key={packagesIds.id}
-              onClick={() => {
-                navigate(`/package/${packagesIds.id}`, {
-                  state: { packagesIds: packagesIds },
-                });
-              }}
-            >
-              {packagesIds.id}
-            </Tag>
-          ))}
-        </span>
-      ),
-    },
+    // {
+    //   title: "Received Packages IDs",
+    //   dataIndex: "receivedPackagesIds",
+    //   key: "receivedPackagesIds",
+    //   render: (receivedPackagesIds: any) => (
+    //     <span>
+    //       {receivedPackagesIds.map((packagesIds: any) => (
+    //         <Tag
+    //           key={packagesIds.id}
+    //           onClick={() => {
+    //             navigate(`/package/${packagesIds.id}`, {
+    //               state: { packagesIds: packagesIds },
+    //             });
+    //           }}
+    //         >
+    //           {packagesIds.id}
+    //         </Tag>
+    //       ))}
+    //     </span>
+    //   ),
+    // },
   ];
 
   return (
@@ -127,17 +135,26 @@ export default function GatherPointDetail() {
           <div className="pb-10">
             <Descriptions title="GatherPointDetail" bordered items={items} />
           </div>
-          {/* <div className="relative flex-grow bg-lime-100">
+          <div className="relative flex flex-grow gap-10">
             <SkeletonTable loading={loading} columns={columns}>
               <Table
                 className="w-full"
                 columns={columns}
-                dataSource={data}
+                dataSource={sentPackages}
                 rowKey={(record: any) => String(record.id)}
                 pagination={pagination}
               />
             </SkeletonTable>
-          </div> */}
+            <SkeletonTable loading={loading} columns={columns}>
+              <Table
+                className="w-full"
+                columns={columns}
+                dataSource={receivedPackages}
+                rowKey={(record: any) => String(record.id)}
+                pagination={pagination}
+              />
+            </SkeletonTable>
+          </div>
         </div>
       </div>
     </>
