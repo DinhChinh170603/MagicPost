@@ -241,7 +241,7 @@ export default function ExchangePointDetail() {
   return (
     <>
       <div className="flex h-full">
-        <div className="mx-auto flex w-full max-w-screen-xl flex-col pt-10">
+        <div className="mx-auto flex w-[90%] max-w-screen-xl flex-col pt-10">
           <div className="pb-10">
             <Descriptions
               title="ExchangePointDetail"

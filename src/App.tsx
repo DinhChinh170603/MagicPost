@@ -9,16 +9,19 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
+import Managers from "./pages/Managers";
 import ExchangePointDetail from "./pages/ExchangePointDetail";
 import ExchangePoints from "./pages/ExchangePoints";
 import GatherPointDetail from "./pages/GatherPointDetail";
 import GatherPoints from "./pages/GatherPoints";
 import Home from "./pages/Home";
 import InviteUser from "./pages/InviteUser";
+import InviteEmployee from "./pages/InviteEmployee";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import PackageDetail from "./pages/PackageDetail";
 import User from "./pages/User";
+
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const inMobileMode = useMediaQuery("(max-width: 768px)");
@@ -80,6 +83,10 @@ function App() {
               <Route index element={getPage(<Home />)}></Route>
               <Route path="/login" element={<Login />}></Route>
               <Route
+                path="/managers"
+                element={getPage(<Managers />)}
+              ></Route>
+              <Route
                 path="/exchange-points"
                 element={getPage(<ExchangePoints />)}
               ></Route>
@@ -97,6 +104,7 @@ function App() {
               ></Route>
               <Route path="/users/:id" element={getPage(<User />)}></Route>
               <Route path="/invite" element={getPage(<InviteUser />)}></Route>
+              <Route path="/invite-employee" element={getPage(<InviteEmployee />)}></Route>
               <Route
                 path="/package/:id"
                 element={getPage(<PackageDetail />)}

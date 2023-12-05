@@ -117,12 +117,12 @@ export default function User() {
                     />
                   )}
                   <div className="absolute right-2 top-2 cursor-pointer rounded-full border border-gray-500 bg-white p-1">
-                    <MdOutlineEdit size={20} rounded-full />
+                    <MdOutlineEdit size={20} />
                   </div>
                 </div>
               </div>
-              <div className="mb-1 text-2xl font-bold">{data.fullName}</div>
-              <div className="mb-5 text-gray-500">{data.role}</div>
+              <div className="mb-1 text-2xl text-center font-bold">{data.fullName}</div>
+              <div className="mb-5 text-center text-gray-500">{data.role}</div>
               <div className="flex w-full flex-col items-center gap-2">
                 <div
                   className={
@@ -166,7 +166,7 @@ export default function User() {
                   </Form.Item>
                   <Form.Item
                     className="w-[50%]"
-                    name="departmentID"
+                    name="departmentId"
                     label="Department ID"
                     labelCol={{ span: 24 }}
                   >

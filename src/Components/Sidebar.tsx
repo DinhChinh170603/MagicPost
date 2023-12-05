@@ -15,6 +15,15 @@ const Sidebar = (props: any) => {
         return (
           <>
             <NavLink
+              to="/managers"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Managers
+            </NavLink>
+            <NavLink
               to="/exchange-points"
               end
               className={({ isActive }) =>
@@ -45,8 +54,40 @@ const Sidebar = (props: any) => {
         );
       case "EXCHANGE_EMPLOYEE":
         return <></>;
-      default:
+
+      case "EXCHANGE_MANAGER":
+        return (
+          <>
+            <NavLink
+              to="/invite-employee"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Invite Employee
+            </NavLink>
+          </>
+        );
+
+        case "GATHER_MANAGER":
+          return (
+            <>
+              <NavLink
+                to="/invite-employee"
+                end
+                className={({ isActive }) =>
+                  isActive ? activeStyle : inactiveStyle
+                }
+              >
+                Invite Employee
+              </NavLink>
+            </>
+          );
+      
+        default:
         return <></>;
+
     }
   };
 
