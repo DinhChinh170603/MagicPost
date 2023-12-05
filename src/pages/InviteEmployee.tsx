@@ -1,29 +1,17 @@
-import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
 import { Button, DatePicker, Form, Input } from "antd";
 
-export default function InviteEmployee() {
+export default function InviteEmployee(props: any) {
   const [form] = Form.useForm();
-  const [data, setData] = useState([]);
 
+  const { role } = props;
   const [roleAPI, setRoleAPI] = useState("");
 
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    service.get("/users/me").then((res) => {
-      setData(res.data.results);
-      if (res.data.results.role === "EXCHANGE_MANAGER") {
-        setRoleAPI("ex-manager");
-      } else if (res.data.results.role === "GATHER_MANAGER") {
-        setRoleAPI("gth-manager");
-      }
-      setLoading(false);
-    });
-  }, []);
 
   const onFinish = () => {
     const { email, fullName, departmentId, dob } = form.getFieldsValue();
@@ -34,21 +22,31 @@ export default function InviteEmployee() {
     formData.append("dob", dob.format("DD-MM-YYYY"));
 
     setLoading(true);
+    if (role === "EXCHANGE_MANAGER") {
+      setRoleAPI("/ex-manager");
+    } else if (role === "GATHER_MANAGER") {
+      setRoleAPI("/gth-manager");
+    } else {
+      toast.error("Something went wrong");
+    }
 
-    service
-      .post("/" + roleAPI + "/invite", formData)
-      .then((res) => {
-        setLoading(false);
-        if (res.data.status === 201) {
-          toast.success(res.data.message);
-        } else {
-          toast.error(res.data.message);
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        toast.error(err.response.data.message);
-      });
+    if (roleAPI) {
+      service
+        .post(roleAPI + "/invite", formData)
+        .then((res) => {
+          setLoading(false);
+          if (res.data.status === 201) {
+            toast.success(res.data.message);
+            form.resetFields();
+          } else {
+            toast.error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.error(err.response.data.message);
+        });
+    }
   };
 
   return (
@@ -114,3 +112,7 @@ export default function InviteEmployee() {
     </Form>
   );
 }
+
+InviteEmployee.propTypes = {
+  role: PropTypes.string,
+};

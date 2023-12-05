@@ -106,7 +106,7 @@ function App() {
               <Route path="/new-package" element={getPage(<NewPackage />)}></Route>
               <Route path="/users/:id" element={getPage(<User />)}></Route>
               <Route path="/invite" element={getPage(<InviteUser />)}></Route>
-              <Route path="/invite-employee" element={getPage(<InviteEmployee />)}></Route>
+              <Route path="/invite-employee" element={getPage(<InviteEmployee role={loggedInUserRole}/>)}></Route>
               <Route
                 path="/package/:id"
                 element={getPage(<PackageDetail />)}
