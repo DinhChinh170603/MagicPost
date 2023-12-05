@@ -167,17 +167,13 @@ export default function ExchangePointDetail() {
       key: 1,
       senderName: "John Brown",
       packageType: "DOCUMENT",
-      description: (
-        <Descriptions size="small" bordered items={packageDetail} />
-      ),
+      description: <Descriptions size="small" bordered items={packageDetail} />,
     },
     {
       key: 2,
       senderName: "Jim Green",
       packageType: "DOCUMENT",
-      description: (
-        <Descriptions size="small" bordered items={packageDetail} />
-      ),
+      description: <Descriptions size="small" bordered items={packageDetail} />,
     },
     {
       key: 3,
@@ -247,7 +243,11 @@ export default function ExchangePointDetail() {
       <div className="flex h-full">
         <div className="mx-auto flex w-full max-w-screen-xl flex-col pt-10">
           <div className="pb-10">
-            <Descriptions title="ExchangePointDetail" bordered items={exchangePointDetail} />
+            <Descriptions
+              title="ExchangePointDetail"
+              bordered
+              items={exchangePointDetail}
+            />
           </div>
           <div className="relative flex flex-grow gap-10">
             {/* <SkeletonTable loading={loading} columns={columnsSent}>
@@ -264,9 +264,7 @@ export default function ExchangePointDetail() {
               columns={columnsSent}
               expandable={{
                 expandedRowRender: (record) => (
-                  <p style={{ margin: 0 }}>
-                    {record.description}
-                  </p>
+                  <p style={{ margin: 0 }}>{record.description}</p>
                 ),
                 rowExpandable: (record) => record.description !== "",
               }}
@@ -277,9 +275,7 @@ export default function ExchangePointDetail() {
               columns={columnsReceived}
               expandable={{
                 expandedRowRender: (record) => (
-                  <p style={{ margin: 0 }}>
-                    {record.description}
-                  </p>
+                  <p style={{ margin: 0 }}>{record.description}</p>
                 ),
                 rowExpandable: (record) => record.description !== "",
               }}

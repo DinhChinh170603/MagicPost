@@ -22,6 +22,7 @@ import User from "./pages/User";
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const inMobileMode = useMediaQuery("(max-width: 768px)");
+  const [loggedInUserRole, setLoggedInUserRole] = useState(null);
 
   useEffect(() => {
     if (inMobileMode) {
@@ -41,10 +42,10 @@ function App() {
               onClose={() => setIsSidebarOpen(false)}
               anchor="left"
             >
-              <Sidebar />
+              <Sidebar role={loggedInUserRole} />
             </Drawer>
           ) : (
-            <Sidebar />
+            <Sidebar role={loggedInUserRole} />
           )}
 
           <div className="relative flex flex-1 flex-col overflow-y-auto">
@@ -52,6 +53,7 @@ function App() {
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
               isInMobileMode={inMobileMode}
+              setLoggedInUserRole={setLoggedInUserRole}
             />
             <div className="flex-1">{children}</div>
           </div>
