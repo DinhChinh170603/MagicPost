@@ -89,7 +89,7 @@ const CreatePackage: React.FC<CreatePackageProps> = ({ departmentId }) => {
 
         <div className="mt-4 flex flex-row gap-24">
           {/* Column 1: Sender Information */}
-          <div className="w-[40%] flex flex-col gap-3">
+          <div className="w-[40%] mb-16 flex flex-col gap-3">
             <Typography.Text className="font-bold">Sender Name</Typography.Text>
             <Input required onChange={(e) => setSenderName(e.target.value)} />
 
@@ -111,7 +111,6 @@ const CreatePackage: React.FC<CreatePackageProps> = ({ departmentId }) => {
             </Typography.Text>
             <Select
               defaultValue="Type"
-              className="h-10"
               onChange={choosePackageType}
               options={[
                 { value: "DOCUMENT", label: "Document" },
@@ -120,7 +119,7 @@ const CreatePackage: React.FC<CreatePackageProps> = ({ departmentId }) => {
             />
           </div>
           {/* Column 2: Receiver Information */}
-          <div className="w-[40%] flex flex-col gap-3">
+          <div className="w-[40%] mb-16 flex flex-col gap-3">
             <Typography.Text className="font-bold">
               Receiver Name
             </Typography.Text>

@@ -84,7 +84,7 @@ function App() {
               <Route path="/login" element={<Login />}></Route>
               <Route
                 path="/managers"
-                element={getPage(<Managers />)}
+                element={getPage(<Managers role={loggedInUserRole}/>)}
               ></Route>
               <Route
                 path="/exchange-points"
