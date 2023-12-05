@@ -1,14 +1,12 @@
-import { Modal as AntModal, Button, Input, Select, Typography } from "antd";
+import { Modal, Button, Input, Select, Typography, Form } from "antd";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
 
-interface CreatePackageProps {
-  departmentId: string;
-}
+const CreatePackage = () => {
+  const [form] = Form.useForm();
 
-const CreatePackage: React.FC<CreatePackageProps> = ({ departmentId }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +24,16 @@ const CreatePackage: React.FC<CreatePackageProps> = ({ departmentId }) => {
   };
 
   const onFinish = () => {
-    if (!senderName || !senderContact || !receiverName || !receiverContact || !orgAddress || !desAddress || !packageType || !weight) {
+    if (
+      !senderName ||
+      !senderContact ||
+      !receiverName ||
+      !receiverContact ||
+      !orgAddress ||
+      !desAddress ||
+      !packageType ||
+      !weight
+    ) {
       toast.error("Please fill out every field");
       return;
     }
@@ -42,7 +49,7 @@ const CreatePackage: React.FC<CreatePackageProps> = ({ departmentId }) => {
         desAddress: desAddress,
         packageType: packageType,
         weight: weight,
-        desPointId: departmentId,
+        desPointId: "dfsa",
       })
       .then((res) => {
         setLoading(false);
@@ -78,72 +85,81 @@ const CreatePackage: React.FC<CreatePackageProps> = ({ departmentId }) => {
       <Button type="primary" onClick={() => setModalOpen(true)}>
         Create a new package
       </Button>
-      <AntModal
-        width={screen.width / 2}
-        style={{ top: 30 }}
-        onOk={onFinish}
-        open={modalOpen}
-        onCancel={() => setModalOpen(false)}
-      >
-        <div className="text-2xl font-bold">Fill out this form</div>
+      <Form form={form} onFinish={onFinish}>
+        <Modal
+          width={screen.width / 2}
+          style={{ top: 30 }}
+          onOk={onFinish}
+          open={modalOpen}
+          onCancel={() => setModalOpen(false)}
+        >
+          <div className="text-2xl font-bold">Fill out this form</div>
 
-        <div className="mt-4 flex flex-row gap-24">
-          {/* Column 1: Sender Information */}
-          <div className="w-[40%] flex flex-col gap-3">
-            <Typography.Text className="font-bold">Sender Name</Typography.Text>
-            <Input required onChange={(e) => setSenderName(e.target.value)} />
+          <div className="mt-4 flex flex-row gap-24">
+            {/* Column 1: Sender Information */}
+            <div className="flex w-[40%] flex-col gap-3">
+              <Typography.Text className="font-bold">
+                Sender Name
+              </Typography.Text>
+              <Input required onChange={(e) => setSenderName(e.target.value)} />
 
-            <Typography.Text className="font-bold">
-              Sender Contact
-            </Typography.Text>
-            <Input
-              required
-              onChange={(e) => setSenderContact(e.target.value)}
-            />
+              <Typography.Text className="font-bold">
+                Sender Contact
+              </Typography.Text>
+              <Input
+                required
+                onChange={(e) => setSenderContact(e.target.value)}
+              />
 
-            <Typography.Text className="font-bold">
-              Origin address
-            </Typography.Text>
-            <Input required onChange={(e) => setOrgAddress(e.target.value)} />
+              <Typography.Text className="font-bold">
+                Origin address
+              </Typography.Text>
+              <Input required onChange={(e) => setOrgAddress(e.target.value)} />
 
-            <Typography.Text className="font-bold">
-              Package Type
-            </Typography.Text>
-            <Select
-              defaultValue="Type"
-              className="h-10"
-              onChange={choosePackageType}
-              options={[
-                { value: "DOCUMENT", label: "Document" },
-                { value: "GOODS", label: "Goods" },
-              ]}
-            />
+              <Typography.Text className="font-bold">
+                Package Type
+              </Typography.Text>
+              <Select
+                defaultValue="Type"
+                className="h-10"
+                onChange={choosePackageType}
+                options={[
+                  { value: "DOCUMENT", label: "Document" },
+                  { value: "GOODS", label: "Goods" },
+                ]}
+              />
+            </div>
+            {/* Column 2: Receiver Information */}
+            <div className="flex w-[40%] flex-col gap-3">
+              <Typography.Text className="font-bold">
+                Receiver Name
+              </Typography.Text>
+              <Input
+                required
+                onChange={(e) => setReceiverName(e.target.value)}
+              />
+              <Typography.Text className="font-bold">
+                Receiver Contact
+              </Typography.Text>
+              <Input
+                required
+                onChange={(e) => setReceiverContact(e.target.value)}
+              />
+              <Typography.Text className="font-bold">
+                Destination address
+              </Typography.Text>
+              <Input required onChange={(e) => setDesAddress(e.target.value)} />
+              <Typography.Text className="font-bold">
+                Weight (kg)
+              </Typography.Text>
+              <Input
+                required
+                onChange={(e) => setWeight(parseFloat(e.target.value))}
+              />
+            </div>
           </div>
-          {/* Column 2: Receiver Information */}
-          <div className="w-[40%] flex flex-col gap-3">
-            <Typography.Text className="font-bold">
-              Receiver Name
-            </Typography.Text>
-            <Input required onChange={(e) => setReceiverName(e.target.value)} />
-            <Typography.Text className="font-bold">
-              Receiver Contact
-            </Typography.Text>
-            <Input
-              required
-              onChange={(e) => setReceiverContact(e.target.value)}
-            />
-            <Typography.Text className="font-bold">
-              Destination address
-            </Typography.Text>
-            <Input required onChange={(e) => setDesAddress(e.target.value)} />
-            <Typography.Text className="font-bold">Weight (kg)</Typography.Text>
-            <Input
-              required
-              onChange={(e) => setWeight(parseFloat(e.target.value))}
-            />
-          </div>
-        </div>
-      </AntModal>
+        </Modal>
+      </Form>
     </>
   );
 };

@@ -53,7 +53,19 @@ const Sidebar = (props: any) => {
           </>
         );
       case "EXCHANGE_EMPLOYEE":
-        return <></>;
+        return (
+          <>
+            <NavLink
+              to="/new-package"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              New Package
+            </NavLink>
+          </>
+        );
 
       case "EXCHANGE_MANAGER":
         return (
@@ -70,24 +82,23 @@ const Sidebar = (props: any) => {
           </>
         );
 
-        case "GATHER_MANAGER":
-          return (
-            <>
-              <NavLink
-                to="/invite-employee"
-                end
-                className={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                Invite Employee
-              </NavLink>
-            </>
-          );
-      
-        default:
-        return <></>;
+      case "GATHER_MANAGER":
+        return (
+          <>
+            <NavLink
+              to="/invite-employee"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Invite Employee
+            </NavLink>
+          </>
+        );
 
+      default:
+        return <></>;
     }
   };
 
