@@ -71,6 +71,15 @@ const Sidebar = (props: any) => {
         return (
           <>
             <NavLink
+              to="/managers"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Employees
+            </NavLink>
+            <NavLink
               to="/invite-employee"
               end
               className={({ isActive }) =>
@@ -85,6 +94,15 @@ const Sidebar = (props: any) => {
       case "GATHER_MANAGER":
         return (
           <>
+            <NavLink
+              to="/managers"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Employees
+            </NavLink>
             <NavLink
               to="/invite-employee"
               end

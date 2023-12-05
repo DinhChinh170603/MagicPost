@@ -97,7 +97,7 @@ const CreatePackage = () => {
 
           <div className="mt-4 flex flex-row gap-24">
             {/* Column 1: Sender Information */}
-            <div className="flex w-[40%] flex-col gap-3">
+            <div className="flex w-[40%] mb-16 flex-col gap-3">
               <Typography.Text className="font-bold">
                 Sender Name
               </Typography.Text>
@@ -121,8 +121,7 @@ const CreatePackage = () => {
               </Typography.Text>
               <Select
                 defaultValue="Type"
-                className="h-10"
-                onChange={choosePackageType}
+                  onChange={choosePackageType}
                 options={[
                   { value: "DOCUMENT", label: "Document" },
                   { value: "GOODS", label: "Goods" },
@@ -130,7 +129,7 @@ const CreatePackage = () => {
               />
             </div>
             {/* Column 2: Receiver Information */}
-            <div className="flex w-[40%] flex-col gap-3">
+            <div className="flex w-[40%] mb-16 flex-col gap-3">
               <Typography.Text className="font-bold">
                 Receiver Name
               </Typography.Text>
