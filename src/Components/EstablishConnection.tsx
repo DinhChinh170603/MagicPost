@@ -1,4 +1,4 @@
-import { Modal as AntModal, Button, Form, Select } from "antd";
+import { Modal as AntModal, Form, Select } from "antd";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
@@ -8,14 +8,15 @@ interface ModalProps {
     onSubmit: () => void;
     exchangePointsList: any;
     gatherPointsList: any;
+    isOpen: boolean;
+    setModalOpen: (isOpen: boolean) => void;
 }
 
 const { Option } = Select;
 
-const EstablishConnection: React.FC<ModalProps> = ({ onSubmit, exchangePointsList, gatherPointsList }) => {
+const EstablishConnection: React.FC<ModalProps> = ({ onSubmit, exchangePointsList, gatherPointsList, isOpen, setModalOpen }) => {
   const [form] = Form.useForm();
 
-  const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onFinish = () => {
@@ -48,20 +49,17 @@ const EstablishConnection: React.FC<ModalProps> = ({ onSubmit, exchangePointsLis
     <>
       {loading && <Loading />}
       <Form form={form} layout="vertical">
-        <Button type="primary" onClick={() => setModalOpen(true)}>
-          Establish Connection
-        </Button>
         <AntModal
           style={{ top: 30 }}
           onOk={onFinish}
-          open={modalOpen}
+          open={isOpen}
           onCancel={() => setModalOpen(false)}
         >
-          <div className="mb-5 text-2xl font-bold">
+          <div className="mb-8 text-2xl font-bold">
             Select a GatherPoint <br /> linked to an ExchangePoint
           </div>
           <Form.Item
-            className="mb-8 flex-1"
+            className="mb-8 w-[80%] flex-1"
             name="gatherPoint"
             label="GatherPoint"
             rules={[{ required: true, message: "Please select a GatherPoint" }]}
@@ -75,7 +73,7 @@ const EstablishConnection: React.FC<ModalProps> = ({ onSubmit, exchangePointsLis
             </Select>
           </Form.Item>
           <Form.Item
-            className="mb-12 flex-1"
+            className="mb-12 w-[80%] flex-1"
             name="exchangePoint"
             label="ExchangePoint"
             rules={[{ required: true, message: "Please select an ExchangePoint" }]}

@@ -1,4 +1,4 @@
-import { Table, Tag } from "antd";
+import { Table, Tag, Button } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import InsertNewPoint from "../components/InsertNewPoint";
@@ -21,6 +21,9 @@ export default function GatherPoints() {
   const [exchangePointsList, setExchangePointsList] = useState([]);
   const [gatherPointsList, setGatherPointsList] = useState([]);
 
+  const [modalPointOpen, setModalPointOpen] = useState(false);
+  const [modalLinkOpen, setModalLinkOpen] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [modalFinished, setModalFinished] = useState(false);
 
@@ -36,11 +39,8 @@ export default function GatherPoints() {
       title: "Manager",
       dataIndex: "manager",
       key: "manager",
-      sorter: sortByString("manager"),
       width: "20%",
-      render: (text: string, record: any) => {
-        return record.manager ? record.manager.fullName : "";
-      },
+      render: (text: string, record: any) => record.manager?.fullName,
     },
     {
       title: "Location",
@@ -128,15 +128,25 @@ export default function GatherPoints() {
   return (
     <>
       <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-lime-100">
-        <div className="flex gap-8 w-[80%] justify-start">
+        <div className="flex w-[80%] justify-start gap-4">
+          <Button type="primary" onClick={() => setModalPointOpen(true)}>
+            Insert a new point
+          </Button>
           <InsertNewPoint
             onSubmit={handleModalSubmit}
             apiEndpoint="/leader/gather-point"
+            isOpen={modalPointOpen}
+            setModalOpen={setModalPointOpen}
           />
+          <Button type="primary" onClick={() => setModalLinkOpen(true)}>
+            Establish Connection
+          </Button>
           <EstablishConnection
-            onSubmit={handleModalSubmit} 
+            onSubmit={handleModalSubmit}
             exchangePointsList={exchangePointsList}
-            gatherPointsList={gatherPointsList} 
+            gatherPointsList={gatherPointsList}
+            isOpen={modalLinkOpen}
+            setModalOpen={setModalLinkOpen}
           />
         </div>
         <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>

@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import InsertNewPoint from "../components/InsertNewPoint";
@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 export default function ExchangePoints() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+
+  const [modalPointOpen, setModalPointOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalFinished, setModalFinished] = useState(false);
 
@@ -25,11 +27,8 @@ export default function ExchangePoints() {
       title: "Manager",
       dataIndex: "manager",
       key: "manager",
-      sorter: sortByString("manager"),
       width: "20%",
-      render: (text: string, record: any) => {
-        return record.manager ? record.manager.fullName : "";
-      },
+      render: (text: string, record: any) => record.manager?.fullName,
     },
     {
       title: "Location",
@@ -120,9 +119,14 @@ export default function ExchangePoints() {
     <>
       <div className="flex h-full w-full flex-col items-center justify-center gap-3">
         <div className="flex w-[80%] justify-start">
+          <Button type="primary" onClick={() => setModalPointOpen(true)}>
+            Insert a new point
+          </Button>
           <InsertNewPoint
             onSubmit={handleModalSubmit}
             apiEndpoint="/leader/exchange-point"
+            isOpen={modalPointOpen}
+            setModalOpen={setModalPointOpen}
           />
         </div>
         <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
