@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Modal from "../components/Modal";
+import InsertNewPoint from "../components/InsertNewPoint";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
@@ -97,7 +97,6 @@ export default function ExchangePoints() {
     setLoading(true);
     service
       .get("/leader/exchange-points")
-      // .get("/gth-manager/exchange-points")
       .then((res) => {
         if (res.data.status !== 200) {
           toast.error(res.data.message);
@@ -121,7 +120,7 @@ export default function ExchangePoints() {
     <>
       <div className="flex h-full w-full flex-col items-center justify-center gap-3">
         <div className="flex w-[80%] justify-start">
-          <Modal
+          <InsertNewPoint
             onSubmit={handleModalSubmit}
             apiEndpoint="/leader/exchange-point"
           />

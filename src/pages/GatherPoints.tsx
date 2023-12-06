@@ -1,10 +1,12 @@
 import { Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Modal from "../components/Modal";
+import InsertNewPoint from "../components/InsertNewPoint";
+import EstablishConnection from "../components/EstablishConnection";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const pagination = {
@@ -16,7 +18,9 @@ const pagination = {
 
 export default function GatherPoints() {
   const navigate = useNavigate();
-  const [data, setData] = useState([]);
+  const [exchangePointsList, setExchangePointsList] = useState([]);
+  const [gatherPointsList, setGatherPointsList] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [modalFinished, setModalFinished] = useState(false);
 
@@ -94,22 +98,25 @@ export default function GatherPoints() {
 
   useEffect(() => {
     setLoading(true);
-    service
-      .get("/leader/gather-points")
-      .then((res) => {
-        if (res.data.status !== 200) {
-          toast.error(res.data.message);
+    axios
+      .all([
+        service.get("/leader/exchange-points"),
+        service.get("/leader/gather-points"),
+      ])
+      .then(
+        axios.spread((res1, res2) => {
+          setExchangePointsList(res1.data.results);
+          setGatherPointsList(res2.data.results);
           setLoading(false);
-
-          return;
-        }
-        setData(res.data.results);
-        console.log(res.data.results);
-        setLoading(false);
-      })
+        }),
+        () => {
+          setLoading(false);
+          toast.error("Something went wrong");
+        },
+      )
       .catch((err) => {
-        toast.error(err);
         setLoading(false);
+        toast.error(err.response.data.message);
       });
   }, [modalFinished]);
 
@@ -121,17 +128,22 @@ export default function GatherPoints() {
   return (
     <>
       <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-lime-100">
-        <div className="flex w-[80%] justify-start">
-          <Modal
+        <div className="flex gap-8 w-[80%] justify-start">
+          <InsertNewPoint
             onSubmit={handleModalSubmit}
             apiEndpoint="/leader/gather-point"
+          />
+          <EstablishConnection
+            onSubmit={handleModalSubmit} 
+            exchangePointsList={exchangePointsList}
+            gatherPointsList={gatherPointsList} 
           />
         </div>
         <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
           <Table
             className="w-[80%]"
             columns={columns}
-            dataSource={data}
+            dataSource={gatherPointsList}
             rowKey={(record) => String(record.id)}
             pagination={pagination}
           />
