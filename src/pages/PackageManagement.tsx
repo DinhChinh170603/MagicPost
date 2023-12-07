@@ -6,13 +6,6 @@ import SkeletonTable from "../components/SkeletonTable";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 
-const pagination = {
-  hideOnSinglePage: true,
-  pageSize: 5,
-  showTotal: (total: number, range: number[]) =>
-    `${range[0]}-${range[1]} of ${total} items`,
-};
-
 export default function PackageManagement() {
   const [data, setData] = useState([]);
 
@@ -22,6 +15,7 @@ export default function PackageManagement() {
     searchText: "",
   });
   const idSearchInput = useRef(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [loading, setLoading] = useState(false);
 
@@ -45,6 +39,7 @@ export default function PackageManagement() {
       .catch((err) => {
         console.log(err);
       });
+    setCurrentPage(1);
   }, []);
 
   // rowSelection
@@ -72,6 +67,23 @@ export default function PackageManagement() {
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearch({ dataIndex, searchText: selectedKeys[0] });
+
+    // Get index of searched data's list
+    const dataIndexIndex = data.findIndex(
+      (item) => item[dataIndex] === selectedKeys[0],
+    );
+
+    // Check if it is founded
+    if (dataIndexIndex !== -1) {
+      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
+
+      // Update current page
+      setCurrentPage(searchedPage);
+    } else {
+      console.log(
+        `The searched id ${selectedKeys[0]} is not found in the data.`,
+      );
+    }
   };
   const handleResetId = (clearFilters) => {
     clearFilters();
@@ -148,8 +160,7 @@ export default function PackageManagement() {
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(
-          () =>
-            (dataIndex === "id" ? idSearchInput : null)?.select(),
+          () => (dataIndex === "id" ? idSearchInput : null)?.select(),
           100,
         );
       }
@@ -169,6 +180,114 @@ export default function PackageManagement() {
         text
       ),
   });
+
+  // Handling operations
+  const handleSendToGatherPoint = () => {
+    setLoading(true);
+    // console.log(selectedRowKeys);
+
+    const sendRequests = selectedRowKeys.map((packageId) => {
+      console.log(typeof packageId, packageId);
+      return service.patch(`/ex-employee/send/` + packageId);
+    });
+
+    Promise.all(sendRequests)
+      .then((responses) => {
+        setLoading(false);
+
+        responses.forEach((res) => {
+          if (res.data.status === 200) {
+            toast.success(res.data.message);
+            setSelectedRowKeys([]);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.response.data.message);
+      });
+
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setSelectedRowKeys([]);
+    // }, 1000);
+  };
+
+  const handleSendToReceiver = () => {
+    setLoading(true);
+    // console.log(selectedRowKeys);
+
+    const sendRequests = selectedRowKeys.map((packageId) => {
+      console.log(typeof packageId, packageId);
+      return service.patch(`/ex-employee/send-receiver/` + packageId);
+    });
+
+    Promise.all(sendRequests)
+      .then((responses) => {
+        setLoading(false);
+
+        responses.forEach((res) => {
+          if (res.data.status === 200) {
+            toast.success(res.data.message);
+            setSelectedRowKeys([]);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.response.data.message);
+      });
+
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setSelectedRowKeys([]);
+    // }, 1000);
+  };
+
+  const handleDeliverySuccess = () => {
+    setLoading(true);
+    // console.log(selectedRowKeys);
+
+    const sendRequests = selectedRowKeys.map((packageId) => {
+      console.log(typeof packageId, packageId);
+      return service.patch(`/ex-employee/confirm-receiver/` + packageId);
+    });
+
+    Promise.all(sendRequests)
+      .then((responses) => {
+        setLoading(false);
+
+        responses.forEach((res) => {
+          if (res.data.status === 200) {
+            toast.success(res.data.message);
+            setSelectedRowKeys([]);
+          } else {
+            toast.error(res.data.message);
+          }
+        });
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.response.data.message);
+      });
+
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setSelectedRowKeys([]);
+    // }, 1000);
+  };
+  
+  const pagination = {
+    hideOnSinglePage: true,
+    pageSize: 5,
+    current: currentPage,
+    showTotal: (total: number, range: number[]) =>
+      `${range[0]}-${range[1]} of ${total} items`,
+  };
 
   const columns = [
     {
@@ -228,6 +347,32 @@ export default function PackageManagement() {
           {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
         </div>
       </div>
+      <div className="flex w-[80%] justify-start gap-4">
+        <Button
+          type="primary"
+          onClick={handleSendToGatherPoint}
+          disabled={!hasSelected}
+          loading={loading}
+        >
+          Sent To GatherPoint
+        </Button>
+        <Button
+          type="primary"
+          onClick={handleSendToReceiver}
+          disabled={!hasSelected}
+          loading={loading}
+        >
+          Sent To Receiver
+        </Button>
+        <Button
+          type="primary"
+          onClick={handleDeliverySuccess}
+          disabled={!hasSelected}
+          loading={loading}
+        >
+          Delivery Success
+        </Button>
+      </div>
       <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
         <Table
           className="w-[80%]"
@@ -236,6 +381,7 @@ export default function PackageManagement() {
           dataSource={data}
           pagination={pagination}
           idSearchInput={idSearchInput}
+          onChange={(pagination) => setCurrentPage(pagination.current)}
         />
       </SkeletonTable>
     </div>
