@@ -22,6 +22,7 @@ import NotFound from "./pages/NotFound";
 import PackageDetail from "./pages/PackageDetail";
 import User from "./pages/User";
 import NewPackage from "./pages/NewPackage";
+import PackageManagement from "./pages/PackageManagement";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -104,6 +105,7 @@ function App() {
                 element={getPage(<ExchangePointDetail />)}
               ></Route>
               <Route path="/new-package" element={getPage(<NewPackage />)}></Route>
+              <Route path="package-management" element={getPage(<PackageManagement />)}></Route>
               <Route path="/users/:id" element={getPage(<User />)}></Route>
               <Route path="/invite" element={getPage(<InviteUser />)}></Route>
               <Route path="/invite-employee" element={getPage(<InviteEmployee role={loggedInUserRole}/>)}></Route>

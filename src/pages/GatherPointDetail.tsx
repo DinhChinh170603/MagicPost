@@ -1,4 +1,4 @@
-import { Skeleton, Table, Tag } from "antd";
+import { Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
@@ -6,7 +6,7 @@ import service from "../helpers/service";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Badge, Descriptions } from 'antd';
+import { Descriptions } from 'antd';
 import type { DescriptionsProps } from 'antd';
 
 const pagination = {

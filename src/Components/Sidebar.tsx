@@ -64,6 +64,15 @@ const Sidebar = (props: any) => {
             >
               New Package
             </NavLink>
+            <NavLink
+              to="/package-management"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Manage Package
+            </NavLink>
           </>
         );
 
