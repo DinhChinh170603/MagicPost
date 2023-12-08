@@ -182,80 +182,25 @@ export default function PackageManagement() {
   });
 
   // Handling operations
-  const handleSendToGatherPoint = () => {
+  const handleOperation = (apiEndpoint) => {
     setLoading(true);
-    // console.log(selectedRowKeys);
+    console.log(selectedRowKeys);
+    console.log(apiEndpoint);
 
-    const sendRequests = selectedRowKeys.map((packageId) => {
-      console.log(typeof packageId, packageId);
-      return service.patch(`/ex-employee/send/` + packageId);
-    });
-
-    Promise.all(sendRequests)
-      .then((responses) => {
-        setLoading(false);
-
-        responses.forEach((res) => {
-          if (res.data.status === 200) {
-            toast.success(res.data.message);
-            setSelectedRowKeys([]);
-          } else {
-            toast.error(res.data.message);
-          }
-        });
-      })
-      .catch((err) => {
-        setLoading(false);
-        toast.error(err.response.data.message);
+    // if (apiEndpoint === "reject-receiver") {
+    //   const sendRequests = selectedRowKeys.map((packageId) => {
+    //     return service.patch(`/ex-employee/${apiEndpoint}`, {
+    //       packageId: packageId,
+    //       // reason: reason,
+    //     });
+    //   })
+    // } else {
+      const sendRequests = selectedRowKeys.map((packageId) => {
+        return service.patch(`/ex-employee/${apiEndpoint}/` + packageId);
       });
+    // }
 
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setSelectedRowKeys([]);
-    // }, 1000);
-  };
-
-  const handleSendToReceiver = () => {
-    setLoading(true);
-    // console.log(selectedRowKeys);
-
-    const sendRequests = selectedRowKeys.map((packageId) => {
-      console.log(typeof packageId, packageId);
-      return service.patch(`/ex-employee/send-receiver/` + packageId);
-    });
-
-    Promise.all(sendRequests)
-      .then((responses) => {
-        setLoading(false);
-
-        responses.forEach((res) => {
-          if (res.data.status === 200) {
-            toast.success(res.data.message);
-            setSelectedRowKeys([]);
-          } else {
-            toast.error(res.data.message);
-          }
-        });
-      })
-      .catch((err) => {
-        setLoading(false);
-        toast.error(err.response.data.message);
-      });
-
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setSelectedRowKeys([]);
-    // }, 1000);
-  };
-
-  const handleDeliverySuccess = () => {
-    setLoading(true);
-    // console.log(selectedRowKeys);
-
-    const sendRequests = selectedRowKeys.map((packageId) => {
-      console.log(typeof packageId, packageId);
-      return service.patch(`/ex-employee/confirm-receiver/` + packageId);
-    });
+    console.log(sendRequests);
 
     Promise.all(sendRequests)
       .then((responses) => {
@@ -350,7 +295,7 @@ export default function PackageManagement() {
       <div className="flex w-[80%] justify-start gap-4">
         <Button
           type="primary"
-          onClick={handleSendToGatherPoint}
+          onClick={() => handleOperation("send")}
           disabled={!hasSelected}
           loading={loading}
         >
@@ -358,7 +303,7 @@ export default function PackageManagement() {
         </Button>
         <Button
           type="primary"
-          onClick={handleSendToReceiver}
+          onClick={() => handleOperation("send-receiver")}
           disabled={!hasSelected}
           loading={loading}
         >
@@ -366,11 +311,19 @@ export default function PackageManagement() {
         </Button>
         <Button
           type="primary"
-          onClick={handleDeliverySuccess}
+          onClick={() => handleOperation("confirm-receiver")}
           disabled={!hasSelected}
           loading={loading}
         >
           Delivery Success
+        </Button>
+        <Button
+          type="primary"
+          onClick={() => handleOperation("reject-receiver")}
+          disabled={!hasSelected}
+          loading={loading}
+        >
+          Delivery Failure
         </Button>
       </div>
       <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
