@@ -20,9 +20,9 @@ export default function Login() {
         password,
       })
       .then((res) => {
-        setLoading(false);
         if (res.data.status === 200) {
           localStorage.setItem("jwtToken", res.data.results);
+          setLoading(false);
           window.location.href = "/";
         } else {
           toast.error(res.data.message);

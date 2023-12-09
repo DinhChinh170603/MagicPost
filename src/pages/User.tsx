@@ -1,8 +1,9 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Avatar, Button, Form, Input } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "react-toastify";
+import AuthContext from "../contexts/AuthContext";
 import service from "../helpers/service";
 // import UploadAvatar from "../components/UploadAvatar";
 
@@ -11,7 +12,7 @@ export default function User() {
   const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
-  const [data, setData] = useState<any>({});
+  const { user } = useContext<any>(AuthContext);
 
   const activeStyle =
     "w-[80%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold cursor-pointer transition-all duration-100";
@@ -39,9 +40,7 @@ export default function User() {
         .post("/avatar", formData)
         .then((res) => {
           if (res.data.status === 200) {
-            toast.success(
-              "Your avatar has been changed successfully!",
-            );
+            toast.success("Your avatar has been changed successfully!");
             window.location.reload();
             setLoading(false);
           } else {
@@ -88,12 +87,7 @@ export default function User() {
   };
 
   useEffect(() => {
-    setLoading(true);
-    service.get("/users/me").then((res) => {
-      form.setFieldsValue(res.data.results);
-      setData(res.data.results);
-      setLoading(false);
-    });
+    form.setFieldsValue(user);
   }, [form]);
 
   return (
@@ -104,9 +98,9 @@ export default function User() {
             <div className="flex flex-col items-center">
               <div className="mx-auto mb-5 mt-10">
                 <div className="relative">
-                  {data && data.avatar ? (
+                  {user && user.avatar ? (
                     <Avatar
-                      src={data.avatar}
+                      src={user.avatar}
                       size={150}
                       className="cursor-pointer"
                     />
@@ -121,8 +115,10 @@ export default function User() {
                   </div>
                 </div>
               </div>
-              <div className="mb-1 text-2xl text-center font-bold">{data.fullName}</div>
-              <div className="mb-5 text-center text-gray-500">{data.role}</div>
+              <div className="mb-1 text-center text-2xl font-bold">
+                {user.fullName}
+              </div>
+              <div className="mb-5 text-center text-gray-500">{user.role}</div>
               <div className="flex w-full flex-col items-center gap-2">
                 <div
                   className={
