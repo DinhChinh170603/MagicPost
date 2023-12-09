@@ -13,7 +13,7 @@ import AuthContext from "../contexts/AuthContext";
 
 export default function Topbar(props: any) {
   const navigate = useNavigate();
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext<any>(AuthContext);
 
   const [loading, setLoading] = useState(false);
 

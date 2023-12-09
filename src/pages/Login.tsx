@@ -4,13 +4,10 @@ import React from "react";
 import { toast } from "react-toastify";
 import logo from "../assets/logo.jpg";
 import service from "../helpers/service";
-import AuthContext from "../contexts/AuthContext";
 
 export default function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
-
-  const { setUser } = React.useContext<any>(AuthContext);
 
   const onFinish = () => {
     setLoading(true);

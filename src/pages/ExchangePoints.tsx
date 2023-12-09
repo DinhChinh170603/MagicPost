@@ -1,12 +1,11 @@
 import { Button, Table } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InsertNewPoint from "../components/InsertNewPoint";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-import { useNavigate } from "react-router-dom";
-import AuthContext from "../contexts/AuthContext";
 
 export default function ExchangePoints() {
   const navigate = useNavigate();

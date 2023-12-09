@@ -3,8 +3,8 @@ import { Avatar, Button, Form, Input } from "antd";
 import { useContext, useEffect, useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "react-toastify";
-import service from "../helpers/service";
 import AuthContext from "../contexts/AuthContext";
+import service from "../helpers/service";
 // import UploadAvatar from "../components/UploadAvatar";
 
 export default function User() {
@@ -12,7 +12,7 @@ export default function User() {
   const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
-  const { user, setUser } = useContext<any>(AuthContext);
+  const { user } = useContext<any>(AuthContext);
 
   const activeStyle =
     "w-[80%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold cursor-pointer transition-all duration-100";
