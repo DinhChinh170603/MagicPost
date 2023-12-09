@@ -4,43 +4,43 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { IconButton } from "@mui/material";
 import { Avatar, Dropdown, MenuProps } from "antd";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
+import AuthContext from "../contexts/AuthContext";
 
 export default function Topbar(props: any) {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>();
+  const { user, setUser } = useContext(AuthContext);
 
   const [loading, setLoading] = useState(false);
 
   const logout = () => {
+    setUser(null);
     localStorage.removeItem("jwtToken");
     window.location.href = "/login";
   };
 
   useEffect(() => {
-    setLoading(true);
-    console.log("Loading");
-    service
-      .get("/users/me")
-      .then((res) => {
-        if (res.data.status === 200) {
-          setUser(res.data.results);
-          setLoggedInUserRole(res.data.results.role);
-        } else {
-          toast.error("Failed to fetch user data");
-        }
-        setLoading(false);
-        console.log("Loaded");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-        setLoading(false);
-        console.log("Failed");
-      });
+    if (!user) {
+      setLoading(true);
+      service
+        .get("/users/me")
+        .then((res) => {
+          if (res.data.status === 200) {
+            setUser(res.data.results);
+          } else {
+            toast.error("Failed to fetch user data");
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+          setLoading(false);
+        });
+    }
   }, []);
 
   const userMenuItems: MenuProps["items"] = [
@@ -48,7 +48,7 @@ export default function Topbar(props: any) {
       key: "1",
       label: <span className="font-[430]">Profile</span>,
       onClick: () => {
-        navigate("/users/" + user.id);
+        navigate("/users/" + (user ? user.id : ""));
       },
     },
     {
@@ -62,12 +62,7 @@ export default function Topbar(props: any) {
     },
   ];
 
-  const {
-    isSidebarOpen,
-    setIsSidebarOpen,
-    isInMobileMode,
-    setLoggedInUserRole,
-  } = props;
+  const { isSidebarOpen, setIsSidebarOpen, isInMobileMode } = props;
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
   return (
     <>
@@ -124,5 +119,4 @@ Topbar.propTypes = {
   isSidebarOpen: PropTypes.bool,
   setIsSidebarOpen: PropTypes.func,
   isInMobileMode: PropTypes.bool,
-  setLoggedInUserRole: PropTypes.func,
 };

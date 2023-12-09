@@ -4,10 +4,13 @@ import React from "react";
 import { toast } from "react-toastify";
 import logo from "../assets/logo.jpg";
 import service from "../helpers/service";
+import AuthContext from "../contexts/AuthContext";
 
 export default function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
+
+  const { setUser } = React.useContext<any>(AuthContext);
 
   const onFinish = () => {
     setLoading(true);
@@ -20,9 +23,9 @@ export default function Login() {
         password,
       })
       .then((res) => {
-        setLoading(false);
         if (res.data.status === 200) {
           localStorage.setItem("jwtToken", res.data.results);
+          setLoading(false);
           window.location.href = "/";
         } else {
           toast.error(res.data.message);

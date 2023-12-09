@@ -23,11 +23,13 @@ import PackageDetail from "./pages/PackageDetail";
 import User from "./pages/User";
 import NewPackage from "./pages/NewPackage";
 import PackageManagement from "./pages/PackageManagement";
+import AuthContext from "./contexts/AuthContext";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const inMobileMode = useMediaQuery("(max-width: 768px)");
-  const [loggedInUserRole, setLoggedInUserRole] = useState(null);
+
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     if (inMobileMode) {
@@ -47,10 +49,10 @@ function App() {
               onClose={() => setIsSidebarOpen(false)}
               anchor="left"
             >
-              <Sidebar role={loggedInUserRole} />
+              <Sidebar role={user ? user.role : null} />
             </Drawer>
           ) : (
-            <Sidebar role={loggedInUserRole} />
+            <Sidebar role={user ? user.role : null} />
           )}
 
           <div className="relative flex flex-1 flex-col overflow-y-auto">
@@ -58,7 +60,6 @@ function App() {
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
               isInMobileMode={inMobileMode}
-              setLoggedInUserRole={setLoggedInUserRole}
             />
             <div className="flex-1">{children}</div>
           </div>
@@ -79,45 +80,56 @@ function App() {
           },
         }}
       >
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <BrowserRouter>
-            <Routes>
-              <Route index element={getPage(<Home />)}></Route>
-              <Route path="/login" element={<Login />}></Route>
-              <Route
-                path="/managers"
-                element={getPage(<Managers role={loggedInUserRole}/>)}
-              ></Route>
-              <Route
-                path="/exchange-points"
-                element={getPage(<ExchangePoints />)}
-              ></Route>
-              <Route
-                path="/gather-points"
-                element={getPage(<GatherPoints />)}
-              ></Route>
-              <Route
-                path="/gather-points/:id"
-                element={getPage(<GatherPointDetail />)}
-              ></Route>
-              <Route
-                path="/exchange-points/:id"
-                element={getPage(<ExchangePointDetail />)}
-              ></Route>
-              <Route path="/new-package" element={getPage(<NewPackage />)}></Route>
-              <Route path="package-management" element={getPage(<PackageManagement />)}></Route>
-              <Route path="/users/:id" element={getPage(<User />)}></Route>
-              <Route path="/invite" element={getPage(<InviteUser />)}></Route>
-              <Route path="/invite-employee" element={getPage(<InviteEmployee role={loggedInUserRole}/>)}></Route>
-              <Route
-                path="/package/:id"
-                element={getPage(<PackageDetail />)}
-              ></Route>
-              <Route path="*" element={getPage(<NotFound />)}></Route>
-            </Routes>
-          </BrowserRouter>
-          <ToastContainer />
-        </LocalizationProvider>
+        <AuthContext.Provider value={{ user, setUser }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <BrowserRouter>
+              <Routes>
+                <Route index element={getPage(<Home />)}></Route>
+                <Route path="/login" element={<Login />}></Route>
+                <Route
+                  path="/managers"
+                  element={getPage(<Managers role={user ? user.role : null} />)}
+                ></Route>
+                <Route
+                  path="/exchange-points"
+                  element={getPage(<ExchangePoints />)}
+                ></Route>
+                <Route
+                  path="/gather-points"
+                  element={getPage(<GatherPoints />)}
+                ></Route>
+                <Route
+                  path="/gather-points/:id"
+                  element={getPage(<GatherPointDetail />)}
+                ></Route>
+                <Route
+                  path="/exchange-points/:id"
+                  element={getPage(<ExchangePointDetail />)}
+                ></Route>
+                <Route
+                  path="/new-package"
+                  element={getPage(<NewPackage />)}
+                ></Route>
+                <Route
+                  path="package-management"
+                  element={getPage(<PackageManagement />)}
+                ></Route>
+                <Route path="/users/:id" element={getPage(<User />)}></Route>
+                <Route path="/invite" element={getPage(<InviteUser />)}></Route>
+                <Route
+                  path="/invite-employee"
+                  element={getPage(<InviteEmployee role={user ? user.role : null} />)}
+                ></Route>
+                <Route
+                  path="/package/:id"
+                  element={getPage(<PackageDetail />)}
+                ></Route>
+                <Route path="*" element={getPage(<NotFound />)}></Route>
+              </Routes>
+            </BrowserRouter>
+            <ToastContainer />
+          </LocalizationProvider>
+        </AuthContext.Provider>
       </ConfigProvider>
     </>
   );
