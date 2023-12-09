@@ -1,5 +1,5 @@
 import { Button, Form, Input, Select } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
 import { toast } from "react-toastify";
@@ -84,10 +84,10 @@ export default function NewPackage() {
               {
                 pattern: /^\d{10}$/,
                 message: "Please enter a valid phone number!",
-              }
+              },
             ]}
           >
-            <Input/>
+            <Input />
           </Form.Item>
           <Form.Item
             name="receiverName"
@@ -114,10 +114,10 @@ export default function NewPackage() {
               {
                 pattern: /^\d{10}$/,
                 message: "Please enter a valid phone number!",
-              }
+              },
             ]}
           >
-            <Input/>
+            <Input />
           </Form.Item>
           <Form.Item
             name="orgAddress"

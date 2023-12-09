@@ -1,28 +1,40 @@
-import { Skeleton, Table, Tag } from "antd";
-import { useEffect, useState } from "react";
+import {
+  Table,
+  Button,
+  Space,
+  Descriptions,
+  Input,
+  DescriptionsProps,
+} from "antd";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Badge, Descriptions } from "antd";
-import type { DescriptionsProps } from "antd";
-
-const pagination = {
-  hideOnSinglePage: true,
-  pageSize: 5,
-  showTotal: (total: number, range: number[]) =>
-    `${range[0]}-${range[1]} of ${total} items`,
-};
+import { SearchOutlined } from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
 
 export default function ExchangePointDetail() {
   const { state } = useLocation();
-  const navigate = useNavigate();
   const { exchangePoint } = state;
 
   const [sentPackages, setSentPackages] = useState([]);
   const [receivedPackages, setReceivedPackages] = useState([]);
+
+  const [searchSent, setSearchSent] = useState({
+    dataIndex: "",
+    searchText: "",
+  });
+  const idSearchInputSent = useRef(null);
+  const [currentPageOfSent, setCurrentPageOfSent] = useState(1);
+
+  const [searchReceived, setSearchReceived] = useState({
+    dataIndex: "",
+    searchText: "",
+  });
+  const idSearchInputReceived = useRef(null);
+  const [currentPageOfReceived, setCurrentPageOfReceived] = useState(1);
 
   const [loading, setLoading] = useState(false);
 
@@ -35,8 +47,16 @@ export default function ExchangePointDetail() {
       ])
       .then(
         axios.spread((res1, res2) => {
-          setSentPackages(res1.data.results);
-          setReceivedPackages(res2.data.results);
+          const newData1 = res1.data.results.map((item) => ({
+            ...item,
+            key: item.id,
+          }));
+          setSentPackages(newData1);
+          const newData2 = res2.data.results.map((item) => ({
+            ...item,
+            key: item.id,
+          }));
+          setReceivedPackages(newData2);
           console.log(res1.data.results);
           console.log(res2.data.results);
           setLoading(false);
@@ -50,6 +70,8 @@ export default function ExchangePointDetail() {
         setLoading(false);
         toast.error(err.response.data.message);
       });
+    setCurrentPageOfSent(1);
+    setCurrentPageOfReceived(1);
   }, []);
 
   const exchangePointDetail: DescriptionsProps["items"] = [
@@ -85,110 +107,418 @@ export default function ExchangePointDetail() {
     },
   ];
 
+  // searchInColumn
+  const handleSearchSent = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchSent({ dataIndex, searchText: selectedKeys[0] });
+
+    // Get index of searched data's list
+    const dataIndexIndex = receivedPackages.findIndex(
+      (item) => item[dataIndex] === selectedKeys[0],
+    );
+
+    // Check if it is founded
+    if (dataIndexIndex !== -1) {
+      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
+
+      // Update current page
+      setCurrentPageOfSent(searchedPage);
+    } else {
+      console.log(
+        `The searched id ${selectedKeys[0]} is not found in the data.`,
+      );
+    }
+  };
+  const handleResetIdSent = (clearFilters) => {
+    clearFilters();
+    setSearchSent({ ...searchSent, searchText: "" });
+  };
+  const getColumnSearchPropsSent = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div className="p-2">
+        <Input
+          ref={dataIndex === "id" ? idSearchInputSent : null}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearchSent(selectedKeys, confirm, dataIndex)
+          }
+          className="mb-4 block"
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearchSent(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            className="w-[90px]"
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleResetIdSent(clearFilters)}
+            size="small"
+            className="w-[90px]"
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchSent({ dataIndex, searchText: selectedKeys[0] });
+            }}
+            className={dataIndex === "id" ? "hidden" : "inline"}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(
+          () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
+          100,
+        );
+      }
+    },
+    render: (text) =>
+      searchSent.dataIndex === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchSent.searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  // searchInColumn
+  const handleSearchReceived = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
+
+    // Get index of searched data's list
+    const dataIndexIndex = receivedPackages.findIndex(
+      (item) => item[dataIndex] === selectedKeys[0],
+    );
+
+    // Check if it is founded
+    if (dataIndexIndex !== -1) {
+      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
+
+      // Update current page
+      setCurrentPageOfReceived(searchedPage);
+    } else {
+      console.log(
+        `The searched id ${selectedKeys[0]} is not found in the data.`,
+      );
+    }
+  };
+  const handleResetIdReceived = (clearFilters) => {
+    clearFilters();
+    setSearchReceived({ ...searchReceived, searchText: "" });
+  };
+  const getColumnSearchPropsReceived = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div className="p-2">
+        <Input
+          ref={dataIndex === "id" ? idSearchInputSent : null}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearchReceived(selectedKeys, confirm, dataIndex)
+          }
+          className="mb-4 block"
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() =>
+              handleSearchReceived(selectedKeys, confirm, dataIndex)
+            }
+            icon={<SearchOutlined />}
+            size="small"
+            className="w-[90px]"
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleResetIdReceived(clearFilters)}
+            size="small"
+            className="w-[90px]"
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
+            }}
+            className={dataIndex === "id" ? "hidden" : "inline"}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(
+          () => (dataIndex === "id" ? idSearchInputReceived : null)?.select(),
+          100,
+        );
+      }
+    },
+    render: (text) =>
+      searchReceived.dataIndex === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchReceived.searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const paginationOfSent = {
+    hideOnSinglePage: true,
+    pageSize: 5,
+    current: currentPageOfSent,
+    showTotal: (total: number, range: number[]) =>
+      `${range[0]}-${range[1]} of ${total} items`,
+  };
+
+  const paginationOfReceived = {
+    hideOnSinglePage: true,
+    pageSize: 5,
+    current: currentPageOfReceived,
+    showTotal: (total: number, range: number[]) =>
+      `${range[0]}-${range[1]} of ${total} items`,
+  };
+
   const columnsSent = [
     {
-      title: "SenderName",
-      dataIndex: "senderName",
-      key: "senderName",
+      title: "Package ID",
+      dataIndex: "id",
+      key: "id",
+      ...getColumnSearchPropsSent("id"),
     },
     {
-      title: "PackageType",
-      dataIndex: "packageType",
-      key: "packageType",
+      title: "Sender Name",
+      dataIndex: "senderName",
+      key: "senderName",
     },
   ];
 
   const columnsReceived = [
     {
-      title: "SenderName",
+      title: "Package ID",
+      dataIndex: "id",
+      key: "id",
+      ...getColumnSearchPropsReceived("id"),
+    },
+    {
+      title: "Sender Name",
       dataIndex: "senderName",
       key: "senderName",
     },
-    {
-      title: "PackageType",
-      dataIndex: "packageType",
-      key: "packageType",
-    },
   ];
 
-  const packageDetail: DescriptionsProps["items"] = [
-    {
-      key: "1",
-      label: "senderName",
-      children: "John Brown",
-      span: 1,
-    },
-    {
-      key: "2",
-      label: "receiverName",
-      children: "Jim Green",
-      span: 2,
-    },
-    {
-      key: "3",
-      label: "senderContact",
-      children: "0123456789",
-      span: 1,
-    },
-    {
-      key: "4",
-      label: "receiverContact",
-      children: "0123456789",
-      span: 2,
-    },
-    {
-      key: "5",
-      label: "orgAddress",
-      children: "Yen Hoa",
-      span: 1,
-    },
-    {
-      key: "6",
-      label: "desAddress",
-      children: "Thanh Xuan",
-      span: 2,
-    },
-    {
-      key: "7",
-      label: "packageType",
-      children: "GOODS",
-      span: 1,
-    },
-    {
-      key: "8",
-      label: "weight (kg)",
-      children: "0.2",
-      span: 2,
-    },
-  ];
+  type PackageDetail = {
+    key: number;
+    label: string;
+    children: React.ReactNode;
+    span: number;
+  };
 
-  const data = [
+  const packageDetailSent = (pkg): PackageDetail[] => [
     {
       key: 1,
-      senderName: "John Brown",
-      packageType: "DOCUMENT",
-      description: <Descriptions size="small" bordered items={packageDetail} />,
+      label: "senderName",
+      children: pkg.senderName,
+      span: 1,
     },
     {
       key: 2,
-      senderName: "Jim Green",
-      packageType: "DOCUMENT",
-      description: <Descriptions size="small" bordered items={packageDetail} />,
+      label: "receiverName",
+      children: pkg.receiverName,
+      span: 2,
     },
     {
       key: 3,
-      senderName: "Not Expandable",
-      packageType: "GOODS",
-      description: "",
+      label: "senderContact",
+      children: pkg.senderContact,
+      span: 1,
     },
     {
       key: 4,
-      senderName: "Joe Black",
-      packageType: "DOCUMENT",
-      description:
-        "My name is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park.",
+      label: "receiverContact",
+      children: pkg.receiverContact,
+      span: 2,
+    },
+    {
+      key: 5,
+      label: "orgAddress",
+      children: pkg.orgAddress,
+      span: 1,
+    },
+    {
+      key: 6,
+      label: "desAddress",
+      children: pkg.desAddress,
+      span: 2,
+    },
+    {
+      key: 7,
+      label: "packageType",
+      children: pkg.packageType,
+      span: 1,
+    },
+    {
+      key: 8,
+      label: "weight (kg)",
+      children: pkg.weight,
+      span: 2,
     },
   ];
+
+  const packageDetailReceived = (pkg): PackageDetail[] => [
+    {
+      key: 1,
+      label: "senderName",
+      children: pkg.senderName,
+      span: 1.5,
+    },
+    {
+      key: 2,
+      label: "receiverName",
+      children: pkg.receiverName,
+      span: 1.5,
+    },
+    {
+      key: 3,
+      label: "senderContact",
+      children: pkg.senderContact,
+      span: 1.5,
+    },
+    {
+      key: 4,
+      label: "receiverContact",
+      children: pkg.receiverContact,
+      span: 1.5,
+    },
+    {
+      key: 5,
+      label: "orgAddress",
+      children: pkg.orgAddress,
+      span: 1.5,
+    },
+    {
+      key: 6,
+      label: "desAddress",
+      children: pkg.desAddress,
+      span: 1.5,
+    },
+    {
+      key: 7,
+      label: "packageType",
+      children: pkg.packageType,
+      span: 1.5,
+    },
+    {
+      key: 8,
+      label: "weight (kg)",
+      children: pkg.weight,
+      span: 1.5,
+    },
+  ];
+
+  const dataSent = sentPackages.map((pkg) => ({
+    key: pkg.id,
+    id: pkg.id,
+    senderName: pkg.senderName,
+    description: (
+      <Descriptions size="small" bordered items={packageDetailSent(pkg)} />
+    ),
+  }));
+
+  const dataReceived = receivedPackages.map((pkg) => ({
+    key: pkg.id,
+    id: pkg.id,
+    senderName: pkg.senderName,
+    description: (
+      <Descriptions size="small" bordered items={packageDetailReceived(pkg)} />
+    ),
+  }));
 
   // const columnsSent = [
   //   {
@@ -241,46 +571,61 @@ export default function ExchangePointDetail() {
   return (
     <>
       <div className="flex h-full">
-        <div className="mx-auto flex w-[90%] max-w-screen-xl flex-col pt-10">
+        <div className="mx-auto flex w-[96%] max-w-screen-xl flex-col pt-10">
           <div className="pb-10">
             <Descriptions
-              title="ExchangePointDetail"
+              title="ExchangePoint Detail"
               bordered
               items={exchangePointDetail}
             />
           </div>
-          <div className="relative flex flex-grow gap-10">
-            {/* <SkeletonTable loading={loading} columns={columnsSent}>
-              <Table
-                className="w-full"
-                columns={columnsSent}
-                dataSource={sentPackages}
-                rowKey={(record: any) => String(record.id)}
-                pagination={pagination}
-              />
-            </SkeletonTable> */}
-            <Table
-              className="w-full"
-              columns={columnsSent}
-              expandable={{
-                expandedRowRender: (record) => (
-                  <p style={{ margin: 0 }}>{record.description}</p>
-                ),
-                rowExpandable: (record) => record.description !== "",
-              }}
-              dataSource={data}
-            />
-            <Table
-              className="w-full"
-              columns={columnsReceived}
-              expandable={{
-                expandedRowRender: (record) => (
-                  <p style={{ margin: 0 }}>{record.description}</p>
-                ),
-                rowExpandable: (record) => record.description !== "",
-              }}
-              dataSource={data}
-            />
+          <div className="relative flex flex-grow gap-6">
+            <div className="w-1/2">
+              <div className="flex w-full flex-col gap-4">
+                <div className="text-[18px] font-bold">Sent Packages</div>
+                <SkeletonTable loading={loading} columns={columnsSent}>
+                  <Table
+                    className="w-full"
+                    columns={columnsSent}
+                    expandable={{
+                      expandedRowRender: (record) => (
+                        <p style={{ margin: 0 }}>{record.description}</p>
+                      ),
+                      rowExpandable: (record) => record.description !== "",
+                    }}
+                    dataSource={dataSent}
+                    pagination={paginationOfSent}
+                    idSearchInput={idSearchInputSent}
+                    onChange={(pagination) =>
+                      setCurrentPageOfSent(pagination.current)
+                    }
+                  />
+                </SkeletonTable>
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="flex w-full flex-col gap-4">
+                <div className="text-[18px] font-bold">Received Packages</div>
+                <SkeletonTable loading={loading} columns={columnsReceived}>
+                  <Table
+                    className="w-full"
+                    columns={columnsReceived}
+                    expandable={{
+                      expandedRowRender: (record) => (
+                        <p style={{ margin: 0 }}>{record.description}</p>
+                      ),
+                      rowExpandable: (record) => record.description !== "",
+                    }}
+                    dataSource={dataReceived}
+                    pagination={paginationOfReceived}
+                    idSearchInput={idSearchInputReceived}
+                    onChange={(pagination) =>
+                      setCurrentPageOfReceived(pagination.current)
+                    }
+                  />
+                </SkeletonTable>
+              </div>
+            </div>
           </div>
         </div>
       </div>

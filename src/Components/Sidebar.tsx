@@ -71,7 +71,25 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Manage Package
+              Package Management
+            </NavLink>
+            <NavLink
+              to="/package-processing"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Package Processing
+            </NavLink>
+            <NavLink
+              to="/incoming-packages"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Incoming Package
             </NavLink>
           </>
         );
@@ -123,6 +141,39 @@ const Sidebar = (props: any) => {
             </NavLink>
           </>
         );
+
+      case "GATHER_EMPLOYEE":
+        return (
+          <>
+            <NavLink
+              to="/package-management"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Package Management
+            </NavLink>
+            <NavLink
+              to="/package-processing"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Package Processing
+            </NavLink>
+            <NavLink
+              to="/incoming-packages"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Incoming Package
+            </NavLink>
+          </>
+        )
 
       default:
         return <></>;

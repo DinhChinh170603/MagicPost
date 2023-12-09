@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-// import { Button, MenuItem, Select, TextField } from "@mui/material";
-// import { DatePicker } from "@mui/x-date-pickers";
 import axios from "axios";
 import { Button, DatePicker, Form, Input, Select } from "antd";
 
@@ -98,6 +96,7 @@ export default function InviteUser() {
         setLoading(false);
         if (res.data.status === 201) {
           toast.success(res.data.message);
+          form.resetFields();
         } else {
           toast.error(res.data.message);
         }

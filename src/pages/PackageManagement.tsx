@@ -1,75 +1,88 @@
-import React, { useEffect, useState, useRef } from "react";
+import { Table, Button, Space, Descriptions, Input } from "antd";
+import PropTypes from "prop-types";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
-import service from "../helpers/service";
-import { Button, Input, Space, Table } from "antd";
 import SkeletonTable from "../components/SkeletonTable";
+import service from "../helpers/service";
+import axios from "axios";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 
-export default function PackageManagement() {
-  const [data, setData] = useState([]);
+export default function PackageManagement(props: any) {
+  const { role } = props;
+  const [roleAPI, setRoleAPI] = useState("");
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [search, setSearch] = useState({
+  const [sentPackages, setSentPackages] = useState([]);
+  const [receivedPackages, setReceivedPackages] = useState([]);
+
+  const [searchSent, setSearchSent] = useState({
     dataIndex: "",
     searchText: "",
   });
-  const idSearchInput = useRef(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const idSearchInputSent = useRef(null);
+  const [currentPageOfSent, setCurrentPageOfSent] = useState(1);
+
+  const [searchReceived, setSearchReceived] = useState({
+    dataIndex: "",
+    searchText: "",
+  });
+  const idSearchInputReceived = useRef(null);
+  const [currentPageOfReceived, setCurrentPageOfReceived] = useState(1);
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    service
-      .get(`/ex-employee/destinations`)
-      .then((res) => {
-        if (res.data.status !== 200) {
-          toast.error(res.data.message);
+    if (role === "EXCHANGE_EMPLOYEE") {
+      setRoleAPI("/ex-employee");
+    } else if (role === "GATHER_EMPLOYEE") {
+      setRoleAPI("/gth-employee");
+    }
+    console.log(roleAPI);
+
+    if (roleAPI) {
+      axios
+        .all([
+          service.get(roleAPI + `/sent-packages`),
+          service.get(roleAPI + `/received-packages`),
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            const newData1 = res1.data.results.map((item) => ({
+              ...item,
+              key: item.id,
+            }));
+            setSentPackages(newData1);
+            const newData2 = res2.data.results.map((item) => ({
+              ...item,
+              key: item.id,
+            }));
+            setReceivedPackages(newData2);
+            console.log(res1.data.results);
+            console.log(res2.data.results);
+            setLoading(false);
+          }),
+          () => {
+            setLoading(false);
+            toast.error("Something went wrong");
+          },
+        )
+        .catch((err) => {
           setLoading(false);
-          return;
-        }
-        const newData = res.data.results.map((item) => ({
-          ...item,
-          key: item.id,
-        }));
-        setData(newData);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setCurrentPage(1);
-  }, []);
-
-  // rowSelection
-  const start = () => {
-    setLoading(true);
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
-  const hasSelected = selectedRowKeys.length > 0;
+          toast.error(err.response.data.message);
+        });
+    }
+    setCurrentPageOfSent(1);
+    setCurrentPageOfReceived(1);
+  }, [role, roleAPI]);
 
   // searchInColumn
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  const handleSearchSent = (selectedKeys, confirm, dataIndex) => {
     confirm();
-    setSearch({ dataIndex, searchText: selectedKeys[0] });
+    setSearchSent({ dataIndex, searchText: selectedKeys[0] });
 
     // Get index of searched data's list
-    const dataIndexIndex = data.findIndex(
+    const dataIndexIndex = receivedPackages.findIndex(
       (item) => item[dataIndex] === selectedKeys[0],
     );
 
@@ -78,18 +91,18 @@ export default function PackageManagement() {
       const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
 
       // Update current page
-      setCurrentPage(searchedPage);
+      setCurrentPageOfSent(searchedPage);
     } else {
       console.log(
         `The searched id ${selectedKeys[0]} is not found in the data.`,
       );
     }
   };
-  const handleResetId = (clearFilters) => {
+  const handleResetIdSent = (clearFilters) => {
     clearFilters();
-    setSearch({ ...search, searchText: "" });
+    setSearchSent({ ...searchSent, searchText: "" });
   };
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchPropsSent = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -99,19 +112,21 @@ export default function PackageManagement() {
     }) => (
       <div className="p-2">
         <Input
-          ref={dataIndex === "id" ? idSearchInput : null}
+          ref={dataIndex === "id" ? idSearchInputSent : null}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          onPressEnter={() =>
+            handleSearchSent(selectedKeys, confirm, dataIndex)
+          }
           className="mb-4 block"
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearchSent(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
             className="w-[90px]"
@@ -119,7 +134,7 @@ export default function PackageManagement() {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleResetId(clearFilters)}
+            onClick={() => clearFilters && handleResetIdSent(clearFilters)}
             size="small"
             className="w-[90px]"
           >
@@ -132,7 +147,7 @@ export default function PackageManagement() {
               confirm({
                 closeDropdown: false,
               });
-              setSearch({ dataIndex, searchText: selectedKeys[0] });
+              setSearchSent({ dataIndex, searchText: selectedKeys[0] });
             }}
             className={dataIndex === "id" ? "hidden" : "inline"}
           >
@@ -160,19 +175,19 @@ export default function PackageManagement() {
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(
-          () => (dataIndex === "id" ? idSearchInput : null)?.select(),
+          () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
           100,
         );
       }
     },
     render: (text) =>
-      search.dataIndex === dataIndex ? (
+      searchSent.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
             backgroundColor: "#ffc069",
             padding: 0,
           }}
-          searchWords={[search.searchText]}
+          searchWords={[searchSent.searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : ""}
         />
@@ -181,162 +196,355 @@ export default function PackageManagement() {
       ),
   });
 
-  // Handling operations
-  const handleOperation = (apiEndpoint) => {
-    setLoading(true);
-    console.log(selectedRowKeys);
-    console.log(apiEndpoint);
+  // searchInColumn
+  const handleSearchReceived = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
 
-    // if (apiEndpoint === "reject-receiver") {
-    //   const sendRequests = selectedRowKeys.map((packageId) => {
-    //     return service.patch(`/ex-employee/${apiEndpoint}`, {
-    //       packageId: packageId,
-    //       // reason: reason,
-    //     });
-    //   })
-    // } else {
-      const sendRequests = selectedRowKeys.map((packageId) => {
-        return service.patch(`/ex-employee/${apiEndpoint}/` + packageId);
-      });
-    // }
+    // Get index of searched data's list
+    const dataIndexIndex = receivedPackages.findIndex(
+      (item) => item[dataIndex] === selectedKeys[0],
+    );
 
-    console.log(sendRequests);
+    // Check if it is founded
+    if (dataIndexIndex !== -1) {
+      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
 
-    Promise.all(sendRequests)
-      .then((responses) => {
-        setLoading(false);
-
-        responses.forEach((res) => {
-          if (res.data.status === 200) {
-            toast.success(res.data.message);
-            setSelectedRowKeys([]);
-          } else {
-            toast.error(res.data.message);
-          }
-        });
-      })
-      .catch((err) => {
-        setLoading(false);
-        toast.error(err.response.data.message);
-      });
-
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setSelectedRowKeys([]);
-    // }, 1000);
+      // Update current page
+      setCurrentPageOfReceived(searchedPage);
+    } else {
+      console.log(
+        `The searched id ${selectedKeys[0]} is not found in the data.`,
+      );
+    }
   };
-  
-  const pagination = {
+  const handleResetIdReceived = (clearFilters) => {
+    clearFilters();
+    setSearchReceived({ ...searchReceived, searchText: "" });
+  };
+  const getColumnSearchPropsReceived = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div className="p-2">
+        <Input
+          ref={dataIndex === "id" ? idSearchInputSent : null}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearchReceived(selectedKeys, confirm, dataIndex)
+          }
+          className="mb-4 block"
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() =>
+              handleSearchReceived(selectedKeys, confirm, dataIndex)
+            }
+            icon={<SearchOutlined />}
+            size="small"
+            className="w-[90px]"
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleResetIdReceived(clearFilters)}
+            size="small"
+            className="w-[90px]"
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
+            }}
+            className={dataIndex === "id" ? "hidden" : "inline"}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(
+          () => (dataIndex === "id" ? idSearchInputReceived : null)?.select(),
+          100,
+        );
+      }
+    },
+    render: (text) =>
+      searchReceived.dataIndex === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchReceived.searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const paginationOfSent = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPage,
+    current: currentPageOfSent,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
-  const columns = [
+  const paginationOfReceived = {
+    hideOnSinglePage: true,
+    pageSize: 5,
+    current: currentPageOfReceived,
+    showTotal: (total: number, range: number[]) =>
+      `${range[0]}-${range[1]} of ${total} items`,
+  };
+
+  const columnsSent = [
     {
-      title: "Id",
+      title: "Package ID",
       dataIndex: "id",
       key: "id",
-      ...getColumnSearchProps("id"),
+      ...getColumnSearchPropsSent("id"),
     },
     {
-      title: "Current Package Location",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Location",
-      dataIndex: "location",
-      key: "location",
-      filters: [
-        {
-          text: "Hải Phòng",
-          value: "Hải Phòng",
-        },
-        {
-          text: "Vinh",
-          value: "Vinh",
-        },
-        {
-          text: "Hà Nội",
-          value: "Hà Nội",
-        },
-        {
-          text: "Biên Hòa",
-          value: "Biên Hòa",
-        },
-        {
-          text: "Hồ Chí Minh",
-          value: "Hồ Chí Minh",
-        },
-      ],
-      onFilter: (value: any, record: any) =>
-        record.location.indexOf(value) === 0,
+      title: "Sender Name",
+      dataIndex: "senderName",
+      key: "senderName",
     },
   ];
 
+  const columnsReceived = [
+    {
+      title: "Package ID",
+      dataIndex: "id",
+      key: "id",
+      ...getColumnSearchPropsReceived("id"),
+    },
+    {
+      title: "Sender Name",
+      dataIndex: "senderName",
+      key: "senderName",
+    },
+  ];
+
+  type PackageDetail = {
+    key: number;
+    label: string;
+    children: React.ReactNode;
+    span: number;
+  };
+
+  const packageDetailSent = (pkg): PackageDetail[] => [
+    {
+      key: 1,
+      label: "senderName",
+      children: pkg.senderName,
+      span: 1,
+    },
+    {
+      key: 2,
+      label: "receiverName",
+      children: pkg.receiverName,
+      span: 2,
+    },
+    {
+      key: 3,
+      label: "senderContact",
+      children: pkg.senderContact,
+      span: 1,
+    },
+    {
+      key: 4,
+      label: "receiverContact",
+      children: pkg.receiverContact,
+      span: 2,
+    },
+    {
+      key: 5,
+      label: "orgAddress",
+      children: pkg.orgAddress,
+      span: 1,
+    },
+    {
+      key: 6,
+      label: "desAddress",
+      children: pkg.desAddress,
+      span: 2,
+    },
+    {
+      key: 7,
+      label: "packageType",
+      children: pkg.packageType,
+      span: 1,
+    },
+    {
+      key: 8,
+      label: "weight (kg)",
+      children: pkg.weight,
+      span: 2,
+    },
+  ];
+
+  const packageDetailReceived = (pkg): PackageDetail[] => [
+    {
+      key: 1,
+      label: "senderName",
+      children: pkg.senderName,
+      span: 1.5,
+    },
+    {
+      key: 2,
+      label: "receiverName",
+      children: pkg.receiverName,
+      span: 1.5,
+    },
+    {
+      key: 3,
+      label: "senderContact",
+      children: pkg.senderContact,
+      span: 1.5,
+    },
+    {
+      key: 4,
+      label: "receiverContact",
+      children: pkg.receiverContact,
+      span: 1.5,
+    },
+    {
+      key: 5,
+      label: "orgAddress",
+      children: pkg.orgAddress,
+      span: 1.5,
+    },
+    {
+      key: 6,
+      label: "desAddress",
+      children: pkg.desAddress,
+      span: 1.5,
+    },
+    {
+      key: 7,
+      label: "packageType",
+      children: pkg.packageType,
+      span: 1.5,
+    },
+    {
+      key: 8,
+      label: "weight (kg)",
+      children: pkg.weight,
+      span: 1.5,
+    },
+  ];
+
+  const dataSent = sentPackages.map((pkg) => ({
+    key: pkg.id,
+    id: pkg.id,
+    senderName: pkg.senderName,
+    description: (
+      <Descriptions size="small" bordered items={packageDetailSent(pkg)} />
+    ),
+  }));
+
+  const dataReceived = receivedPackages.map((pkg) => ({
+    key: pkg.id,
+    id: pkg.id,
+    senderName: pkg.senderName,
+    description: (
+      <Descriptions size="small" bordered items={packageDetailReceived(pkg)} />
+    ),
+  }));
+
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-lime-100">
-      <div className="flex w-[80%] justify-start gap-4">
-        <Button
-          type="primary"
-          onClick={start}
-          disabled={!hasSelected}
-          loading={loading}
-        >
-          Reload
-        </Button>
-        <div className="mt-1">
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+    <>
+      <div className="flex h-full w-full">
+        <div className="mx-auto mt-8 flex w-[98%]">
+          <div className="w-1/2">
+            <div className="flex w-full flex-col gap-4">
+              <div className="text-2xl font-bold">Sent Packages</div>
+              <SkeletonTable loading={loading} columns={columnsSent}>
+                <Table
+                  className="w-full"
+                  columns={columnsSent}
+                  expandable={{
+                    expandedRowRender: (record) => (
+                      <p style={{ margin: 0 }}>{record.description}</p>
+                    ),
+                    rowExpandable: (record) => record.description !== "",
+                  }}
+                  dataSource={dataSent}
+                  pagination={paginationOfSent}
+                  idSearchInput={idSearchInputSent}
+                  onChange={(pagination) =>
+                    setCurrentPageOfSent(pagination.current)
+                  }
+                />
+              </SkeletonTable>
+            </div>
+          </div>
+          <div className="flex-1">
+            <div className="flex w-full flex-col gap-4">
+              <div className="text-2xl font-bold">Received Packages</div>
+              <SkeletonTable loading={loading} columns={columnsReceived}>
+                <Table
+                  className="w-full"
+                  columns={columnsReceived}
+                  expandable={{
+                    expandedRowRender: (record) => (
+                      <p style={{ margin: 0 }}>{record.description}</p>
+                    ),
+                    rowExpandable: (record) => record.description !== "",
+                  }}
+                  dataSource={dataReceived}
+                  pagination={paginationOfReceived}
+                  idSearchInput={idSearchInputReceived}
+                  onChange={(pagination) =>
+                    setCurrentPageOfReceived(pagination.current)
+                  }
+                />
+              </SkeletonTable>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex w-[80%] justify-start gap-4">
-        <Button
-          type="primary"
-          onClick={() => handleOperation("send")}
-          disabled={!hasSelected}
-          loading={loading}
-        >
-          Sent To GatherPoint
-        </Button>
-        <Button
-          type="primary"
-          onClick={() => handleOperation("send-receiver")}
-          disabled={!hasSelected}
-          loading={loading}
-        >
-          Sent To Receiver
-        </Button>
-        <Button
-          type="primary"
-          onClick={() => handleOperation("confirm-receiver")}
-          disabled={!hasSelected}
-          loading={loading}
-        >
-          Delivery Success
-        </Button>
-        <Button
-          type="primary"
-          onClick={() => handleOperation("reject-receiver")}
-          disabled={!hasSelected}
-          loading={loading}
-        >
-          Delivery Failure
-        </Button>
-      </div>
-      <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
-        <Table
-          className="w-[80%]"
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-          pagination={pagination}
-          idSearchInput={idSearchInput}
-          onChange={(pagination) => setCurrentPage(pagination.current)}
-        />
-      </SkeletonTable>
-    </div>
+    </>
   );
 }
+
+PackageManagement.propTypes = {
+  role: PropTypes.string,
+};

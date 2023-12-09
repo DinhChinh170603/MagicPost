@@ -32,7 +32,15 @@ export default function Managers(props: any) {
             setLoading(false);
             return;
           }
-          const filteredData = res.data.results.filter((record) => record.role !== (role === "LEADER" ? "LEADER" : (role === "EXCHANGE_MANAGER" ? "EXCHANGE_MANAGER" : "GATHER_MANAGER")));
+          const filteredData = res.data.results.filter(
+            (record) =>
+              record.role !==
+              (role === "LEADER"
+                ? "LEADER"
+                : role === "EXCHANGE_MANAGER"
+                  ? "EXCHANGE_MANAGER"
+                  : "GATHER_MANAGER"),
+          );
           setData(filteredData);
           setLoading(false);
         })
@@ -45,14 +53,16 @@ export default function Managers(props: any) {
 
   // Format to DD-MM-YYYY
   const formatDate = (date) => {
-    if (!date) return ''; 
+    if (!date) return "";
     const formattedDate = new Date(date);
     const day = formattedDate.getDate();
     const month = formattedDate.getMonth() + 1; // Month starts from 0
     const year = formattedDate.getFullYear();
 
     // Use template string to format as DD-MM-YYYY
-    return `${day < 10 ? "0" : ""}${day}-${month < 10 ? "0" : ""}${month}-${year}`;
+    return `${day < 10 ? "0" : ""}${day}-${
+      month < 10 ? "0" : ""
+    }${month}-${year}`;
   };
 
   const columns = [
@@ -97,12 +107,11 @@ export default function Managers(props: any) {
             value: "EXCHANGE_MANAGER",
           },
           {
-            text: "GATHER_MANAGER",
+            text: "EXCHANGE_EMPLOYEE",
             value: "EXCHANGE_EMPLOYEE",
           },
         ],
-        onFilter: (value: any, record: any) =>
-          record.role.indexOf(value) === 0,
+        onFilter: (value: any, record: any) => record.role.indexOf(value) === 0,
       }),
     },
     {
