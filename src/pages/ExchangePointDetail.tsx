@@ -77,32 +77,26 @@ export default function ExchangePointDetail() {
   const exchangePointDetail: DescriptionsProps["items"] = [
     {
       key: "1",
-      label: "ID",
+      label: "ExchangePoint's name",
       children: exchangePoint.id,
-      span: 3,
+      span: 2,
     },
     {
       key: "2",
-      label: "ExchangePoint's name",
-      children: exchangePoint.name,
-      span: 1,
+      label: "Location",
+      children: exchangePoint.location,
+      span: 2,
     },
     {
       key: "3",
-      label: "Location",
-      children: exchangePoint.location,
-      span: 3,
+      label: "Managed by",
+      children: exchangePoint.manager ? exchangePoint.manager.fullName : null,
+      span: 2,
     },
     {
       key: "4",
-      label: "Managed by",
-      children: exchangePoint.manager.fullName,
-      span: 1,
-    },
-    {
-      key: "5",
       label: "Email",
-      children: exchangePoint.manager.email,
+      children: exchangePoint.manager ? exchangePoint.manager.email : null,
       span: 2,
     },
   ];

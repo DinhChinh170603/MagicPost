@@ -30,9 +30,9 @@ export default function GatherPoints() {
   const columns = [
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
-      sorter: sortByString("name"),
+      dataIndex: "id",
+      key: "id",
+      sorter: sortByString("id"),
       width: "15%",
     },
     {
@@ -88,7 +88,7 @@ export default function GatherPoints() {
                 });
               }}
             >
-              {exchangePoint.name}
+              {exchangePoint.id}
             </Tag>
           ))}
         </span>

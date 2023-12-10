@@ -258,30 +258,8 @@ export default function IncomingPackage(props: any) {
     },
     {
       title: "From",
-      dataIndex: "orgPoint",
-      key: "orgPoint",
-      filters: [
-        {
-          text: "Exchange",
-          value: "Exchange",
-        },
-        {
-          text: "Gather",
-          value: "Gather",
-        },
-      ],
-      onFilter: (value, record) => {
-        const pointType =
-          record.orgPoint.manager?.role === "EXCHANGE_MANAGER"
-            ? "Exchange"
-            : "Gather";
-        return pointType === value;
-      },
-      render: (orgPoint) => {
-        const pointType =
-          orgPoint.manager?.role === "EXCHANGE_MANAGER" ? "Exchange" : "Gather";
-        return `${orgPoint.name} (${pointType})`;
-      },
+      dataIndex: "orgPointId",
+      key: "orgPointId",
     },
     {
       title: "Timestamp",
@@ -338,7 +316,7 @@ export default function IncomingPackage(props: any) {
         {role === "EXCHANGE_EMPLOYEE" ? (
           <Button
             type="primary"
-            onClick={() => handleOperation("confirm-receiver")}
+            onClick={() => handleOperation("receive")}
             disabled={!hasSelected}
             loading={loading}
           >
