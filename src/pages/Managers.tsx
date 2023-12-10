@@ -84,7 +84,6 @@ export default function Managers(props: any) {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      // sorter: sortByString("email"),
       width: "30%",
     },
     {
