@@ -514,54 +514,6 @@ export default function ExchangePointDetail() {
     ),
   }));
 
-  // const columnsSent = [
-  //   {
-  //     title: "Sent Packages IDs",
-  //     dataIndex: "sentPackagesIds",
-  //     key: "sentPackagesIds",
-  //     render: (sentPackagesIds) => (
-  //       <span>
-  //         {sentPackagesIds.map((packageId) => (
-  //           <Tag
-  //             key={packageId.id}
-  //             // onClick={() => {
-  //             //   navigate(`/package/${packageId}`, {
-  //             //     state: { packageId: packageId },
-  //             //   });
-  //             // }}
-  //           >
-  //             {packageId.id}
-  //           </Tag>
-  //         ))}
-  //       </span>
-  //     ),
-  //   },
-  // ];
-
-  // const columnsReceived = [
-  //   {
-  //     title: "Received Packages IDs",
-  //     dataIndex: "receivedPackagesIds",
-  //     key: "receivedPackagesIds",
-  //     render: (receivedPackagesIds: any) => (
-  //       <span>
-  //         {receivedPackagesIds.map((packagesIds: any) => (
-  //           <Tag
-  //             key={packagesIds.id}
-  //             // onClick={() => {
-  //             //   navigate(`/package/${packagesIds.id}`, {
-  //             //     state: { packagesIds: packagesIds },
-  //             //   });
-  //             // }}
-  //           >
-  //             {packagesIds.id}
-  //           </Tag>
-  //         ))}
-  //       </span>
-  //     ),
-  //   },
-  // ];
-
   return (
     <>
       <div className="flex h-full">

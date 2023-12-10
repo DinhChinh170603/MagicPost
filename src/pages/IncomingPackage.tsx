@@ -207,19 +207,9 @@ export default function IncomingPackage(props: any) {
       setRoleAPI("/gth-employee");
     }
 
-    // if (apiEndpoint === "reject-receiver") {
-    //   const sendRequests = selectedRowKeys.map((packageId) => {
-    //     return service.patch(`/ex-employee/${apiEndpoint}`, {
-    //       packageId: packageId,
-    //       // reason: reason,
-    //     });
-    //   })
-    // } else {
     const sendRequests = selectedRowKeys.map((packageId) => {
       return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
     });
-    // }
-
     console.log(sendRequests);
 
     Promise.all(sendRequests)
