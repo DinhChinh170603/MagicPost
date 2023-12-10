@@ -77,32 +77,26 @@ export default function GatherPointDetail() {
   const gatherPointDetail: DescriptionsProps["items"] = [
     {
       key: "1",
-      label: "ID",
+      label: "GatherPoint's name",
       children: gatherPoint.id,
-      span: 3,
+      span: 1,
     },
     {
       key: "2",
-      label: "GatherPoint's name",
-      children: gatherPoint.name,
-      span: 1,
+      label: "Location",
+      children: gatherPoint.location,
+      span: 2,
     },
     {
       key: "3",
-      label: "Location",
-      children: gatherPoint.location,
-      span: 3,
-    },
-    {
-      key: "4",
       label: "Managed by",
-      children: gatherPoint.manager.fullName,
+      children: gatherPoint.manager ? gatherPoint.manager.fullName : null,
       span: 1,
     },
     {
-      key: "5",
+      key: "4",
       label: "Email",
-      children: gatherPoint.manager.email,
+      children: gatherPoint.manager ? gatherPoint.manager.email : null,
       span: 2,
     },
   ];

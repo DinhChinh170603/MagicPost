@@ -18,9 +18,9 @@ export default function ExchangePoints() {
   const columns = [
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
-      sorter: sortByString("name"),
+      dataIndex: "id",
+      key: "id",
+      sorter: sortByString("id"),
       width: "15%",
     },
     {
@@ -65,7 +65,6 @@ export default function ExchangePoints() {
       title: "Link with Gather",
       dataIndex: "linkedGatherPoints",
       key: "linkedGatherPoints",
-      // sorter: sortByString("linkedGatherPoints"),
       width: "20%",
       render: (text: string, record: any) => {
         return record.linkedGatherPoint ? (
@@ -76,7 +75,7 @@ export default function ExchangePoints() {
               });
             }}
           >
-            {record.linkedGatherPoint.name}
+            {record.linkedGatherPoint.id}
           </div>
         ) : (
           ""

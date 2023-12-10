@@ -7,6 +7,7 @@ import SkeletonTable from "../components/SkeletonTable";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
+import DeliveryFailureModal from "../components/DeliveryFailureModal";
 
 export default function PackageProcessing(props: any) {
   const { role } = props;
@@ -22,12 +23,18 @@ export default function PackageProcessing(props: any) {
   const idSearchInput = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [modalReasonOpen, setModalReasonOpen] = useState(false);
+  const [modalFinished, setModalFinished] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
+    setModalLoading(true);
     if (role === "EXCHANGE_EMPLOYEE") {
       setRoleAPI("/ex-employee");
+      console.log(roleAPI);
     } else if (role === "GATHER_EMPLOYEE") {
       setRoleAPI("/gth-employee");
     }
@@ -39,6 +46,7 @@ export default function PackageProcessing(props: any) {
           if (res.data.status !== 200) {
             toast.error(res.data.message);
             setLoading(false);
+            setModalLoading(false);
             return;
           }
           const newData = res.data.results.map((item) => ({
@@ -48,13 +56,16 @@ export default function PackageProcessing(props: any) {
           setData(newData);
           console.log(newData);
           setLoading(false);
+          setModalLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
+          setModalLoading(false);
         });
     }
     setCurrentPage(1);
-  }, [role, roleAPI]);
+  }, [role, roleAPI, modalFinished]);
 
   // rowSelection
   const start = () => {
@@ -201,19 +212,9 @@ export default function PackageProcessing(props: any) {
     console.log(selectedRowKeys);
     console.log(apiEndpoint);
 
-    // if (apiEndpoint === "reject-receiver") {
-    //   const sendRequests = selectedRowKeys.map((packageId) => {
-    //     return service.patch(`/ex-employee/${apiEndpoint}`, {
-    //       packageId: packageId,
-    //       // reason: reason,
-    //     });
-    //   })
-    // } else {
     const sendRequests = selectedRowKeys.map((packageId) => {
       return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
     });
-    // }
-
     console.log(sendRequests);
 
     Promise.all(sendRequests)
@@ -235,6 +236,11 @@ export default function PackageProcessing(props: any) {
       });
   };
 
+  const handleModalSubmit = () => {
+    console.log("Submit from GatherPoints");
+    setModalFinished((prev) => !prev);
+  };
+
   const pagination = {
     hideOnSinglePage: true,
     pageSize: 5,
@@ -252,30 +258,8 @@ export default function PackageProcessing(props: any) {
     },
     {
       title: "From",
-      dataIndex: "orgPoint",
-      key: "orgPoint",
-      filters: [
-        {
-          text: "Exchange",
-          value: "Exchange",
-        },
-        {
-          text: "Gather",
-          value: "Gather",
-        },
-      ],
-      onFilter: (value, record) => {
-        const pointType =
-          record.orgPoint.manager?.role === "EXCHANGE_MANAGER"
-            ? "Exchange"
-            : "Gather";
-        return pointType === value;
-      },
-      render: (orgPoint) => {
-        const pointType =
-          orgPoint.manager?.role === "EXCHANGE_MANAGER" ? "Exchange" : "Gather";
-        return `${orgPoint.name} (${pointType})`;
-      },
+      dataIndex: "orgPointId",
+      key: "orgPointId",
     },
     {
       title: "Timestamp",
@@ -357,12 +341,18 @@ export default function PackageProcessing(props: any) {
             </Button>
             <Button
               type="primary"
-              onClick={() => handleOperation("reject-receiver")}
+              onClick={() => setModalReasonOpen(true)}
               disabled={!hasSelected}
-              loading={loading}
+              loading={modalLoading}
             >
               Delivery Failure
             </Button>
+            <DeliveryFailureModal
+              onSubmit={handleModalSubmit}
+              packageIds={selectedRowKeys}
+              isOpen={modalReasonOpen}
+              setModalOpen={setModalReasonOpen}
+            />
           </>
         ) : null}
         {role === "GATHER_EMPLOYEE" ? (

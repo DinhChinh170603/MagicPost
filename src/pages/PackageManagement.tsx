@@ -493,50 +493,52 @@ export default function PackageManagement(props: any) {
     <>
       <div className="flex h-full w-full">
         <div className="mx-auto mt-8 flex w-[98%]">
-          <div className="w-1/2">
-            <div className="flex w-full flex-col gap-4">
-              <div className="text-2xl font-bold">Sent Packages</div>
-              <SkeletonTable loading={loading} columns={columnsSent}>
-                <Table
-                  className="w-full"
-                  columns={columnsSent}
-                  expandable={{
-                    expandedRowRender: (record) => (
-                      <p style={{ margin: 0 }}>{record.description}</p>
-                    ),
-                    rowExpandable: (record) => record.description !== "",
-                  }}
-                  dataSource={dataSent}
-                  pagination={paginationOfSent}
-                  idSearchInput={idSearchInputSent}
-                  onChange={(pagination) =>
-                    setCurrentPageOfSent(pagination.current)
-                  }
-                />
-              </SkeletonTable>
+        <div className="relative flex flex-grow gap-6">
+            <div className="w-1/2">
+              <div className="flex w-full flex-col gap-4">
+                <div className="text-[18px] font-bold">Sent Packages</div>
+                <SkeletonTable loading={loading} columns={columnsSent}>
+                  <Table
+                    className="w-full"
+                    columns={columnsSent}
+                    expandable={{
+                      expandedRowRender: (record) => (
+                        <p style={{ margin: 0 }}>{record.description}</p>
+                      ),
+                      rowExpandable: (record) => record.description !== "",
+                    }}
+                    dataSource={dataSent}
+                    pagination={paginationOfSent}
+                    idSearchInput={idSearchInputSent}
+                    onChange={(pagination) =>
+                      setCurrentPageOfSent(pagination.current)
+                    }
+                  />
+                </SkeletonTable>
+              </div>
             </div>
-          </div>
-          <div className="flex-1">
-            <div className="flex w-full flex-col gap-4">
-              <div className="text-2xl font-bold">Received Packages</div>
-              <SkeletonTable loading={loading} columns={columnsReceived}>
-                <Table
-                  className="w-full"
-                  columns={columnsReceived}
-                  expandable={{
-                    expandedRowRender: (record) => (
-                      <p style={{ margin: 0 }}>{record.description}</p>
-                    ),
-                    rowExpandable: (record) => record.description !== "",
-                  }}
-                  dataSource={dataReceived}
-                  pagination={paginationOfReceived}
-                  idSearchInput={idSearchInputReceived}
-                  onChange={(pagination) =>
-                    setCurrentPageOfReceived(pagination.current)
-                  }
-                />
-              </SkeletonTable>
+            <div className="flex-1">
+              <div className="flex w-full flex-col gap-4">
+                <div className="text-[18px] font-bold">Received Packages</div>
+                <SkeletonTable loading={loading} columns={columnsReceived}>
+                  <Table
+                    className="w-full"
+                    columns={columnsReceived}
+                    expandable={{
+                      expandedRowRender: (record) => (
+                        <p style={{ margin: 0 }}>{record.description}</p>
+                      ),
+                      rowExpandable: (record) => record.description !== "",
+                    }}
+                    dataSource={dataReceived}
+                    pagination={paginationOfReceived}
+                    idSearchInput={idSearchInputReceived}
+                    onChange={(pagination) =>
+                      setCurrentPageOfReceived(pagination.current)
+                    }
+                  />
+                </SkeletonTable>
+              </div>
             </div>
           </div>
         </div>
