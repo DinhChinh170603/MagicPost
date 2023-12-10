@@ -14,7 +14,7 @@ interface ModalProps {
 
 const { Option } = Select;
 
-const EstablishConnection: React.FC<ModalProps> = ({ onSubmit, exchangePointsList, gatherPointsList, isOpen, setModalOpen }) => {
+const EstablishConnectionModal: React.FC<ModalProps> = ({ onSubmit, exchangePointsList, gatherPointsList, isOpen, setModalOpen }) => {
   const [form] = Form.useForm();
 
   const [loading, setLoading] = useState(false);
@@ -92,4 +92,4 @@ const EstablishConnection: React.FC<ModalProps> = ({ onSubmit, exchangePointsLis
   );
 };
 
-export default EstablishConnection;
+export default EstablishConnectionModal;

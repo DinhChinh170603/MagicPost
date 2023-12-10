@@ -1,13 +1,12 @@
-import { Table, Tag, Button } from "antd";
+import { Button, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import InsertNewPoint from "../components/InsertNewPoint";
-import EstablishConnection from "../components/EstablishConnection";
+import EstablishConnectionModal from "../components/EstablishConnectionModal";
+import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const pagination = {
   hideOnSinglePage: true,
@@ -24,7 +23,8 @@ export default function GatherPoints() {
   const [modalPointOpen, setModalPointOpen] = useState(false);
   const [modalLinkOpen, setModalLinkOpen] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [tableLoading, setTableLoading] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
   const [modalFinished, setModalFinished] = useState(false);
 
   const columns = [
@@ -97,25 +97,39 @@ export default function GatherPoints() {
   ];
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .all([
-        service.get("/leader/exchange-points"),
-        service.get("/leader/gather-points"),
-      ])
+    setTableLoading(true);
+    setModalLoading(true);
+    service
+      .get("/leader/gather-points")
       .then(
-        axios.spread((res1, res2) => {
-          setExchangePointsList(res1.data.results);
-          setGatherPointsList(res2.data.results);
-          setLoading(false);
-        }),
-        () => {
-          setLoading(false);
-          toast.error("Something went wrong");
+        (res) => {
+          setTableLoading(false);
+          setGatherPointsList(res.data.results);
+        },
+        (rej) => {
+          setTableLoading(false);
+          toast.error("Something went wrong", rej);
         },
       )
       .catch((err) => {
-        setLoading(false);
+        setTableLoading(false);
+        toast.error(err.response.data.message);
+      });
+
+    service
+      .get("/leader/exchange-points")
+      .then(
+        (res) => {
+          setModalLoading(false);
+          setExchangePointsList(res.data.results);
+        },
+        (rej) => {
+          setModalLoading(false);
+          toast.error("Something went wrong", rej);
+        },
+      )
+      .catch((err) => {
+        setModalLoading(false);
         toast.error(err.response.data.message);
       });
   }, [modalFinished]);
@@ -132,16 +146,20 @@ export default function GatherPoints() {
           <Button type="primary" onClick={() => setModalPointOpen(true)}>
             Insert a new point
           </Button>
-          <InsertNewPoint
+          <InsertNewPointModal
             onSubmit={handleModalSubmit}
             apiEndpoint="/leader/gather-point"
             isOpen={modalPointOpen}
             setModalOpen={setModalPointOpen}
           />
-          <Button type="primary" onClick={() => setModalLinkOpen(true)}>
+          <Button
+            type="primary"
+            onClick={() => setModalLinkOpen(true)}
+            loading={modalLoading}
+          >
             Establish Connection
           </Button>
-          <EstablishConnection
+          <EstablishConnectionModal
             onSubmit={handleModalSubmit}
             exchangePointsList={exchangePointsList}
             gatherPointsList={gatherPointsList}
@@ -149,7 +167,11 @@ export default function GatherPoints() {
             setModalOpen={setModalLinkOpen}
           />
         </div>
-        <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
+        <SkeletonTable
+          className="w-[80%]"
+          loading={tableLoading}
+          columns={columns}
+        >
           <Table
             className="w-[80%]"
             columns={columns}

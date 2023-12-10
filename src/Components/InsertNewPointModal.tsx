@@ -11,7 +11,7 @@ interface ModalProps {
   setModalOpen: (isOpen: boolean) => void;
 }
 
-const InsertNewPoint: React.FC<ModalProps> = ({
+const InsertNewPointModal: React.FC<ModalProps> = ({
   onSubmit,
   apiEndpoint,
   isOpen,
@@ -91,4 +91,4 @@ const InsertNewPoint: React.FC<ModalProps> = ({
   );
 };
 
-export default InsertNewPoint;
+export default InsertNewPointModal;

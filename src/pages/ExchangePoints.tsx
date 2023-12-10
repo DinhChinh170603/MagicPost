@@ -2,7 +2,7 @@ import { Button, Table } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import InsertNewPoint from "../components/InsertNewPoint";
+import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
@@ -122,7 +122,7 @@ export default function ExchangePoints() {
           <Button type="primary" onClick={() => setModalPointOpen(true)}>
             Insert a new point
           </Button>
-          <InsertNewPoint
+          <InsertNewPointModal
             onSubmit={handleModalSubmit}
             apiEndpoint="/leader/exchange-point"
             isOpen={modalPointOpen}
