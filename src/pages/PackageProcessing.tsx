@@ -213,7 +213,11 @@ export default function PackageProcessing(props: any) {
     console.log(apiEndpoint);
 
     const sendRequests = selectedRowKeys.map((packageId) => {
-      return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
+      if (apiEndpoint === "report") {
+        return service.get(roleAPI + `/${apiEndpoint}/` + packageId);
+      } else {
+        return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
+      }
     });
     console.log(sendRequests);
 
@@ -346,6 +350,14 @@ export default function PackageProcessing(props: any) {
               loading={modalLoading}
             >
               Delivery Failure
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => handleOperation("report")}
+              disabled={!hasSelected}
+              loading={loading}
+            >
+              Export Invoice
             </Button>
             <DeliveryFailureModal
               onSubmit={handleModalSubmit}
