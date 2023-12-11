@@ -24,6 +24,15 @@ const Sidebar = (props: any) => {
               Managers
             </NavLink>
             <NavLink
+              to="/package-management"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              All Package
+            </NavLink>
+            <NavLink
               to="/exchange-points"
               end
               className={({ isActive }) =>
@@ -107,6 +116,15 @@ const Sidebar = (props: any) => {
               Employees
             </NavLink>
             <NavLink
+              to="/package-management"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Package Management
+            </NavLink>
+            <NavLink
               to="/invite-employee"
               end
               className={({ isActive }) =>
@@ -129,6 +147,15 @@ const Sidebar = (props: any) => {
               }
             >
               Employees
+            </NavLink>
+            <NavLink
+              to="/package-management"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Package Management
             </NavLink>
             <NavLink
               to="/invite-employee"
