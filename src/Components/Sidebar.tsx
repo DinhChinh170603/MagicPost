@@ -100,6 +100,15 @@ const Sidebar = (props: any) => {
             >
               Incoming Package
             </NavLink>
+            <NavLink
+              to="/delivery-status"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Delivery Status
+            </NavLink>
           </>
         );
 

@@ -24,6 +24,7 @@ import NewPackage from "./pages/NewPackage";
 import PackageProcessing from "./pages/PackageProcessing";
 import IncomingPackage from "./pages/IncomingPackage";
 import PackageManagement from "./pages/PackageManagement";
+import DeliveryStatus from "./pages/DeliveryStatus";
 import AuthContext from "./contexts/AuthContext";
 
 function App() {
@@ -96,6 +97,7 @@ function App() {
                 <Route path="/package-processing" element={getPage(<PackageProcessing role={user ? user.role : null}/>)}></Route>
                 <Route path="/incoming-packages" element={getPage(<IncomingPackage role={user ? user.role : null}/>)}></Route>
                 <Route path="/package-management" element={getPage(<PackageManagement role={user ? user.role : null}/>)}></Route>
+                <Route path="/delivery-status" element={getPage(<DeliveryStatus role={user ? user.role : null}/>)}></Route>
                 <Route path="/users/:id" element={getPage(<User />)}></Route>
                 <Route path="/invite" element={getPage(<InviteUser />)}></Route>
                 <Route path="/invite-employee" element={getPage(<InviteEmployee role={user ? user.role : null}/>)}></Route>

@@ -514,7 +514,7 @@ export default function PackageManagement(props: any) {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
-      ...getColumnSearchPropsReceived("id"),
+      ...getColumnSearchPropsByLeader("id"),
     },
     {
       title: "Sender Name",
