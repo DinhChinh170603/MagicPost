@@ -8,6 +8,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
 import DeliveryFailureModal from "../components/DeliveryFailureModal";
+import download from "downloadjs";
 
 export default function PackageProcessing(props: any) {
   const { role } = props;
@@ -275,7 +276,7 @@ export default function PackageProcessing(props: any) {
         );
         if (timestampDetail) {
           const formattedTimestamp = moment(timestampDetail.timestamp).format(
-            "YYYY-MM-DD [lúc] HH:mm:ss",
+            "DD-MM-YYYY [at] HH:mm:ss",
           );
           return formattedTimestamp;
         }
@@ -300,6 +301,22 @@ export default function PackageProcessing(props: any) {
         record.packageType.indexOf(value) === 0,
     },
   ];
+
+  const [downloadLoading, setDownloadLoading] = useState(false);
+
+  const downloadReport = () => {
+    setDownloadLoading(true);
+    service
+      .get(roleAPI + "/report/" + selectedRowKeys[0], { responseType: "arraybuffer" })
+      .then((res) => {
+        download(res.data, "report.pdf", res.headers["content-type"]);
+        setDownloadLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        setLoading(false);
+      });
+  };
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-lime-100">
@@ -353,11 +370,11 @@ export default function PackageProcessing(props: any) {
             </Button>
             <Button
               type="primary"
-              onClick={() => handleOperation("report")}
+              onClick={() => downloadReport()}
               disabled={!hasSelected}
-              loading={loading}
+              loading={loading || downloadLoading}
             >
-              Export Invoice
+              {downloadLoading ? "Downloading" : "Export Invoice"}
             </Button>
             <DeliveryFailureModal
               onSubmit={handleModalSubmit}
