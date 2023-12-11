@@ -261,7 +261,7 @@ export default function IncomingPackage(props: any) {
         );
         if (timestampDetail) {
           const formattedTimestamp = moment(timestampDetail.timestamp).format(
-            "YYYY-MM-DD [lúc] HH:mm:ss",
+            "DD-MM-YYYY [at] HH:mm:ss",
           );
           return formattedTimestamp;
         }
