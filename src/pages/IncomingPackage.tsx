@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, SetStateAction } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import service from "../helpers/service";
@@ -41,7 +41,7 @@ export default function IncomingPackage(props: any) {
             setLoading(false);
             return;
           }
-          const newData = res.data.results.map((item) => ({
+          const newData = res.data.results.map((item: { id: any; }) => ({
             ...item,
             key: item.id,
           }));
@@ -64,7 +64,7 @@ export default function IncomingPackage(props: any) {
       setLoading(false);
     }, 1000);
   };
-  const onSelectChange = (newSelectedRowKeys) => {
+  const onSelectChange = (newSelectedRowKeys: SetStateAction<never[]>) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -76,7 +76,7 @@ export default function IncomingPackage(props: any) {
   const hasSelected = selectedRowKeys.length > 0;
 
   // searchInColumn
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  const handleSearch = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
     confirm();
     setSearch({ dataIndex, searchText: selectedKeys[0] });
 
@@ -97,17 +97,23 @@ export default function IncomingPackage(props: any) {
       );
     }
   };
-  const handleResetId = (clearFilters) => {
+  const handleResetId = (clearFilters: () => void) => {
     clearFilters();
     setSearch({ ...search, searchText: "" });
   };
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
       clearFilters,
       close,
+    }: {
+      setSelectedKeys: (keys: string[]) => void;
+      selectedKeys: string[];
+      confirm: () => void;
+      clearFilters: () => void;
+      close: () => void;
     }) => (
       <div className="p-2">
         <Input
@@ -141,19 +147,6 @@ export default function IncomingPackage(props: any) {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearch({ dataIndex, searchText: selectedKeys[0] });
-            }}
-            className={dataIndex === "id" ? "hidden" : "inline"}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >
@@ -162,14 +155,14 @@ export default function IncomingPackage(props: any) {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
-    onFilterDropdownOpenChange: (visible) => {
+    onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () => (dataIndex === "id" ? idSearchInput : null)?.select(),
@@ -177,7 +170,7 @@ export default function IncomingPackage(props: any) {
         );
       }
     },
-    render: (text) =>
+    render: (text: { toString: () => string; }) =>
       search.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -194,7 +187,7 @@ export default function IncomingPackage(props: any) {
   });
 
   // Handling operations
-  const handleOperation = (apiEndpoint) => {
+  const handleOperation = (apiEndpoint: string) => {
     setLoading(true);
 
     if (role === "EXCHANGE_EMPLOYEE") {
@@ -250,7 +243,7 @@ export default function IncomingPackage(props: any) {
       title: "Timestamp",
       dataIndex: "status",
       key: "timestamp",
-      render: (status) => {
+      render: (status: any[]) => {
         const timestampDetail = status.find((s) =>
           s.detail.includes("Gói hàng mới đã được ghi nhận tại điểm"),
         );

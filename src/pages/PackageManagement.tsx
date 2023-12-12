@@ -58,12 +58,12 @@ export default function PackageManagement(props: any) {
         ])
         .then(
           axios.spread((res1, res2) => {
-            const newData1 = res1.data.results.map((item) => ({
+            const newData1 = res1.data.results.map((item: { id: any; }) => ({
               ...item,
               key: item.id,
             }));
             setSentPackages(newData1);
-            const newData2 = res2.data.results.map((item) => ({
+            const newData2 = res2.data.results.map((item: { id: any; }) => ({
               ...item,
               key: item.id,
             }));
@@ -83,7 +83,7 @@ export default function PackageManagement(props: any) {
       setCurrentPageOfReceived(1);
     } else if (roleAPI && role === "LEADER") {
       service.get(roleAPI + `/all-packages`).then((res) => {
-        const newData = res.data.results.map((item) => ({
+        const newData = res.data.results.map((item: { id: any; }) => ({
           ...item,
           key: item.id,
         }));
@@ -94,7 +94,7 @@ export default function PackageManagement(props: any) {
   }, [role, roleAPI]);
 
   // searchInColumn
-  const handleSearchSent = (selectedKeys, confirm, dataIndex) => {
+  const handleSearchSent = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
     confirm();
     setSearchSent({ dataIndex, searchText: selectedKeys[0] });
 
@@ -111,17 +111,23 @@ export default function PackageManagement(props: any) {
       setCurrentPageOfSent(searchedPage);
     }
   };
-  const handleResetIdSent = (clearFilters) => {
+  const handleResetIdSent = (clearFilters: () => void) => {
     clearFilters();
     setSearchSent({ ...searchSent, searchText: "" });
   };
-  const getColumnSearchPropsSent = (dataIndex) => ({
+  const getColumnSearchPropsSent = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
       clearFilters,
       close,
+    }: {
+      setSelectedKeys: (keys: string[]) => void;
+      selectedKeys: string[];
+      confirm: () => void;
+      clearFilters: () => void;
+      close: () => void;
     }) => (
       <div className="p-2">
         <Input
@@ -157,19 +163,6 @@ export default function PackageManagement(props: any) {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchSent({ dataIndex, searchText: selectedKeys[0] });
-            }}
-            className={dataIndex === "id" ? "hidden" : "inline"}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >
@@ -178,14 +171,14 @@ export default function PackageManagement(props: any) {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
-    onFilterDropdownOpenChange: (visible) => {
+    onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
@@ -193,7 +186,7 @@ export default function PackageManagement(props: any) {
         );
       }
     },
-    render: (text) =>
+    render: (text: { toString: () => string; }) =>
       searchSent.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -210,7 +203,7 @@ export default function PackageManagement(props: any) {
   });
 
   // Search in receivedPackages
-  const handleSearchReceived = (selectedKeys, confirm, dataIndex) => {
+  const handleSearchReceived = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
     confirm();
     setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
 
@@ -227,17 +220,23 @@ export default function PackageManagement(props: any) {
       setCurrentPageOfReceived(searchedPage);
     }
   };
-  const handleResetIdReceived = (clearFilters) => {
+  const handleResetIdReceived = (clearFilters: () => void) => {
     clearFilters();
     setSearchReceived({ ...searchReceived, searchText: "" });
   };
-  const getColumnSearchPropsReceived = (dataIndex) => ({
+  const getColumnSearchPropsReceived = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
       clearFilters,
       close,
+    }: {
+      setSelectedKeys: (keys: string[]) => void;
+      selectedKeys: string[];
+      confirm: () => void;
+      clearFilters: () => void;
+      close: () => void;
     }) => (
       <div className="p-2">
         <Input
@@ -275,19 +274,6 @@ export default function PackageManagement(props: any) {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
-            }}
-            className={dataIndex === "id" ? "hidden" : "inline"}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >
@@ -296,14 +282,14 @@ export default function PackageManagement(props: any) {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
-    onFilterDropdownOpenChange: (visible) => {
+    onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () => (dataIndex === "id" ? idSearchInputReceived : null)?.select(),
@@ -311,7 +297,7 @@ export default function PackageManagement(props: any) {
         );
       }
     },
-    render: (text) =>
+    render: (text: { toString: () => string; }) =>
       searchReceived.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -328,7 +314,7 @@ export default function PackageManagement(props: any) {
   });
 
   // Search in allPackage
-  const handleSearchByLeader = (selectedKeys, confirm, dataIndex) => {
+  const handleSearchByLeader = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
     confirm();
     setSearchByLeader({ dataIndex, searchText: selectedKeys[0] });
 
@@ -345,17 +331,23 @@ export default function PackageManagement(props: any) {
       setCurrentPageOfAll(searchedPage);
     }
   };
-  const handleResetIdByLeader = (clearFilters) => {
+  const handleResetIdByLeader = (clearFilters: () => void) => {
     clearFilters();
     setSearchByLeader({ ...searchByLeader, searchText: "" });
   };
-  const getColumnSearchPropsByLeader = (dataIndex) => ({
+  const getColumnSearchPropsByLeader = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
       clearFilters,
       close,
+    }: {
+      setSelectedKeys: (keys: string[]) => void;
+      selectedKeys: string[];
+      confirm: () => void;
+      clearFilters: () => void;
+      close: () => void;
     }) => (
       <div className="p-2">
         <Input
@@ -393,19 +385,6 @@ export default function PackageManagement(props: any) {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchByLeader({ dataIndex, searchText: selectedKeys[0] });
-            }}
-            className={dataIndex === "id" ? "hidden" : "inline"}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >
@@ -414,14 +393,14 @@ export default function PackageManagement(props: any) {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
-    onFilterDropdownOpenChange: (visible) => {
+    onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
@@ -429,7 +408,7 @@ export default function PackageManagement(props: any) {
         );
       }
     },
-    render: (text) =>
+    render: (text: { toString: () => string; }) =>
       searchByLeader.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -525,13 +504,13 @@ export default function PackageManagement(props: any) {
       title: "Sender Name",
       dataIndex: "senderName",
       key: "senderName",
-      sorter: (a, b) => a.senderName.localeCompare(b.senderName),
+      sorter: (a: { senderName: string; }, b: { senderName: any; }) => a.senderName.localeCompare(b.senderName),
     },
     {
       title: "Receiver Name",
       dataIndex: "receiverName",
       key: "receiverName",
-      sorter: (c, d) => c.receiverName.localeCompare(d.receiverName),
+      sorter: (c: { receiverName: string; }, d: { receiverName: any; }) => c.receiverName.localeCompare(d.receiverName),
     },
     {
       title: "Package Type",
@@ -569,7 +548,7 @@ export default function PackageManagement(props: any) {
     span: number;
   };
 
-  const packageDetailSent = (pkg): PackageDetail[] => [
+  const packageDetailSent = (pkg: any): PackageDetail[] => [
     {
       key: 1,
       label: "senderName",
@@ -628,7 +607,66 @@ export default function PackageManagement(props: any) {
     },
   ];
 
-  const packageDetailReceived = (pkg): PackageDetail[] => [
+  const packageDetailReceived = (pkg: any): PackageDetail[] => [
+    {
+      key: 1,
+      label: "senderName",
+      children: (pkg.senderName),
+      span: 1.5,
+    },
+    {
+      key: 2,
+      label: "receiverName",
+      children: pkg.receiverName,
+      span: 1.5,
+    },
+    {
+      key: 3,
+      label: "senderContact",
+      children: pkg.senderContact,
+      span: 1.5,
+    },
+    {
+      key: 4,
+      label: "receiverContact",
+      children: pkg.receiverContact,
+      span: 1.5,
+    },
+    {
+      key: 5,
+      label: "orgAddress",
+      children: pkg.orgAddress,
+      span: 1.5,
+    },
+    {
+      key: 6,
+      label: "desAddress",
+      children: pkg.desAddress,
+      span: 1.5,
+    },
+    {
+      key: 7,
+      label: "packageType",
+      children: pkg.packageType,
+      span: 1.5,
+    },
+    {
+      key: 8,
+      label: "weight (kg)",
+      children: pkg.weight,
+      span: 1.5,
+    },
+    {
+      key: 9,
+      label: "lastStatus",
+      children: pkg.status[pkg.status.length - 1]
+        ? pkg.status[pkg.status.length - 1].detail
+        : "",
+      span: 3,
+    },
+  ];
+
+  const packageDetailAll = (pkg: any): PackageDetail[] => [
     {
       key: 1,
       label: "senderName",
@@ -687,66 +725,7 @@ export default function PackageManagement(props: any) {
     },
   ];
 
-  const packageDetailAll = (pkg): PackageDetail[] => [
-    {
-      key: 1,
-      label: "senderName",
-      children: pkg.senderName,
-      span: 1.5,
-    },
-    {
-      key: 2,
-      label: "receiverName",
-      children: pkg.receiverName,
-      span: 1.5,
-    },
-    {
-      key: 3,
-      label: "senderContact",
-      children: pkg.senderContact,
-      span: 1.5,
-    },
-    {
-      key: 4,
-      label: "receiverContact",
-      children: pkg.receiverContact,
-      span: 1.5,
-    },
-    {
-      key: 5,
-      label: "orgAddress",
-      children: pkg.orgAddress,
-      span: 1.5,
-    },
-    {
-      key: 6,
-      label: "desAddress",
-      children: pkg.desAddress,
-      span: 1.5,
-    },
-    {
-      key: 7,
-      label: "packageType",
-      children: pkg.packageType,
-      span: 1.5,
-    },
-    {
-      key: 8,
-      label: "weight (kg)",
-      children: pkg.weight,
-      span: 1.5,
-    },
-    {
-      key: 9,
-      label: "lastStatus",
-      children: pkg.status[pkg.status.length - 1]
-        ? pkg.status[pkg.status.length - 1].detail
-        : "",
-      span: 3,
-    },
-  ];
-
-  const dataSent = sentPackages.map((pkg) => ({
+  const dataSent = sentPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
     senderName: pkg.senderName,
@@ -756,7 +735,7 @@ export default function PackageManagement(props: any) {
     ),
   }));
 
-  const dataReceived = receivedPackages.map((pkg) => ({
+  const dataReceived = receivedPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
     senderName: pkg.senderName,
@@ -766,7 +745,7 @@ export default function PackageManagement(props: any) {
     ),
   }));
 
-  const dataOfAll = allPackage.map((pkg) => ({
+  const dataOfAll = allPackage.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
     senderName: pkg.senderName,
