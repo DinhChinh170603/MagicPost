@@ -2,8 +2,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { roleValueMap } from "./helpers";
 
-// const baseURL = "http://127.0.0.1:8080/api";
-const baseURL = "https://magicpost.onrender.com/api";
+const baseURL = "http://127.0.0.1:8080/api";
+// const baseURL = "https://magicpost.onrender.com/api";
 
 const service = axios.create({
   baseURL: baseURL,
