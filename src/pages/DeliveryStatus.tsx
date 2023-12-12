@@ -1,5 +1,4 @@
 import { Table, Button, Space, Descriptions, Input } from "antd";
-import PropTypes from "prop-types";
 import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
@@ -9,22 +8,22 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 
 export default function DeliveryStatus() {
-  const [sentPackages, setSentPackages] = useState([]);
-  const [receivedPackages, setReceivedPackages] = useState([]);
+  const [succeedPackages, setSucceedPackages] = useState([]);
+  const [rejectedPackages, setRejectedPackages] = useState([]);
 
-  const [searchSent, setSearchSent] = useState({
+  const [searchSucceed, setSearchSucceed] = useState({
     dataIndex: "",
     searchText: "",
   });
-  const idSearchInputSent = useRef(null);
-  const [currentPageOfSent, setCurrentPageOfSent] = useState(1);
+  const idSearchInputSucceed = useRef(null);
+  const [currentPageOfSucceed, setCurrentPageOfSucceed] = useState(1);
 
-  const [searchReceived, setSearchReceived] = useState({
+  const [searchRejected, setSearchRejected] = useState({
     dataIndex: "",
     searchText: "",
   });
-  const idSearchInputReceived = useRef(null);
-  const [currentPageOfReceived, setCurrentPageOfReceived] = useState(1);
+  const idSearchInputRejected = useRef(null);
+  const [currentPageOfRejected, setCurrentPageOfRejected] = useState(1);
 
   const [loading, setLoading] = useState(false);
 
@@ -41,12 +40,12 @@ export default function DeliveryStatus() {
             ...item,
             key: item.id,
           }));
-          setSentPackages(newData1);
+          setSucceedPackages(newData1);
           const newData2 = res2.data.results.map((item) => ({
             ...item,
             key: item.id,
           }));
-          setReceivedPackages(newData2);
+          setRejectedPackages(newData2);
           console.log(res1.data.results);
           console.log(res2.data.results);
           setLoading(false);
@@ -60,17 +59,17 @@ export default function DeliveryStatus() {
         setLoading(false);
         toast.error(err.response.data.message);
       });
-    setCurrentPageOfSent(1);
-    setCurrentPageOfReceived(1);
+    setCurrentPageOfSucceed(1);
+    setCurrentPageOfRejected(1);
   }, []);
 
-  // searchInColumn
-  const handleSearchSent = (selectedKeys, confirm, dataIndex) => {
+  // Search succeedPackages
+  const handleSearchSucceed = (selectedKeys, confirm, dataIndex) => {
     confirm();
-    setSearchSent({ dataIndex, searchText: selectedKeys[0] });
+    setSearchSucceed({ dataIndex, searchText: selectedKeys[0] });
 
     // Get index of searched data's list
-    const dataIndexIndex = receivedPackages.findIndex(
+    const dataIndexIndex = succeedPackages.findIndex(
       (item) => item[dataIndex] === selectedKeys[0],
     );
 
@@ -79,18 +78,18 @@ export default function DeliveryStatus() {
       const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
 
       // Update current page
-      setCurrentPageOfSent(searchedPage);
+      setCurrentPageOfSucceed(searchedPage);
     } else {
       console.log(
         `The searched id ${selectedKeys[0]} is not found in the data.`,
       );
     }
   };
-  const handleResetIdSent = (clearFilters) => {
+  const handleResetIdSucceed = (clearFilters) => {
     clearFilters();
-    setSearchSent({ ...searchSent, searchText: "" });
+    setSearchSucceed({ ...searchSucceed, searchText: "" });
   };
-  const getColumnSearchPropsSent = (dataIndex) => ({
+  const getColumnSearchPropsSucceed = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -100,21 +99,21 @@ export default function DeliveryStatus() {
     }) => (
       <div className="p-2">
         <Input
-          ref={dataIndex === "id" ? idSearchInputSent : null}
+          ref={dataIndex === "id" ? idSearchInputSucceed : null}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() =>
-            handleSearchSent(selectedKeys, confirm, dataIndex)
+            handleSearchSucceed(selectedKeys, confirm, dataIndex)
           }
           className="mb-4 block"
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearchSent(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearchSucceed(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
             className="w-[90px]"
@@ -122,7 +121,7 @@ export default function DeliveryStatus() {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleResetIdSent(clearFilters)}
+            onClick={() => clearFilters && handleResetIdSucceed(clearFilters)}
             size="small"
             className="w-[90px]"
           >
@@ -135,7 +134,7 @@ export default function DeliveryStatus() {
               confirm({
                 closeDropdown: false,
               });
-              setSearchSent({ dataIndex, searchText: selectedKeys[0] });
+              setSearchSucceed({ dataIndex, searchText: selectedKeys[0] });
             }}
             className={dataIndex === "id" ? "hidden" : "inline"}
           >
@@ -163,19 +162,19 @@ export default function DeliveryStatus() {
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(
-          () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
+          () => (dataIndex === "id" ? idSearchInputSucceed : null)?.select(),
           100,
         );
       }
     },
     render: (text) =>
-      searchSent.dataIndex === dataIndex ? (
+      searchSucceed.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
             backgroundColor: "#ffc069",
             padding: 0,
           }}
-          searchWords={[searchSent.searchText]}
+          searchWords={[searchSucceed.searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : ""}
         />
@@ -184,13 +183,13 @@ export default function DeliveryStatus() {
       ),
   });
 
-  // searchInColumn
-  const handleSearchReceived = (selectedKeys, confirm, dataIndex) => {
+  // Search rejectedPackages
+  const handleSearchRejected = (selectedKeys, confirm, dataIndex) => {
     confirm();
-    setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
+    setSearchRejected({ dataIndex, searchText: selectedKeys[0] });
 
     // Get index of searched data's list
-    const dataIndexIndex = receivedPackages.findIndex(
+    const dataIndexIndex = rejectedPackages.findIndex(
       (item) => item[dataIndex] === selectedKeys[0],
     );
 
@@ -199,18 +198,18 @@ export default function DeliveryStatus() {
       const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
 
       // Update current page
-      setCurrentPageOfReceived(searchedPage);
+      setCurrentPageOfRejected(searchedPage);
     } else {
       console.log(
         `The searched id ${selectedKeys[0]} is not found in the data.`,
       );
     }
   };
-  const handleResetIdReceived = (clearFilters) => {
+  const handleResetIdRejected = (clearFilters) => {
     clearFilters();
-    setSearchReceived({ ...searchReceived, searchText: "" });
+    setSearchRejected({ ...searchRejected, searchText: "" });
   };
-  const getColumnSearchPropsReceived = (dataIndex) => ({
+  const getColumnSearchPropsRejected = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -220,14 +219,14 @@ export default function DeliveryStatus() {
     }) => (
       <div className="p-2">
         <Input
-          ref={dataIndex === "id" ? idSearchInputSent : null}
+          ref={dataIndex === "id" ? idSearchInputRejected : null}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() =>
-            handleSearchReceived(selectedKeys, confirm, dataIndex)
+            handleSearchRejected(selectedKeys, confirm, dataIndex)
           }
           className="mb-4 block"
         />
@@ -235,7 +234,7 @@ export default function DeliveryStatus() {
           <Button
             type="primary"
             onClick={() =>
-              handleSearchReceived(selectedKeys, confirm, dataIndex)
+              handleSearchRejected(selectedKeys, confirm, dataIndex)
             }
             icon={<SearchOutlined />}
             size="small"
@@ -244,7 +243,7 @@ export default function DeliveryStatus() {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleResetIdReceived(clearFilters)}
+            onClick={() => clearFilters && handleResetIdRejected(clearFilters)}
             size="small"
             className="w-[90px]"
           >
@@ -257,7 +256,7 @@ export default function DeliveryStatus() {
               confirm({
                 closeDropdown: false,
               });
-              setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
+              setSearchRejected({ dataIndex, searchText: selectedKeys[0] });
             }}
             className={dataIndex === "id" ? "hidden" : "inline"}
           >
@@ -285,19 +284,19 @@ export default function DeliveryStatus() {
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(
-          () => (dataIndex === "id" ? idSearchInputReceived : null)?.select(),
+          () => (dataIndex === "id" ? idSearchInputRejected : null)?.select(),
           100,
         );
       }
     },
     render: (text) =>
-      searchReceived.dataIndex === dataIndex ? (
+      searchRejected.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
             backgroundColor: "#ffc069",
             padding: 0,
           }}
-          searchWords={[searchReceived.searchText]}
+          searchWords={[searchRejected.searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : ""}
         />
@@ -306,28 +305,28 @@ export default function DeliveryStatus() {
       ),
   });
 
-  const paginationOfSent = {
+  const paginationOfSucceed = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPageOfSent,
+    current: currentPageOfSucceed,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
-  const paginationOfReceived = {
+  const paginationOfRejected = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPageOfReceived,
+    current: currentPageOfRejected,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
-  const columnsSent = [
+  const columnsSucceed = [
     {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
-      ...getColumnSearchPropsSent("id"),
+      ...getColumnSearchPropsSucceed("id"),
     },
     {
       title: "Receiver Name",
@@ -341,12 +340,12 @@ export default function DeliveryStatus() {
     },
   ];
 
-  const columnsReceived = [
+  const columnsRejected = [
     {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
-      ...getColumnSearchPropsReceived("id"),
+      ...getColumnSearchPropsRejected("id"),
     },
     {
       title: "Receiver Name",
@@ -367,7 +366,7 @@ export default function DeliveryStatus() {
     span: number;
   };
 
-  const packageDetailSent = (pkg): PackageDetail[] => [
+  const packageDetailSucceed = (pkg): PackageDetail[] => [
     {
       key: 1,
       label: "senderName",
@@ -426,7 +425,7 @@ export default function DeliveryStatus() {
     },
   ];
 
-  const packageDetailReceived = (pkg): PackageDetail[] => [
+  const packageDetailRejected = (pkg): PackageDetail[] => [
     {
       key: 1,
       label: "senderName",
@@ -485,7 +484,7 @@ export default function DeliveryStatus() {
     },
   ];
 
-  const dataSent = sentPackages.map((pkg) => ({
+  const dataSucceed = succeedPackages.map((pkg) => ({
     key: pkg.id,
     id: pkg.id,
     receiverName: pkg.receiverName,
@@ -493,11 +492,11 @@ export default function DeliveryStatus() {
       ? pkg.status[pkg.status.length - 1].detail
       : "",
     description: (
-      <Descriptions size="small" bordered items={packageDetailSent(pkg)} />
+      <Descriptions size="small" bordered items={packageDetailSucceed(pkg)} />
     ),
   }));
 
-  const dataReceived = receivedPackages.map((pkg) => ({
+  const dataRejected = rejectedPackages.map((pkg) => ({
     key: pkg.id,
     id: pkg.id,
     receiverName: pkg.receiverName,
@@ -505,7 +504,7 @@ export default function DeliveryStatus() {
       ? pkg.status[pkg.status.length - 1].detail
       : "",
     description: (
-      <Descriptions size="small" bordered items={packageDetailReceived(pkg)} />
+      <Descriptions size="small" bordered items={packageDetailRejected(pkg)} />
     ),
   }));
 
@@ -519,21 +518,21 @@ export default function DeliveryStatus() {
                 <div className="text-[18px] font-bold">
                   Successful Deliveries
                 </div>
-                <SkeletonTable loading={loading} columns={columnsSent}>
+                <SkeletonTable loading={loading} columns={columnsSucceed}>
                   <Table
                     className="w-full"
-                    columns={columnsSent}
+                    columns={columnsSucceed}
                     expandable={{
                       expandedRowRender: (record) => (
                         <p style={{ margin: 0 }}>{record.description}</p>
                       ),
                       rowExpandable: (record) => record.description !== "",
                     }}
-                    dataSource={dataSent}
-                    pagination={paginationOfSent}
-                    idSearchInput={idSearchInputSent}
+                    dataSource={dataSucceed}
+                    pagination={paginationOfSucceed}
+                    idSearchInput={idSearchInputSucceed}
                     onChange={(pagination) =>
-                      setCurrentPageOfSent(pagination.current)
+                      setCurrentPageOfSucceed(pagination.current)
                     }
                   />
                 </SkeletonTable>
@@ -542,21 +541,21 @@ export default function DeliveryStatus() {
             <div className="flex-1">
               <div className="flex w-full flex-col gap-4">
                 <div className="text-[18px] font-bold">Failed Deliveries</div>
-                <SkeletonTable loading={loading} columns={columnsReceived}>
+                <SkeletonTable loading={loading} columns={columnsRejected}>
                   <Table
                     className="w-full"
-                    columns={columnsReceived}
+                    columns={columnsRejected}
                     expandable={{
                       expandedRowRender: (record) => (
                         <p style={{ margin: 0 }}>{record.description}</p>
                       ),
                       rowExpandable: (record) => record.description !== "",
                     }}
-                    dataSource={dataReceived}
-                    pagination={paginationOfReceived}
-                    idSearchInput={idSearchInputReceived}
+                    dataSource={dataRejected}
+                    pagination={paginationOfRejected}
+                    idSearchInput={idSearchInputRejected}
                     onChange={(pagination) =>
-                      setCurrentPageOfReceived(pagination.current)
+                      setCurrentPageOfRejected(pagination.current)
                     }
                   />
                 </SkeletonTable>
@@ -568,7 +567,3 @@ export default function DeliveryStatus() {
     </>
   );
 }
-
-DeliveryStatus.propTypes = {
-  role: PropTypes.string,
-};

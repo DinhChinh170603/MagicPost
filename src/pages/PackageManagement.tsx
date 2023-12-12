@@ -83,7 +83,7 @@ export default function PackageManagement(props: any) {
         });
     setCurrentPageOfSent(1);
     setCurrentPageOfReceived(1);
-    } else {
+    } else if (roleAPI && role === "LEADER") {
       service.get(roleAPI + `/all-packages`).then((res) => {
         const newData = res.data.results.map((item) => ({
           ...item,
@@ -101,7 +101,7 @@ export default function PackageManagement(props: any) {
     setSearchSent({ dataIndex, searchText: selectedKeys[0] });
 
     // Get index of searched data's list
-    const dataIndexIndex = receivedPackages.findIndex(
+    const dataIndexIndex = sentPackages.findIndex(
       (item) => item[dataIndex] === selectedKeys[0],
     );
 
@@ -215,7 +215,7 @@ export default function PackageManagement(props: any) {
       ),
   });
 
-  // searchInColumn
+  // Search in receivedPackages
   const handleSearchReceived = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
@@ -251,7 +251,7 @@ export default function PackageManagement(props: any) {
     }) => (
       <div className="p-2">
         <Input
-          ref={dataIndex === "id" ? idSearchInputSent : null}
+          ref={dataIndex === "id" ? idSearchInputReceived : null}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) =>
@@ -337,7 +337,7 @@ export default function PackageManagement(props: any) {
       ),
   });
 
-  // searchInColumn
+  // Search in allPackage
   const handleSearchByLeader = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchByLeader({ dataIndex, searchText: selectedKeys[0] });
@@ -361,7 +361,7 @@ export default function PackageManagement(props: any) {
   };
   const handleResetIdByLeader = (clearFilters) => {
     clearFilters();
-    setSearchByLeader({ ...searchSent, searchText: "" });
+    setSearchByLeader({ ...searchByLeader, searchText: "" });
   };
   const getColumnSearchPropsByLeader = (dataIndex) => ({
     filterDropdown: ({
@@ -373,7 +373,7 @@ export default function PackageManagement(props: any) {
     }) => (
       <div className="p-2">
         <Input
-          ref={dataIndex === "id" ? idSearchInputSent : null}
+          ref={dataIndex === "id" ? idSearchInputByLeader : null}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) =>
