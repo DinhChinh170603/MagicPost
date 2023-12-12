@@ -111,7 +111,6 @@ export default function ExchangePoints() {
   }, [modalFinished]);
 
   const handleModalSubmit = () => {
-    console.log("Submit from ExchangePoints");
     setModalFinished((prev) => !prev);
   };
   return (

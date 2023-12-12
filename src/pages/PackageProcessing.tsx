@@ -35,7 +35,6 @@ export default function PackageProcessing(props: any) {
     setModalLoading(true);
     if (role === "EXCHANGE_EMPLOYEE") {
       setRoleAPI("/ex-employee");
-      console.log(roleAPI);
     } else if (role === "GATHER_EMPLOYEE") {
       setRoleAPI("/gth-employee");
     }
@@ -55,12 +54,11 @@ export default function PackageProcessing(props: any) {
             key: item.id,
           }));
           setData(newData);
-          console.log(newData);
           setLoading(false);
           setModalLoading(false);
         })
         .catch((err) => {
-          console.log(err);
+          toast.error(err.response.data.message);
           setLoading(false);
           setModalLoading(false);
         });
@@ -78,7 +76,6 @@ export default function PackageProcessing(props: any) {
     }, 1000);
   };
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -210,8 +207,6 @@ export default function PackageProcessing(props: any) {
   // Handling operations
   const handleOperation = (apiEndpoint) => {
     setLoading(true);
-    console.log(selectedRowKeys);
-    console.log(apiEndpoint);
 
     const sendRequests = selectedRowKeys.map((packageId) => {
       if (apiEndpoint === "report") {
@@ -220,7 +215,6 @@ export default function PackageProcessing(props: any) {
         return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
       }
     });
-    console.log(sendRequests);
 
     Promise.all(sendRequests)
       .then((responses) => {
@@ -242,7 +236,6 @@ export default function PackageProcessing(props: any) {
   };
 
   const handleModalSubmit = () => {
-    console.log("Submit from GatherPoints");
     setModalFinished((prev) => !prev);
   };
 

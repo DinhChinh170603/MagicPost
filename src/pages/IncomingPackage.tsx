@@ -46,11 +46,10 @@ export default function IncomingPackage(props: any) {
             key: item.id,
           }));
           setData(newData);
-          console.log(newData);
           setLoading(false);
         })
         .catch((err) => {
-          console.log(err);
+          toast.error(err.response.data.message);
         });
     }
     setCurrentPage(1);
@@ -66,7 +65,6 @@ export default function IncomingPackage(props: any) {
     }, 1000);
   };
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -198,8 +196,6 @@ export default function IncomingPackage(props: any) {
   // Handling operations
   const handleOperation = (apiEndpoint) => {
     setLoading(true);
-    console.log(selectedRowKeys);
-    console.log(apiEndpoint);
 
     if (role === "EXCHANGE_EMPLOYEE") {
       setRoleAPI("/ex-employee");
@@ -210,7 +206,6 @@ export default function IncomingPackage(props: any) {
     const sendRequests = selectedRowKeys.map((packageId) => {
       return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
     });
-    console.log(sendRequests);
 
     Promise.all(sendRequests)
       .then((responses) => {

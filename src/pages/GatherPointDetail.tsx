@@ -57,8 +57,6 @@ export default function GatherPointDetail() {
             key: item.id,
           }));
           setReceivedPackages(newData2);
-          console.log(res1.data.results);
-          console.log(res2.data.results);
           setLoading(false);
         }),
         () => {
@@ -118,9 +116,6 @@ export default function GatherPointDetail() {
       // Update current page
       setCurrentPageOfSent(searchedPage);
     } else {
-      console.log(
-        `The searched id ${selectedKeys[0]} is not found in the data.`,
-      );
     }
   };
   const handleResetIdSent = (clearFilters) => {
@@ -237,10 +232,6 @@ export default function GatherPointDetail() {
 
       // Update current page
       setCurrentPageOfReceived(searchedPage);
-    } else {
-      console.log(
-        `The searched id ${selectedKeys[0]} is not found in the data.`,
-      );
     }
   };
   const handleResetIdReceived = (clearFilters) => {

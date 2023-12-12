@@ -26,7 +26,6 @@ const DeliveryFailureModal: React.FC<ModalProps> = ({
   const onFinish = () => {
     const { reason, sendAttempt } = form.getFieldsValue();
     setLoading(true);
-    console.log(packageIds);
 
     const sendRequests = packageIds.map((packageId) => {
         return service.patch(`/ex-employee/reject-receiver/`, {
@@ -34,7 +33,6 @@ const DeliveryFailureModal: React.FC<ModalProps> = ({
           reason: `${sendAttempt} (thất bại) với lí do: ${reason}`,
         });
     });
-    console.log(sendRequests);
 
     Promise.all(sendRequests)
       .then((responses) => {

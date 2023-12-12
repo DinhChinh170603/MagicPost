@@ -135,7 +135,6 @@ export default function GatherPoints() {
   }, [modalFinished]);
 
   const handleModalSubmit = () => {
-    console.log("Submit from GatherPoints");
     setModalFinished((prev) => !prev);
   };
 

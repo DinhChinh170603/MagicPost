@@ -7,6 +7,7 @@ import service from "../helpers/service";
 import axios from "axios";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import moment from "moment";
 
 export default function PackageManagement(props: any) {
   const { role } = props;
@@ -48,7 +49,6 @@ export default function PackageManagement(props: any) {
     } else if (role === "LEADER") {
       setRoleAPI("/leader");
     }
-    console.log(roleAPI);
 
     if (roleAPI && role !== "LEADER") {
       axios
@@ -68,8 +68,6 @@ export default function PackageManagement(props: any) {
               key: item.id,
             }));
             setReceivedPackages(newData2);
-            console.log(res1.data.results);
-            console.log(res2.data.results);
             setLoading(false);
           }),
           () => {
@@ -81,8 +79,8 @@ export default function PackageManagement(props: any) {
           setLoading(false);
           toast.error(err.response.data.message);
         });
-    setCurrentPageOfSent(1);
-    setCurrentPageOfReceived(1);
+      setCurrentPageOfSent(1);
+      setCurrentPageOfReceived(1);
     } else if (roleAPI && role === "LEADER") {
       service.get(roleAPI + `/all-packages`).then((res) => {
         const newData = res.data.results.map((item) => ({
@@ -91,7 +89,7 @@ export default function PackageManagement(props: any) {
         }));
         setAllPackage(newData);
         setLoading(false);
-      })
+      });
     }
   }, [role, roleAPI]);
 
@@ -111,10 +109,6 @@ export default function PackageManagement(props: any) {
 
       // Update current page
       setCurrentPageOfSent(searchedPage);
-    } else {
-      console.log(
-        `The searched id ${selectedKeys[0]} is not found in the data.`,
-      );
     }
   };
   const handleResetIdSent = (clearFilters) => {
@@ -231,10 +225,6 @@ export default function PackageManagement(props: any) {
 
       // Update current page
       setCurrentPageOfReceived(searchedPage);
-    } else {
-      console.log(
-        `The searched id ${selectedKeys[0]} is not found in the data.`,
-      );
     }
   };
   const handleResetIdReceived = (clearFilters) => {
@@ -353,10 +343,6 @@ export default function PackageManagement(props: any) {
 
       // Update current page
       setCurrentPageOfAll(searchedPage);
-    } else {
-      console.log(
-        `The searched id ${selectedKeys[0]} is not found in the data.`,
-      );
     }
   };
   const handleResetIdByLeader = (clearFilters) => {
@@ -387,7 +373,9 @@ export default function PackageManagement(props: any) {
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearchByLeader(selectedKeys, confirm, dataIndex)}
+            onClick={() =>
+              handleSearchByLeader(selectedKeys, confirm, dataIndex)
+            }
             icon={<SearchOutlined />}
             size="small"
             className="w-[90px]"
@@ -489,9 +477,16 @@ export default function PackageManagement(props: any) {
       ...getColumnSearchPropsSent("id"),
     },
     {
-      title: "Sender Name",
-      dataIndex: "senderName",
-      key: "senderName",
+      title: "Timestamp",
+      dataIndex: "timestamp",
+      key: "timestamp",
+      render: (text: any, record: any) => (
+        <>
+          {record.timestamp
+            ? moment(record.timestamp).format("DD-MM-YYYY [at] HH:mm")
+            : null}
+        </>
+      ),
     },
   ];
 
@@ -503,9 +498,19 @@ export default function PackageManagement(props: any) {
       ...getColumnSearchPropsReceived("id"),
     },
     {
-      title: "Sender Name",
-      dataIndex: "senderName",
-      key: "senderName",
+      title: "Timestamp",
+      dataIndex: "timestamp",
+      key: "timestamp",
+      render: (text: any, record: any) => {
+        console.log(record);
+        return (
+          <>
+            {record.timestamp
+              ? moment(record.timestamp).format("DD-MM-YYYY [at] HH:mm")
+              : null}
+          </>
+        );
+      },
     },
   ];
 
@@ -554,7 +559,7 @@ export default function PackageManagement(props: any) {
       title: "Destination Point ID",
       dataIndex: "desPointId",
       key: "desPointId",
-    }
+    },
   ];
 
   type PackageDetail = {
@@ -675,7 +680,9 @@ export default function PackageManagement(props: any) {
     {
       key: 9,
       label: "lastStatus",
-      children: pkg.status[pkg.status.length - 1] ? pkg.status[pkg.status.length - 1].detail : "",
+      children: pkg.status[pkg.status.length - 1]
+        ? pkg.status[pkg.status.length - 1].detail
+        : "",
       span: 3,
     },
   ];
@@ -732,7 +739,9 @@ export default function PackageManagement(props: any) {
     {
       key: 9,
       label: "lastStatus",
-      children: pkg.status[pkg.status.length - 1] ? pkg.status[pkg.status.length - 1].detail : "",
+      children: pkg.status[pkg.status.length - 1]
+        ? pkg.status[pkg.status.length - 1].detail
+        : "",
       span: 3,
     },
   ];
@@ -741,6 +750,7 @@ export default function PackageManagement(props: any) {
     key: pkg.id,
     id: pkg.id,
     senderName: pkg.senderName,
+    timestamp: pkg.timestamp,
     description: (
       <Descriptions size="small" bordered items={packageDetailSent(pkg)} />
     ),
@@ -750,6 +760,7 @@ export default function PackageManagement(props: any) {
     key: pkg.id,
     id: pkg.id,
     senderName: pkg.senderName,
+    timestamp: pkg.timestamp,
     description: (
       <Descriptions size="small" bordered items={packageDetailReceived(pkg)} />
     ),

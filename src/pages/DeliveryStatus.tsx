@@ -46,8 +46,6 @@ export default function DeliveryStatus() {
             key: item.id,
           }));
           setRejectedPackages(newData2);
-          console.log(res1.data.results);
-          console.log(res2.data.results);
           setLoading(false);
         }),
         () => {
@@ -80,9 +78,6 @@ export default function DeliveryStatus() {
       // Update current page
       setCurrentPageOfSucceed(searchedPage);
     } else {
-      console.log(
-        `The searched id ${selectedKeys[0]} is not found in the data.`,
-      );
     }
   };
   const handleResetIdSucceed = (clearFilters) => {
@@ -113,7 +108,9 @@ export default function DeliveryStatus() {
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearchSucceed(selectedKeys, confirm, dataIndex)}
+            onClick={() =>
+              handleSearchSucceed(selectedKeys, confirm, dataIndex)
+            }
             icon={<SearchOutlined />}
             size="small"
             className="w-[90px]"
@@ -199,10 +196,6 @@ export default function DeliveryStatus() {
 
       // Update current page
       setCurrentPageOfRejected(searchedPage);
-    } else {
-      console.log(
-        `The searched id ${selectedKeys[0]} is not found in the data.`,
-      );
     }
   };
   const handleResetIdRejected = (clearFilters) => {

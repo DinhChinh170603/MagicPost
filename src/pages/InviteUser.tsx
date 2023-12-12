@@ -60,19 +60,15 @@ export default function InviteUser() {
     switch (value) {
       case "GATHER_MANAGER":
         setRoleDepartmentList(noManagerGatherPointsList);
-        console.log("noManagerGatherPointsList", noManagerGatherPointsList);
         break;
       case "EXCHANGE_MANAGER":
         setRoleDepartmentList(noManagerExchangePointsList);
-        console.log("noManagerExchangePointsList", noManagerExchangePointsList);
         break;
       case "GATHER_EMPLOYEE":
         setRoleDepartmentList(gatherPointsList);
-        console.log("gatherPointsList", gatherPointsList);
         break;
       case "EXCHANGE_EMPLOYEE":
         setRoleDepartmentList(exchangePointsList);
-        console.log("exchangePointsList", exchangePointsList);
         break;
       default:
         break;
