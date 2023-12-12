@@ -114,8 +114,8 @@ export default function User() {
                     <MdOutlineEdit size={20} />
                   </div>
                 </div>
-              </div>
-              <div className="mb-1 text-center text-2xl font-bold">
+              </div>  
+              <div className="mb-1 w-[90%] text-center text-2xl font-bold" style={{ overflowWrap: 'break-word' }}>
                 {user.fullName}
               </div>
               <div className="mb-5 text-center text-gray-500">{user.role}</div>

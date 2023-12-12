@@ -364,7 +364,7 @@ export default function PackageProcessing(props: any) {
               type="primary"
               onClick={() => setModalReasonOpen(true)}
               disabled={!hasSelected}
-              loading={modalLoading}
+              loading={loading || modalLoading}
             >
               Delivery Failure
             </Button>
