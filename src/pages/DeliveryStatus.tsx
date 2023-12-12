@@ -36,12 +36,12 @@ export default function DeliveryStatus() {
       ])
       .then(
         axios.spread((res1, res2) => {
-          const newData1 = res1.data.results.map((item) => ({
+          const newData1 = res1.data.results.map((item: { id: any; }) => ({
             ...item,
             key: item.id,
           }));
           setSucceedPackages(newData1);
-          const newData2 = res2.data.results.map((item) => ({
+          const newData2 = res2.data.results.map((item: { id: any; }) => ({
             ...item,
             key: item.id,
           }));
@@ -62,7 +62,7 @@ export default function DeliveryStatus() {
   }, []);
 
   // Search succeedPackages
-  const handleSearchSucceed = (selectedKeys, confirm, dataIndex) => {
+  const handleSearchSucceed = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
     confirm();
     setSearchSucceed({ dataIndex, searchText: selectedKeys[0] });
 
@@ -80,17 +80,23 @@ export default function DeliveryStatus() {
     } else {
     }
   };
-  const handleResetIdSucceed = (clearFilters) => {
+  const handleResetIdSucceed = (clearFilters: () => void) => {
     clearFilters();
     setSearchSucceed({ ...searchSucceed, searchText: "" });
   };
-  const getColumnSearchPropsSucceed = (dataIndex) => ({
+  const getColumnSearchPropsSucceed = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
       clearFilters,
       close,
+    }: {
+      setSelectedKeys: (keys: string[]) => void;
+      selectedKeys: string[];
+      confirm: () => void;
+      clearFilters: () => void;
+      close: () => void;
     }) => (
       <div className="p-2">
         <Input
@@ -128,19 +134,6 @@ export default function DeliveryStatus() {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchSucceed({ dataIndex, searchText: selectedKeys[0] });
-            }}
-            className={dataIndex === "id" ? "hidden" : "inline"}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >
@@ -149,14 +142,14 @@ export default function DeliveryStatus() {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
-    onFilterDropdownOpenChange: (visible) => {
+    onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () => (dataIndex === "id" ? idSearchInputSucceed : null)?.select(),
@@ -164,7 +157,7 @@ export default function DeliveryStatus() {
         );
       }
     },
-    render: (text) =>
+    render: (text: { toString: () => string; }) =>
       searchSucceed.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -181,7 +174,7 @@ export default function DeliveryStatus() {
   });
 
   // Search rejectedPackages
-  const handleSearchRejected = (selectedKeys, confirm, dataIndex) => {
+  const handleSearchRejected = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
     confirm();
     setSearchRejected({ dataIndex, searchText: selectedKeys[0] });
 
@@ -198,17 +191,23 @@ export default function DeliveryStatus() {
       setCurrentPageOfRejected(searchedPage);
     }
   };
-  const handleResetIdRejected = (clearFilters) => {
+  const handleResetIdRejected = (clearFilters: () => void) => {
     clearFilters();
     setSearchRejected({ ...searchRejected, searchText: "" });
   };
-  const getColumnSearchPropsRejected = (dataIndex) => ({
+  const getColumnSearchPropsRejected = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
       clearFilters,
       close,
+    }: {
+      setSelectedKeys: (keys: string[]) => void;
+      selectedKeys: string[];
+      confirm: () => void;
+      clearFilters: () => void;
+      close: () => void;
     }) => (
       <div className="p-2">
         <Input
@@ -246,19 +245,6 @@ export default function DeliveryStatus() {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchRejected({ dataIndex, searchText: selectedKeys[0] });
-            }}
-            className={dataIndex === "id" ? "hidden" : "inline"}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >
@@ -267,14 +253,14 @@ export default function DeliveryStatus() {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
-    onFilterDropdownOpenChange: (visible) => {
+    onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () => (dataIndex === "id" ? idSearchInputRejected : null)?.select(),
@@ -282,7 +268,7 @@ export default function DeliveryStatus() {
         );
       }
     },
-    render: (text) =>
+    render: (text: { toString: () => string; }) =>
       searchRejected.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -359,7 +345,7 @@ export default function DeliveryStatus() {
     span: number;
   };
 
-  const packageDetailSucceed = (pkg): PackageDetail[] => [
+  const packageDetailSucceed = (pkg: any): PackageDetail[] => [
     {
       key: 1,
       label: "senderName",
@@ -418,7 +404,7 @@ export default function DeliveryStatus() {
     },
   ];
 
-  const packageDetailRejected = (pkg): PackageDetail[] => [
+  const packageDetailRejected = (pkg: any): PackageDetail[] => [
     {
       key: 1,
       label: "senderName",
@@ -477,7 +463,7 @@ export default function DeliveryStatus() {
     },
   ];
 
-  const dataSucceed = succeedPackages.map((pkg) => ({
+  const dataSucceed = succeedPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
     receiverName: pkg.receiverName,
@@ -489,7 +475,7 @@ export default function DeliveryStatus() {
     ),
   }));
 
-  const dataRejected = rejectedPackages.map((pkg) => ({
+  const dataRejected = rejectedPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
     receiverName: pkg.receiverName,

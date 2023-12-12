@@ -47,12 +47,12 @@ export default function GatherPointDetail() {
       ])
       .then(
         axios.spread((res1, res2) => {
-          const newData1 = res1.data.results.map((item) => ({
+          const newData1 = res1.data.results.map((item: { id: any; }) => ({
             ...item,
             key: item.id,
           }));
           setSentPackages(newData1);
-          const newData2 = res2.data.results.map((item) => ({
+          const newData2 = res2.data.results.map((item: { id: any; }) => ({
             ...item,
             key: item.id,
           }));
@@ -100,7 +100,7 @@ export default function GatherPointDetail() {
   ];
 
   // searchInColumn
-  const handleSearchSent = (selectedKeys, confirm, dataIndex) => {
+  const handleSearchSent = (selectedKeys: any[], confirm: { (): void; (): void; (): void; }, dataIndex: string) => {
     confirm();
     setSearchSent({ dataIndex, searchText: selectedKeys[0] });
 
@@ -118,17 +118,23 @@ export default function GatherPointDetail() {
     } else {
     }
   };
-  const handleResetIdSent = (clearFilters) => {
+  const handleResetIdSent = (clearFilters: { (): void; (): void; }) => {
     clearFilters();
     setSearchSent({ ...searchSent, searchText: "" });
   };
-  const getColumnSearchPropsSent = (dataIndex) => ({
+  const getColumnSearchPropsSent = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
       clearFilters,
       close,
+    }: {
+      setSelectedKeys: (keys: string[]) => void;
+      selectedKeys: string[];
+      confirm: () => void;
+      clearFilters: () => void;
+      close: () => void;
     }) => (
       <div className="p-2">
         <Input
@@ -164,19 +170,6 @@ export default function GatherPointDetail() {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchSent({ dataIndex, searchText: selectedKeys[0] });
-            }}
-            className={dataIndex === "id" ? "hidden" : "inline"}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >
@@ -185,14 +178,14 @@ export default function GatherPointDetail() {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
-    onFilterDropdownOpenChange: (visible) => {
+    onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
@@ -217,7 +210,7 @@ export default function GatherPointDetail() {
   });
 
   // searchInColumn
-  const handleSearchReceived = (selectedKeys, confirm, dataIndex) => {
+  const handleSearchReceived = (selectedKeys: any[], confirm: { (): void; (): void; (): void; }, dataIndex: string) => {
     confirm();
     setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
 
@@ -238,13 +231,19 @@ export default function GatherPointDetail() {
     clearFilters();
     setSearchReceived({ ...searchReceived, searchText: "" });
   };
-  const getColumnSearchPropsReceived = (dataIndex) => ({
+  const getColumnSearchPropsReceived = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
       clearFilters,
       close,
+    }: {
+      setSelectedKeys: (keys: string[]) => void;
+      selectedKeys: string[];
+      confirm: () => void;
+      clearFilters: () => void;
+      close: () => void;
     }) => (
       <div className="p-2">
         <Input
@@ -282,19 +281,6 @@ export default function GatherPointDetail() {
             type="link"
             size="small"
             onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
-            }}
-            className={dataIndex === "id" ? "hidden" : "inline"}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
               close();
             }}
           >
@@ -303,14 +289,14 @@ export default function GatherPointDetail() {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => (
+    filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
           color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
-    onFilterDropdownOpenChange: (visible) => {
+    onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
           () => (dataIndex === "id" ? idSearchInputReceived : null)?.select(),
@@ -318,7 +304,7 @@ export default function GatherPointDetail() {
         );
       }
     },
-    render: (text) =>
+    render: (text: { toString: () => string; }) =>
       searchReceived.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -385,7 +371,7 @@ export default function GatherPointDetail() {
     span: number;
   };
 
-  const packageDetailSent = (pkg): PackageDetail[] => [
+  const packageDetailSent = (pkg: any): PackageDetail[] => [
     {
       key: 1,
       label: "senderName",
@@ -436,7 +422,7 @@ export default function GatherPointDetail() {
     },
   ];
 
-  const packageDetailReceived = (pkg): PackageDetail[] => [
+  const packageDetailReceived = (pkg: any): PackageDetail[] => [
     {
       key: 1,
       label: "senderName",
@@ -487,7 +473,7 @@ export default function GatherPointDetail() {
     },
   ];
 
-  const dataSent = sentPackages.map((pkg) => ({
+  const dataSent = sentPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
     senderName: pkg.senderName,
@@ -496,7 +482,7 @@ export default function GatherPointDetail() {
     ),
   }));
 
-  const dataReceived = receivedPackages.map((pkg) => ({
+  const dataReceived = receivedPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
     senderName: pkg.senderName,

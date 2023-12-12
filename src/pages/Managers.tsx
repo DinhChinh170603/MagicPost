@@ -33,7 +33,7 @@ export default function Managers(props: any) {
             return;
           }
           const filteredData = res.data.results.filter(
-            (record) =>
+            (record: { role: string; }) =>
               record.role !==
               (role === "LEADER"
                 ? "LEADER"
@@ -52,7 +52,7 @@ export default function Managers(props: any) {
   }, [role, roleAPI]);
 
   // Format to DD-MM-YYYY
-  const formatDate = (date) => {
+  const formatDate = (date: string | number | Date) => {
     if (!date) return "";
     const formattedDate = new Date(date);
     const day = formattedDate.getDate();
@@ -77,7 +77,7 @@ export default function Managers(props: any) {
       title: "Date of Birth",
       dataIndex: "dob",
       key: "dob",
-      render: (dob) => formatDate(dob),
+      render: (dob: any) => formatDate(dob),
       width: "15%",
     },
     {
@@ -117,12 +117,14 @@ export default function Managers(props: any) {
       title: "Joining Date",
       dataIndex: "startWorkingDate",
       key: "startWorkingDate",
-      sorter: (a, b) => {
+      sorter: (a: { startWorkingDate: string | number | Date; }, b: {
+        id(id: any): import("react").Key; startWorkingDate: string | number | Date; 
+}) => {
         const dateA = new Date(a.startWorkingDate);
         const dateB = new Date(b.startWorkingDate);
         return dateA - dateB;
       },
-      render: (startWorkingDate) => formatDate(startWorkingDate),
+      render: (startWorkingDate: any) => formatDate(startWorkingDate),
       width: "15%",
     },
   ];
