@@ -1,6 +1,6 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Avatar, Button, Form, Input } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "react-toastify";
 import AuthContext from "../contexts/AuthContext";
@@ -12,7 +12,11 @@ export default function User() {
   const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
-  const { user } = useContext<any>(AuthContext);
+  const { user, setUser } = useContext<any>(AuthContext);
+
+  const [avatarLink, setAvatarLink] = useState(user?.avatar);
+
+  const imageInputRef = useRef(null);
 
   const activeStyle =
     "w-[80%] rounded-lg bg-orange-400 p-3 text-center text-xl font-bold cursor-pointer transition-all duration-100";
@@ -61,7 +65,7 @@ export default function User() {
         return;
       }
       service
-        .patch("/password", {
+        .patch("/change-password", {
           oldPassword: curPassword,
           newPassword: newPassword,
         })
@@ -86,6 +90,32 @@ export default function User() {
     }
   };
 
+  const submitEditAvatar = () => {
+    const formData = new FormData();
+    formData.append("image", imageInputRef.current.files[0]);
+    setLoading(true);
+    service
+      .patch("/avatar", formData)
+      .then((res) => {
+        if (res.data.status === 200) {
+          toast.success(res.data.message);
+          setUser({
+            ...user,
+            avatar: res.data.results,
+          });
+          setAvatarLink(res.data.results);
+          setLoading(false);
+        } else {
+          toast.error(res.data.message);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     form.setFieldsValue(user);
   }, [form]);
@@ -97,23 +127,37 @@ export default function User() {
           <div className="w-1/4 border border-black p-4">
             <div className="flex flex-col items-center">
               <div className="mx-auto mb-5 mt-10">
-                <div className="relative">
-                  {user && user.avatar ? (
-                    <Avatar
-                      src={user.avatar}
-                      size={150}
-                      className="cursor-pointer"
-                    />
-                  ) : (
-                    <AccountCircleIcon
-                      className="cursor-pointer"
-                      sx={{ color: "black", fontSize: 150 }}
-                    />
-                  )}
-                  <div className="absolute right-2 top-2 cursor-pointer rounded-full border border-gray-500 bg-white p-1">
-                    <MdOutlineEdit size={20} />
+                <label className="relative" htmlFor="avatar">
+                  <div className="relative">
+                    {avatarLink ? (
+                      <Avatar
+                        src={avatarLink}
+                        size={150}
+                        className="cursor-pointer shadow-lg"
+                      />
+                    ) : (
+                      <AccountCircleIcon
+                        className="cursor-pointer"
+                        sx={{ color: "black", fontSize: 150 }}
+                      />
+                    )}
+                    <div className="absolute right-0 top-1 cursor-pointer rounded-full border border-gray-500 bg-white p-1 transition-all duration-100 hover:bg-gray-200">
+                      <MdOutlineEdit size={20} />
+                    </div>
                   </div>
-                </div>
+                </label>
+                <input
+                  ref={imageInputRef}
+                  accept="image/*"
+                  id="avatar"
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setAvatarLink(URL.createObjectURL(e.target.files[0]));
+                    }
+                  }}
+                />
               </div>
               <div
                 className="mb-1 w-[90%] text-center text-2xl font-bold"
@@ -153,7 +197,7 @@ export default function User() {
                     label="Full Name"
                     labelCol={{ span: 24 }}
                   >
-                    <Input disabled />
+                    <Input disabled={!user || user.role !== "LEADER"} />
                   </Form.Item>
                   <Form.Item
                     className="w-[50%]"
@@ -161,7 +205,7 @@ export default function User() {
                     label="Email"
                     labelCol={{ span: 24 }}
                   >
-                    <Input disabled />
+                    <Input disabled={!user || user.role !== "LEADER"} />
                   </Form.Item>
                   <Form.Item
                     className="w-[50%]"
@@ -169,20 +213,43 @@ export default function User() {
                     label="Department ID"
                     labelCol={{ span: 24 }}
                   >
-                    <Input disabled />
+                    <Input disabled={!user || user.role !== "LEADER"} />
                   </Form.Item>
-                  <div className="flex gap-4">
-                    <Button
-                      className="h-10 w-20"
-                      type="primary"
-                      onClick={onFinish}
-                    >
-                      Save
-                    </Button>
-                    <Button className="h-10 w-20" type="default">
-                      Cancel
-                    </Button>
-                  </div>
+                  {user && user.role === "LEADER" && (
+                    <div className="flex gap-4">
+                      <Button
+                        className="h-10 w-20"
+                        type="primary"
+                        onClick={onFinish}
+                      >
+                        Save
+                      </Button>
+                      <Button className="h-10 w-20" type="default">
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
+                  {avatarLink !== user?.avatar && (
+                    <div className="flex gap-4">
+                      <Button
+                        className="h-10 w-30"
+                        type="primary"
+                        onClick={() => {
+                          submitEditAvatar();
+                        }}
+                        loading={loading}
+                      >
+                        Save Avatar
+                      </Button>
+                      <Button
+                        className="h-10 w-20"
+                        type="default"
+                        onClick={() => setAvatarLink(user?.avatar)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
               {activeTab === "password" && (
