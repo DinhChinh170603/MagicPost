@@ -99,15 +99,6 @@ export default function Login() {
               />
             </Form.Item>
 
-            <div className="-mt-4 mb-3 w-[38%] text-left">
-              <span
-                className="cursor-pointer text-base text-[#dc5f29] hover:underline"
-                onClick={() => setForgotPassword(true)}
-              >
-                Forgot Password?
-              </span>
-            </div>
-
             <Form.Item className="w-[20%]">
               <Button
                 type="primary"
@@ -118,6 +109,15 @@ export default function Login() {
                 Login
               </Button>
             </Form.Item>
+
+            <div className="-mt-4 mb-3 w-[38%] text-center">
+              <span
+                className="cursor-pointer text-base text-[#dc5f29] hover:underline"
+                onClick={() => setForgotPassword(true)}
+              >
+                Forgot Password?
+              </span>
+            </div>
           </div>
         </Form>
       ) : (
@@ -140,15 +140,6 @@ export default function Login() {
               />
             </Form.Item>
 
-            <div className="-mt-4 mb-3 w-[38%] text-left">
-              <span
-                className="cursor-pointer text-base text-[#dc5f29] hover:underline"
-                onClick={() => setForgotPassword(false)}
-              >
-                Back to Login
-              </span>
-            </div>
-
             <Form.Item className="w-40">
               <Button
                 type="primary"
@@ -159,6 +150,15 @@ export default function Login() {
                 Reset password
               </Button>
             </Form.Item>
+
+            <div className="-mt-4 mb-3 w-[38%] text-center">
+              <span
+                className="cursor-pointer text-base text-[#dc5f29] hover:underline"
+                onClick={() => setForgotPassword(false)}
+              >
+                Back to Login
+              </span>
+            </div>
           </div>
         </Form>
       )}

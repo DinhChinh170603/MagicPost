@@ -75,7 +75,7 @@ function App() {
         theme={{
           token: {
             fontFamily: "Roboto",
-            colorPrimary: "#fa541c",
+            colorPrimary: "#3C50E0",
             fontSize: 16,
             controlItemBgHover: "rgba(147, 147, 147, 0.6)",
             colorBorder: "rgba(147, 147, 147, 0.4)",
