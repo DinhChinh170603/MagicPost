@@ -140,7 +140,7 @@ export default function GatherPoints() {
 
   return (
     <>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-lime-100">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-3">
         <div className="flex w-[80%] justify-start gap-4">
           <Button type="primary" onClick={() => setModalPointOpen(true)}>
             Insert a new point

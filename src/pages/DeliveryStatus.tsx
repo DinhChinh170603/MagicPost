@@ -77,7 +77,6 @@ export default function DeliveryStatus() {
 
       // Update current page
       setCurrentPageOfSucceed(searchedPage);
-    } else {
     }
   };
   const handleResetIdSucceed = (clearFilters: () => void) => {

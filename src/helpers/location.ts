@@ -1,4 +1,4 @@
-[
+export const cities = [
     {
       "name": "Thành phố Hà Nội",
       "code": 1,

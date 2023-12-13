@@ -1,20 +1,25 @@
-import { Modal as AntModal, Form, Select } from "antd";
+import { Modal as AntModal, Button, Form, Select } from "antd";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import Loading from "../helpers/Loading";
 import service from "../helpers/service";
 
 interface ModalProps {
-    onSubmit: () => void;
-    exchangePointsList: any;
-    gatherPointsList: any;
-    isOpen: boolean;
-    setModalOpen: (isOpen: boolean) => void;
+  onSubmit: () => void;
+  exchangePointsList: any;
+  gatherPointsList: any;
+  isOpen: boolean;
+  setModalOpen: (isOpen: boolean) => void;
 }
 
 const { Option } = Select;
 
-const EstablishConnectionModal: React.FC<ModalProps> = ({ onSubmit, exchangePointsList, gatherPointsList, isOpen, setModalOpen }) => {
+const EstablishConnectionModal: React.FC<ModalProps> = ({
+  onSubmit,
+  exchangePointsList,
+  gatherPointsList,
+  isOpen,
+  setModalOpen,
+}) => {
   const [form] = Form.useForm();
 
   const [loading, setLoading] = useState(false);
@@ -45,15 +50,32 @@ const EstablishConnectionModal: React.FC<ModalProps> = ({ onSubmit, exchangePoin
       });
   };
 
+  const handleModalClose = () => {
+    setModalOpen(false);
+    form.resetFields();
+  };
+
   return (
     <>
-      {loading && <Loading />}
-      <Form form={form} layout="vertical">
+      <Form form={form} layout="vertical" onFinish={onFinish} id="linkForm">
         <AntModal
           style={{ top: 30 }}
-          onOk={onFinish}
           open={isOpen}
-          onCancel={() => setModalOpen(false)}
+          onCancel={handleModalClose}
+          footer={[
+            <Button key="back" onClick={handleModalClose}>
+              Cancel
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              form="linkForm"
+            >
+              Submit
+            </Button>,
+          ]}
         >
           <div className="mb-8 text-2xl font-bold">
             Select a GatherPoint <br /> linked to an ExchangePoint
@@ -76,7 +98,9 @@ const EstablishConnectionModal: React.FC<ModalProps> = ({ onSubmit, exchangePoin
             className="mb-12 w-[80%] flex-1"
             name="exchangePoint"
             label="ExchangePoint"
-            rules={[{ required: true, message: "Please select an ExchangePoint" }]}
+            rules={[
+              { required: true, message: "Please select an ExchangePoint" },
+            ]}
           >
             <Select>
               {exchangePointsList.map((department: any) => (
