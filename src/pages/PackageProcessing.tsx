@@ -49,7 +49,7 @@ export default function PackageProcessing(props: any) {
             setModalLoading(false);
             return;
           }
-          const newData = res.data.results.map((item: { id: any; }) => ({
+          const newData = res.data.results.map((item: { id: any }) => ({
             ...item,
             key: item.id,
           }));
@@ -87,7 +87,11 @@ export default function PackageProcessing(props: any) {
   const hasSelected = selectedRowKeys.length > 0;
 
   // searchInColumn
-  const handleSearch = (selectedKeys: any[], confirm: { (): void; (): void; (): void; }, dataIndex: string) => {
+  const handleSearch = (
+    selectedKeys: any[],
+    confirm: { (): void; (): void; (): void },
+    dataIndex: string,
+  ) => {
     confirm();
     setSearch({ dataIndex, searchText: selectedKeys[0] });
 
@@ -108,7 +112,7 @@ export default function PackageProcessing(props: any) {
       );
     }
   };
-  const handleResetId = (clearFilters: { (): void; (): void; }) => {
+  const handleResetId = (clearFilters: { (): void; (): void }) => {
     clearFilters();
     setSearch({ ...search, searchText: "" });
   };
@@ -181,7 +185,7 @@ export default function PackageProcessing(props: any) {
         );
       }
     },
-    render: (text: { toString: () => string; }) =>
+    render: (text: { toString: () => string }) =>
       search.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -293,7 +297,9 @@ export default function PackageProcessing(props: any) {
   const downloadReport = () => {
     setDownloadLoading(true);
     service
-      .get(roleAPI + "/report/" + selectedRowKeys[0], { responseType: "arraybuffer" })
+      .get(roleAPI + "/report/" + selectedRowKeys[0], {
+        responseType: "arraybuffer",
+      })
       .then((res) => {
         download(res.data, "report.pdf", res.headers["content-type"]);
         setDownloadLoading(false);
@@ -305,7 +311,7 @@ export default function PackageProcessing(props: any) {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-lime-100">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3">
       <div className="flex w-[80%] justify-start gap-4">
         <Button
           type="primary"

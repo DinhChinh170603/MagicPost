@@ -1,26 +1,25 @@
 import { Button, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
-import Loading from "../helpers/Loading";
-import service from "../helpers/service";
 import { toast } from "react-toastify";
+import service from "../helpers/service";
 
 export default function NewPackage() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [pageLoading, setPageLoading] = useState(false);
+  const [destinationLoading, setDestinationLoading] = useState(false);
   const [destinations, setDestinations] = useState<any[]>([]);
 
   useEffect(() => {
-    setPageLoading(true);
+    setDestinationLoading(true);
     service
       .get("/ex-employee/destinations")
       .then(
         (res) => {
           setDestinations(res.data.results);
-          setPageLoading(false);
+          setDestinationLoading(false);
         },
         () => {
-          setPageLoading(false);
+          setDestinationLoading(false);
           toast.error("Failed to get destinations");
         },
       )
@@ -50,7 +49,6 @@ export default function NewPackage() {
   };
   return (
     <>
-      {pageLoading && <Loading />}
       <Form
         form={form}
         onFinish={onFinish}
@@ -189,10 +187,30 @@ export default function NewPackage() {
             rules={[{ required: true, message: "Please select destination!" }]}
           >
             <Select
+              showSearch
+              filterOption={(input: string, option: any) =>
+                option.label.toLowerCase().includes(input.toLowerCase()) ||
+                option.value.toLowerCase().includes(input.toLowerCase())
+              }
               options={
                 destinations &&
-                destinations.map((d) => ({ value: d.id, label: d.name }))
+                destinations.map((d) => ({
+                  value: d.id,
+                  label: d.location,
+                }))
               }
+              optionRender={(option: any) => {
+                return (
+                  <>
+                    <span className="mr-2">{option.value}</span>
+                    <span className="text-sm text-gray-500">
+                      {option.label}
+                    </span>
+                  </>
+                );
+              }}
+              loading={destinationLoading}
+              disabled={destinationLoading}
             />
           </Form.Item>
         </div>

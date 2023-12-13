@@ -41,7 +41,7 @@ export default function IncomingPackage(props: any) {
             setLoading(false);
             return;
           }
-          const newData = res.data.results.map((item: { id: any; }) => ({
+          const newData = res.data.results.map((item: { id: any }) => ({
             ...item,
             key: item.id,
           }));
@@ -76,7 +76,11 @@ export default function IncomingPackage(props: any) {
   const hasSelected = selectedRowKeys.length > 0;
 
   // searchInColumn
-  const handleSearch = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
+  const handleSearch = (
+    selectedKeys: any[],
+    confirm: () => void,
+    dataIndex: string,
+  ) => {
     confirm();
     setSearch({ dataIndex, searchText: selectedKeys[0] });
 
@@ -170,7 +174,7 @@ export default function IncomingPackage(props: any) {
         );
       }
     },
-    render: (text: { toString: () => string; }) =>
+    render: (text: { toString: () => string }) =>
       search.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -222,7 +226,6 @@ export default function IncomingPackage(props: any) {
   const pagination = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPage,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
@@ -276,7 +279,7 @@ export default function IncomingPackage(props: any) {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-lime-100">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3">
       <div className="flex w-[80%] justify-start gap-4">
         <Button
           type="primary"
@@ -330,7 +333,6 @@ export default function IncomingPackage(props: any) {
           dataSource={data}
           pagination={pagination}
           idSearchInput={idSearchInput}
-          onChange={(pagination) => setCurrentPage(pagination.current)}
         />
       </SkeletonTable>
     </div>

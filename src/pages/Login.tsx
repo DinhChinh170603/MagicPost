@@ -112,7 +112,7 @@ export default function Login() {
 
             <div className="-mt-4 mb-3 w-[38%] text-center">
               <span
-                className="cursor-pointer text-base text-[#dc5f29] hover:underline"
+                className="cursor-pointer text-base text-[#4c56df] hover:underline"
                 onClick={() => setForgotPassword(true)}
               >
                 Forgot Password?
