@@ -341,12 +341,14 @@ export default function ExchangePointDetail() {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
+      width: "32%",
       ...getColumnSearchPropsSent("id"),
     },
     {
-      title: "Sender Name",
-      dataIndex: "senderName",
-      key: "senderName",
+      title: "Last Status",
+      dataIndex: "status",
+      key: "status",
+      width: "68%",
     },
   ];
 
@@ -355,12 +357,14 @@ export default function ExchangePointDetail() {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
+      width: "32%",
       ...getColumnSearchPropsReceived("id"),
     },
     {
-      title: "Sender Name",
-      dataIndex: "senderName",
-      key: "senderName",
+      title: "Last Status",
+      dataIndex: "status",
+      key: "status",
+      width: "68%",
     },
   ];
 
@@ -476,7 +480,7 @@ export default function ExchangePointDetail() {
   const dataSent = sentPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
-    senderName: pkg.senderName,
+    status: pkg.status[pkg.status.length - 1].detail,
     description: (
       <Descriptions size="small" bordered items={packageDetailSent(pkg)} />
     ),
@@ -485,7 +489,7 @@ export default function ExchangePointDetail() {
   const dataReceived = receivedPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
-    senderName: pkg.senderName,
+    status: pkg.status[pkg.status.length - 1].detail,
     description: (
       <Descriptions size="small" bordered items={packageDetailReceived(pkg)} />
     ),
@@ -494,7 +498,7 @@ export default function ExchangePointDetail() {
   return (
     <>
       <div className="flex h-full">
-        <div className="mx-auto flex w-[96%] max-w-screen-xl flex-col pt-10">
+        <div className="mx-auto flex w-[98%] max-w-screen-xl flex-col pt-10">
           <div className="pb-10">
             <Descriptions
               title="ExchangePoint Detail"

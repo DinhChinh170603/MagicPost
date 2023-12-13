@@ -304,17 +304,20 @@ export default function DeliveryStatus() {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
+      width: "25%",
       ...getColumnSearchPropsSucceed("id"),
     },
     {
       title: "Receiver Name",
       dataIndex: "receiverName",
       key: "receiverName",
+      width: "25%",
     },
     {
       title: "Last Status",
       dataIndex: "lastStatus",
       key: "lastStatus",
+      width: "50%",
     },
   ];
 
@@ -323,17 +326,20 @@ export default function DeliveryStatus() {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
+      width: "25%",
       ...getColumnSearchPropsRejected("id"),
     },
     {
       title: "Receiver Name",
       dataIndex: "receiverName",
       key: "receiverName",
+      width: "28%",
     },
     {
-      title: "Last Status",
-      dataIndex: "lastStatus",
-      key: "lastStatus",
+      title: "Reason",
+      dataIndex: "reason",
+      key: "reason",
+      width: "47%",
     },
   ];
 
@@ -478,8 +484,8 @@ export default function DeliveryStatus() {
     key: pkg.id,
     id: pkg.id,
     receiverName: pkg.receiverName,
-    lastStatus: pkg.status[pkg.status.length - 1]
-      ? pkg.status[pkg.status.length - 1].detail
+    reason: pkg.rejectDetails[pkg.rejectDetails.length - 1]
+      ? pkg.rejectDetails[pkg.rejectDetails.length - 1].reason
       : "",
     description: (
       <Descriptions size="small" bordered items={packageDetailRejected(pkg)} />
@@ -493,7 +499,7 @@ export default function DeliveryStatus() {
           <div className="relative flex flex-grow gap-4">
             <div className="w-1/2">
               <div className="flex w-full flex-col gap-4">
-                <div className="text-[18px] font-bold">
+                <div className="text-[22px] font-bold">
                   Successful Deliveries
                 </div>
                 <SkeletonTable loading={loading} columns={columnsSucceed}>
@@ -518,7 +524,7 @@ export default function DeliveryStatus() {
             </div>
             <div className="flex-1">
               <div className="flex w-full flex-col gap-4">
-                <div className="text-[18px] font-bold">Failed Deliveries</div>
+                <div className="text-[22px] font-bold">Failed Deliveries</div>
                 <SkeletonTable loading={loading} columns={columnsRejected}>
                   <Table
                     className="w-full"
