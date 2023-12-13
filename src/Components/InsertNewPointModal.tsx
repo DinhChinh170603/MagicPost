@@ -103,9 +103,7 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
             </Button>,
           ]}
         >
-          <div className="mb-8 text-2xl font-bold">
-            Create an Exchange Point
-          </div>
+          <div className="mb-8 text-2xl font-bold">{apiEndpoint === "/exchange-point" ? "Create an Exchange Point" : "Create a Gather Point"}</div>
           <Form.Item
             className="mb-8 w-[70%] flex-1"
             name="name"

@@ -5,7 +5,6 @@ import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "react-toastify";
 import AuthContext from "../contexts/AuthContext";
 import service from "../helpers/service";
-// import UploadAvatar from "../components/UploadAvatar";
 
 export default function User() {
   const [activeTab, setActiveTab] = useState("account");
@@ -26,10 +25,6 @@ export default function User() {
   const handleTabChange = (tab: any) => {
     setActiveTab(tab);
   };
-
-  // const handleAvatarUpload = (file) => {
-  //   console.log('Uploaded file:', file);
-  // };
 
   const logout = () => {
     localStorage.removeItem("jwtToken");
