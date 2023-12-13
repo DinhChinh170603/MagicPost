@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        slideBar: "#1C2434",
+        btnColor: "#3C50E0",
+        btnHover: "#B2B7DF",
+        bgColor: "#F1F5F9",
+      }
+    },
   },
   plugins: [],
 }
