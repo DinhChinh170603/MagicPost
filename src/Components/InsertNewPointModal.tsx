@@ -1,8 +1,9 @@
 import { Modal as AntModal, Form, Input, Select } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
-import service, { getCities, getDistrictsByCityName, getWardsByCityAndDistrictName } from "../helpers/service";
+import { cities } from "../helpers/location";
+import service from "../helpers/service";
 
 interface ModalProps {
   onSubmit: () => void;
@@ -19,32 +20,60 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
 }) => {
   const [form] = Form.useForm();
 
-  const [cities, setCities] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
-  const [selectedWard, setSelectedWard] = useState(null);
+  const [districts, setDistricts] = useState<any>([]);
+  const [wards, setWards] = useState<any>([]);
+  const [selectedCity, setSelectedCity] = useState<any>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<any>(null);
+  const [selectedWard, setSelectedWard] = useState<any>(null);
 
   const [loading, setLoading] = useState(false);
 
-  const fetchCitiesData = async () => {
-    // Read data from location.json
-    const locationData = await getCities();
-    setCities(locationData);
-  };
-
-  const handleCityChange = async (cityName) => {
-    await fetchCitiesData();
-    const districts = await getDistrictsByCityName(cityName);
+  const handleCityChange = (cityName: string) => {
+    const districts = getDistrictsByCityName(cityName);
     setDistricts(districts);
     setSelectedCity(cityName);
     setSelectedDistrict(null);
     setSelectedWard(null);
   };
-  
-  const handleDistrictChange = async (districtName) => {
-    const newWards = await getWardsByCityAndDistrictName(selectedCity, districtName);
+
+  // Get districtsList base on cityName
+  const getDistrictsByCityName = (cityName: string) => {
+    try {
+      const city = cities.find((c) => c.name === cityName);
+
+      if (city) {
+        return city.districts;
+      } else {
+        throw new Error(`City with name ${cityName} not found`);
+      }
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+      throw error;
+    }
+  };
+
+  // Get wardsList base on cityName and districtName
+  const getWardsByCityAndDistrictName = (
+    cityName: string,
+    districtName: string,
+  ) => {
+    try {
+      const districts = getDistrictsByCityName(cityName);
+      const district = districts.find((d) => d.name === districtName);
+
+      if (district) {
+        return district.wards;
+      } else {
+        throw new Error(`District with name ${districtName} not found`);
+      }
+    } catch (error) {
+      console.error("Error fetching wards:", error);
+      throw error;
+    }
+  };
+
+  const handleDistrictChange = (districtName: string) => {
+    const newWards = getWardsByCityAndDistrictName(selectedCity, districtName);
     setWards(newWards);
     setSelectedDistrict(districtName);
     setSelectedWard(null);
@@ -52,14 +81,14 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
 
   // Read data from file location.json when component was render
   useEffect(() => {
-    fetchCitiesData();
     setSelectedDistrict(null);
     setSelectedWard(null);
   }, [selectedCity]);
 
   const onFinish = () => {
     const { name } = form.getFieldsValue();
-    const location = selectedCity + ", " + selectedDistrict + ", " + selectedWard
+    const location =
+      selectedCity + ", " + selectedDistrict + ", " + selectedWard;
 
     setLoading(true);
 
@@ -95,7 +124,9 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
           open={isOpen}
           onCancel={() => setModalOpen(false)}
         >
-          <div className="mb-8 text-2xl font-bold">Create an Exchange Point</div>
+          <div className="mb-8 text-2xl font-bold">
+            Create an Exchange Point
+          </div>
           <Form.Item
             className="mb-8 w-[70%] flex-1"
             name="name"
@@ -104,35 +135,50 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
           >
             <Input />
           </Form.Item>
-          <Form.Item className="mb-8 w-[70%] flex-1" label="City" name="city" rules={[{ required: true, message: "Please select a city" }]}>
-          <Select onChange={handleCityChange}>
-            {cities.map((city) => (
-              <Select.Option key={city.name} value={city.name}>
-                {city.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+          <Form.Item
+            className="mb-8 w-[70%] flex-1"
+            label="City"
+            name="city"
+            rules={[{ required: true, message: "Please select a city" }]}
+          >
+            <Select onChange={handleCityChange}>
+              {cities.map((city) => (
+                <Select.Option key={city.name} value={city.name}>
+                  {city.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        <Form.Item className="mb-8 w-[70%] flex-1" label="District" name="district" rules={[{ required: true, message: "Please select a district" }]}>
-          <Select onChange={handleDistrictChange} disabled={!selectedCity}>
-            {districts.map((district) => (
-              <Select.Option key={district.name} value={district.name}>
-                {district.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+          <Form.Item
+            className="mb-8 w-[70%] flex-1"
+            label="District"
+            name="district"
+            rules={[{ required: true, message: "Please select a district" }]}
+          >
+            <Select onChange={handleDistrictChange} disabled={!selectedCity}>
+              {districts.map((district: any) => (
+                <Select.Option key={district.name} value={district.name}>
+                  {district.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        <Form.Item className="mb-8 w-[70%] flex-1" label="Ward" name="wards" rules={[{ required: true, message: "Please select a ward" }]}>
-          <Select onChange={setSelectedWard} disabled={!selectedDistrict}>
-            {wards.map((ward) => (
-              <Select.Option key={ward.name} value={ward.name}>
-                {ward.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+          <Form.Item
+            className="mb-8 w-[70%] flex-1"
+            label="Ward"
+            name="wards"
+            rules={[{ required: true, message: "Please select a ward" }]}
+          >
+            <Select onChange={setSelectedWard} disabled={!selectedDistrict}>
+              {wards.map((ward: any) => (
+                <Select.Option key={ward.name} value={ward.name}>
+                  {ward.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
         </AntModal>
       </Form>
     </>

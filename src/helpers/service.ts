@@ -44,49 +44,5 @@ service.interceptors.response.use(
   }
 );
 
-// Get cities
-export const getCities = async () => {
-  try {
-    const response = await axios.get('/location.json');
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching cities:", error);
-    throw error;
-  }
-};
-
-// Get districtsList base on cityName
-export const getDistrictsByCityName = async (cityName: string) => {
-  try {
-    const cities = await getCities();
-    const city = cities.find((c) => c.name === cityName);
-
-    if (city) {
-      return city.districts;
-    } else {
-      throw new Error(`City with name ${cityName} not found`);
-    }
-  } catch (error) {
-    console.error("Error fetching districts:", error);
-    throw error;
-  }
-};
-
-// Get wardsList base on cityName and districtName
-export const getWardsByCityAndDistrictName = async (cityName: string, districtName: string) => {
-  try {
-    const districts = await getDistrictsByCityName(cityName);
-    const district = districts.find((d) => d.name === districtName);
-
-    if (district) {
-      return district.wards;
-    } else {
-      throw new Error(`District with name ${districtName} not found`);
-    }
-  } catch (error) {
-    console.error("Error fetching wards:", error);
-    throw error;
-  }
-};
 
 export default service;
