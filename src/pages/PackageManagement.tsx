@@ -453,12 +453,14 @@ export default function PackageManagement(props: any) {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
+      width: "40%",
       ...getColumnSearchPropsSent("id"),
     },
     {
       title: "Timestamp",
       dataIndex: "timestamp",
       key: "timestamp",
+      width: "60%",
       render: (text: any, record: any) => (
         <>
           {record.timestamp
@@ -474,12 +476,14 @@ export default function PackageManagement(props: any) {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
+      width: "40%",
       ...getColumnSearchPropsReceived("id"),
     },
     {
       title: "Timestamp",
       dataIndex: "timestamp",
       key: "timestamp",
+      width: "60%",
       render: (text: any, record: any) => {
         console.log(record);
         return (
@@ -766,7 +770,7 @@ export default function PackageManagement(props: any) {
             <div className="relative flex flex-grow gap-4">
               <div className="w-1/2">
                 <div className="flex w-full flex-col gap-4">
-                  <div className="text-[18px] font-bold">Sent Packages</div>
+                  <div className="text-[22px] font-bold">Sent Packages</div>
                   <SkeletonTable loading={loading} columns={columnsSent}>
                     <Table
                       className="w-full"
@@ -789,7 +793,7 @@ export default function PackageManagement(props: any) {
               </div>
               <div className="flex-1">
                 <div className="flex w-full flex-col gap-4">
-                  <div className="text-[18px] font-bold">Received Packages</div>
+                  <div className="text-[22px] font-bold">Received Packages</div>
                   <SkeletonTable loading={loading} columns={columnsReceived}>
                     <Table
                       className="w-full"
@@ -815,7 +819,7 @@ export default function PackageManagement(props: any) {
 
           {role === "LEADER" && (
             <div className="w-full">
-              <div className="text-[18px] font-bold">All Package</div>
+              <div className="text-[24px] font-bold">All Package</div>
               <SkeletonTable loading={loading} columns={columnsAll}>
                 <Table
                   className="w-full"
