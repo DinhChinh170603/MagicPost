@@ -1,4 +1,5 @@
 import { Table, Button, Space, Descriptions, Input } from "antd";
+import PropTypes from "prop-types";
 import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
@@ -7,7 +8,10 @@ import axios from "axios";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 
-export default function DeliveryStatus() {
+export default function DeliveryStatus(props: any) {
+  const { role } = props;
+  const [roleAPI, setRoleAPI] = useState("");
+
   const [succeedPackages, setSucceedPackages] = useState([]);
   const [rejectedPackages, setRejectedPackages] = useState([]);
 
@@ -29,36 +33,44 @@ export default function DeliveryStatus() {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .all([
-        service.get(`/ex-employee/successful-packages`),
-        service.get(`/ex-employee/rejected-packages`),
-      ])
-      .then(
-        axios.spread((res1, res2) => {
-          const newData1 = res1.data.results.map((item: { id: any; }) => ({
-            ...item,
-            key: item.id,
-          }));
-          setSucceedPackages(newData1);
-          const newData2 = res2.data.results.map((item: { id: any; }) => ({
-            ...item,
-            key: item.id,
-          }));
-          setRejectedPackages(newData2);
+    if (role === "EXCHANGE_EMPLOYEE") {
+      setRoleAPI("/ex-employee");
+    } else if (role === "EXCHANGE_MANAGER") {
+      setRoleAPI("/ex-manager");
+    }
+
+    if (roleAPI) {
+      axios
+        .all([
+          service.get(roleAPI + `/successful-packages`),
+          service.get(roleAPI + `/rejected-packages`),
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            const newData1 = res1.data.results.map((item: { id: any; }) => ({
+              ...item,
+              key: item.id,
+            }));
+            setSucceedPackages(newData1);
+            const newData2 = res2.data.results.map((item: { id: any; }) => ({
+              ...item,
+              key: item.id,
+            }));
+            setRejectedPackages(newData2);
+            setLoading(false);
+          }),
+          () => {
+            setLoading(false);
+            toast.error("Something went wrong");
+          },
+        )
+        .catch((err) => {
           setLoading(false);
-        }),
-        () => {
-          setLoading(false);
-          toast.error("Something went wrong");
-        },
-      )
-      .catch((err) => {
-        setLoading(false);
-        toast.error(err.response.data.message);
-      });
-    setCurrentPageOfSucceed(1);
-    setCurrentPageOfRejected(1);
+          toast.error(err.response.data.message);
+        });
+      setCurrentPageOfSucceed(1);
+      setCurrentPageOfRejected(1);
+    }
   }, []);
 
   // Search succeedPackages
@@ -551,3 +563,7 @@ export default function DeliveryStatus() {
     </>
   );
 }
+
+DeliveryStatus.propTypes = {
+  role: PropTypes.string,
+};

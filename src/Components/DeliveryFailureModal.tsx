@@ -20,6 +20,7 @@ const DeliveryFailureModal: React.FC<ModalProps> = ({
   setModalOpen,
 }) => {
   const [form] = Form.useForm();
+  const [apiEndpoint, setApiEndpoint] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -28,10 +29,14 @@ const DeliveryFailureModal: React.FC<ModalProps> = ({
     setLoading(true);
 
     const sendRequests = packageIds.map((packageId) => {
-        return service.patch(`/ex-employee/reject-receiver/`, {
+      if (sendAttempt === "exceed") {
+        return service.patch(`/ex-employee` + `/${apiEndpoint}/` + packageId);
+      } else {
+        return service.patch(`/ex-employee` + `/${apiEndpoint}/`, {
           packageId: packageId,
           reason: `${sendAttempt} (thất bại) với lí do: ${reason}`,
         });
+      }
     });
 
     Promise.all(sendRequests)
@@ -56,7 +61,12 @@ const DeliveryFailureModal: React.FC<ModalProps> = ({
   };
 
   const handleReasonChange = (value: string) => {
-    form.setFieldsValue({ reason: value });
+    if (value === "Đã quá 3 lần") {
+      setApiEndpoint("strict-reject-receiver");
+    } else {
+      form.setFieldsValue({ reason: value });
+      setApiEndpoint("reject-receiver");
+    }
   };
 
   const handleSendAttemptChange = (value: string) => {
@@ -84,6 +94,7 @@ const DeliveryFailureModal: React.FC<ModalProps> = ({
               <Option value="Lần gửi 1">Lần gửi 1</Option>
               <Option value="Lần gửi 2">Lần gửi 2</Option>
               <Option value="Lần gửi 3">Lần gửi 3</Option>
+              <Option value="exceed">Đã quá 3 lần gửi</Option>
             </Select>
           </Form.Item>
           <Form.Item
