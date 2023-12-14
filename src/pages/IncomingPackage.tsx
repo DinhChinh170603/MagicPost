@@ -226,6 +226,7 @@ export default function IncomingPackage(props: any) {
   const pagination = {
     hideOnSinglePage: true,
     pageSize: 5,
+    current: currentPage,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
