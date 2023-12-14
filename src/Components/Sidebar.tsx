@@ -125,6 +125,15 @@ const Sidebar = (props: any) => {
               Employees
             </NavLink>
             <NavLink
+              to="/invite-employee"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              Invite Employee
+            </NavLink>
+            <NavLink
               to="/package-management"
               end
               className={({ isActive }) =>
@@ -134,13 +143,13 @@ const Sidebar = (props: any) => {
               Package Management
             </NavLink>
             <NavLink
-              to="/invite-employee"
+              to="/delivery-status"
               end
               className={({ isActive }) =>
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Invite Employee
+              Delivery Status
             </NavLink>
           </>
         );
