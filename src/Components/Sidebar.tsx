@@ -1,5 +1,13 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import service from "../helpers/service";
+import AuthContext from "../contexts/AuthContext";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Avatar } from "antd";
+import simpleLogo from "./../assets/simpleLogo.png";
+
 
 const Sidebar = (props: any) => {
   const activeStyle =
@@ -216,11 +224,34 @@ const Sidebar = (props: any) => {
     }
   };
 
+  const { user, setUser } = useContext<any>(AuthContext);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (!user) {
+      setLoading(true);
+      service
+        .get("/users/me")
+        .then((res) => {
+          if (res.data.status === 200) {
+            setUser(res.data.results);
+          } else {
+            toast.error("Failed to fetch user data");
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+          setLoading(false);
+        });
+    }
+  }, []);
+
   return (
     <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto border-r-2 border-slate-200 bg-slideBar">
       <>
-        <div style={{marginTop: 20, marginBottom: 35}}>
-          <h1 className="text-3xl font-bold text-white">Magic Post</h1>
+        <div style={{display: "flex", marginTop: 15, marginBottom: 30}}>
+          <img src={simpleLogo} alt="Logo" className="h-10"/>
+          <h1 className="text-3xl font-bold text-white ml-2 mt-1">Magic Post</h1>
         </div>
         <NavLink
           to="/"
@@ -230,6 +261,21 @@ const Sidebar = (props: any) => {
           Home
         </NavLink>
         {renderNavigations(role)}
+
+        <div className="w-[80%] rounded-lg bg-bgColor" style={{ display: "flex", marginTop: 15, marginBottom: 30, padding: 5, alignItems: "center", marginTop: "auto"}}>
+          {user && user.avatar ? (
+              <Avatar
+                src={user.avatar}
+                size={45}
+              />
+            ) : (
+              <AccountCircleIcon
+                sx={{ color: "black", fontSize: 45 }}
+              />
+            )}
+          <h1 className="font-bold text-black ml-1 mt-1" style={{fontSize: (role === "LEADER") ? 16 : 13}}>{role}</h1>
+        </div>
+
       </>
     </div>
   );
