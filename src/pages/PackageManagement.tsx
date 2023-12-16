@@ -48,6 +48,10 @@ export default function PackageManagement(props: any) {
       setRoleAPI("/gth-employee");
     } else if (role === "LEADER") {
       setRoleAPI("/leader");
+    } else if (role === "EXCHANGE_MANAGER") {
+      setRoleAPI("/ex-manager");
+    } else if (role === "GATHER_MANAGER") {
+      setRoleAPI("/gth-manager");
     }
 
     if (roleAPI && role !== "LEADER") {
