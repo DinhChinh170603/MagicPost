@@ -1,11 +1,6 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import service from "../helpers/service";
-import AuthContext from "../contexts/AuthContext";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Avatar } from "antd";
 import simpleLogo from "./../assets/simpleLogo.png";
 import gatherMana from "./../assets/GT_MN_logo.png"
 import exchangeMana from "./../assets/EC_MN_logo.png"
@@ -309,7 +304,7 @@ const Sidebar = (props: any) => {
   return (
     <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto border-r-2 border-slate-200 bg-slideBar">
       <>
-        <div style={{display: "flex", marginTop: 10, alignItems: "center" }}>
+        <div style={{display: "flex", marginTop: 10, alignItems: "center"}}>
           <img src={simpleLogo} alt="Logo" className="h-10"/>
           <h1 className="font-bold text-white ml-2" style={{fontSize: 28}}>Magic Post</h1>
         </div>
