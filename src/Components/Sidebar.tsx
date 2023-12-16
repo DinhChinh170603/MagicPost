@@ -1,11 +1,24 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import simpleLogo from "./../assets/simpleLogo.png";
+import gatherMana from "./../assets/GT_MN_logo.png"
+import exchangeMana from "./../assets/EC_MN_logo.png"
+import gatherEmp from "./../assets/GT_EM_logo.png"
+import exchangeEmp from "./../assets/EC_EM_logo.png"
+import leader from "./../assets/leader_logo.png"
+import { FaHome, FaExchangeAlt } from 'react-icons/fa';
+import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
+import { PiPackageFill } from "react-icons/pi";
+import { MdOutlineZoomInMap } from "react-icons/md";
+import { TbTruckDelivery } from "react-icons/tb";
+import { LuPackagePlus } from "react-icons/lu";
 
 const Sidebar = (props: any) => {
   const activeStyle =
-    "w-[80%] rounded-lg bg-btnColor p-3 text-white text-center text-xl font-bold transition-all duration-100";
+    "w-[80%] rounded-lg bg-btnColor p-3 text-white text-left text-lg font-bold transition-all duration-100";
   const inactiveStyle =
-    "w-[80%] rounded-lg p-3 text-center text-white text-xl transition-all duration-100 hover:bg-btnHover hover:text-black hover:font-bold";
+    "w-[80%] rounded-lg p-3 text-left text-white text-lg transition-all duration-100 hover:bg-btnHover hover:text-black hover:font-bold";
 
   const { role } = props;
 
@@ -21,7 +34,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Managers
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <IoPeople size={20} style={{ marginRight: 10 }} />
+                Managers
+              </span>
             </NavLink>
             <NavLink
               to="/package-management"
@@ -30,7 +46,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              All Package
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <PiPackageFill size={20} style={{ marginRight: 10 }} />
+                All packages
+              </span>
             </NavLink>
             <NavLink
               to="/exchange-points"
@@ -39,7 +58,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Exchange Points
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <FaExchangeAlt size={20} style={{ marginRight: 10 }} />
+                Exchange Points
+              </span>
             </NavLink>
             <NavLink
               to="/gather-points"
@@ -48,7 +70,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Gather Points
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <MdOutlineZoomInMap size={20} style={{ marginRight: 10 }} />
+                Gather Points
+              </span>
             </NavLink>
             <NavLink
               to="/invite"
@@ -57,7 +82,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Invite
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <IoPersonAddSharp size={20} style={{ marginRight: 10 }} />
+                Invite
+              </span>
             </NavLink>
           </>
         );
@@ -71,7 +99,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              New Package
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <LuPackagePlus size={20} style={{ marginRight: 10 }} />
+                New Package
+              </span>
             </NavLink>
             <NavLink
               to="/package-management"
@@ -80,7 +111,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Package Management
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <PiPackageFill size={20} style={{ marginRight: 10 }} />
+                Package Management
+              </span>
             </NavLink>
             <NavLink
               to="/package-processing"
@@ -122,7 +156,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Employees
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <IoPeople size={20} style={{ marginRight: 10 }} />
+                Employees
+              </span>
             </NavLink>
             <NavLink
               to="/invite-employee"
@@ -131,7 +168,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Invite Employee
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <IoPersonAddSharp size={20} style={{ marginRight: 10 }} />
+                Invite employee
+              </span>
             </NavLink>
             <NavLink
               to="/package-management"
@@ -140,7 +180,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Package Management
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <PiPackageFill size={20} style={{ marginRight: 10 }} />
+                Package Management
+              </span>
             </NavLink>
             <NavLink
               to="/delivery-status"
@@ -149,7 +192,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Delivery Status
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <TbTruckDelivery size={20} style={{ marginRight: 10 }} />
+                Delivery Status
+              </span>
             </NavLink>
           </>
         );
@@ -164,7 +210,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Employees
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <IoPeople size={20} style={{ marginRight: 10 }} />
+                Employees
+              </span>
             </NavLink>
             <NavLink
               to="/package-management"
@@ -173,7 +222,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Package Management
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <PiPackageFill size={20} style={{ marginRight: 10 }} />
+                Package Management
+              </span>
             </NavLink>
             <NavLink
               to="/invite-employee"
@@ -182,7 +234,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Invite Employee
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <IoPersonAddSharp size={20} style={{ marginRight: 10 }} />
+                Invite Employee
+              </span>
             </NavLink>
           </>
         );
@@ -197,7 +252,10 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Package Management
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <PiPackageFill size={20} style={{ marginRight: 10 }} />
+                Package Management
+              </span>
             </NavLink>
             <NavLink
               to="/package-processing"
@@ -225,20 +283,51 @@ const Sidebar = (props: any) => {
     }
   };
 
+  const renderIcon = (currentRole: string) => {
+    const iconStyle = { width: 40, height: 40 };
+    switch (currentRole) {
+      case "LEADER":
+        return <img src={leader} alt="Leader Icon" style={iconStyle} />;
+      case "GATHER_MANAGER":
+        return <img src={gatherMana} alt="Gather Manager Icon" style={iconStyle} />;
+      case "EXCHANGE_MANAGER":
+        return <img src={exchangeMana} alt="Exchange Manager Icon" style={iconStyle}/>;
+      case "GATHER_EMPLOYEE":
+        return <img src={gatherEmp} alt="Gather Employee Icon" style={iconStyle}/>;
+      case "EXCHANGE_EMPLOYEE":
+        return <img src={exchangeEmp} alt="Exchange Employee Icon" style={iconStyle}/>;
+      default:
+        return <AccountCircleIcon sx={{ color: "black", fontSize: 45 }} />;
+    }
+  };
+
   return (
     <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto border-r-2 border-slate-200 bg-slideBar">
       <>
-        <div style={{marginTop: 20, marginBottom: 35}}>
-          <h1 className="text-3xl font-bold text-white">Magic Post</h1>
+        <div style={{display: "flex", marginTop: 10, alignItems: "center"}}>
+          <img src={simpleLogo} alt="Logo" className="h-10"/>
+          <h1 className="font-bold text-white ml-2" style={{fontSize: 28}}>Magic Post</h1>
         </div>
+
+        <hr style={{ width: "60%", marginBottom: 15}} />
+
         <NavLink
           to="/"
           end
           className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
         >
-          Home
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+            <FaHome size={20} style={{ marginRight: 10 }} />
+            Home
+          </span>
         </NavLink>
         {renderNavigations(role)}
+
+        <div className="w-[80%] rounded-lg bg-bgColor" style={{ display: "flex", marginTop: 15, marginBottom: 30, padding: 10, alignItems: "center", marginTop: "auto"}}>
+          {renderIcon(role)}
+          <h1 className="font-bold text-black ml-2 mt-1" style={{fontSize: (role === "LEADER") ? 16 : 13}}>{role}</h1>
+        </div>
+
       </>
     </div>
   );
