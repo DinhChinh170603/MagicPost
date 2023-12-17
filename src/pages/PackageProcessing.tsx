@@ -234,6 +234,7 @@ export default function PackageProcessing(props: any) {
 
   const handleModalSubmit = () => {
     setModalFinished((prev) => !prev);
+    setSelectedRowKeys([]);
   };
 
   const pagination = {
