@@ -9,7 +9,6 @@ export default function InviteEmployee(props: any) {
   const [form] = Form.useForm();
 
   const { role } = props;
-  const [roleAPI, setRoleAPI] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -22,17 +21,18 @@ export default function InviteEmployee(props: any) {
     formData.append("dob", dob.format("DD-MM-YYYY"));
 
     setLoading(true);
+    let roleApiPrefix = "";
     if (role === "EXCHANGE_MANAGER") {
-      setRoleAPI("/ex-manager");
+      roleApiPrefix = "/ex-manager";
     } else if (role === "GATHER_MANAGER") {
-      setRoleAPI("/gth-manager");
+      roleApiPrefix = "/gth-manager";
     } else {
       toast.error("Something went wrong");
     }
 
-    if (roleAPI) {
+    if (roleApiPrefix) {
       service
-        .post(roleAPI + "/invite", formData)
+        .post(roleApiPrefix + "/invite", formData)
         .then((res) => {
           setLoading(false);
           if (res.data.status === 201) {
