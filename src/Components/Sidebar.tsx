@@ -323,7 +323,7 @@ const Sidebar = (props: any) => {
         </NavLink>
         {renderNavigations(role)}
 
-        <div className="w-[80%] rounded-lg bg-bgColor" style={{ display: "flex", marginTop: 15, marginBottom: 30, padding: 10, alignItems: "center", marginTop: "auto"}}>
+        <div className="w-[80%] rounded-lg bg-bgColor" style={{ display: "flex", marginBottom: 30, padding: 10, alignItems: "center", marginTop: "auto"}}>
           {renderIcon(role)}
           <h1 className="font-bold text-black ml-2 mt-1" style={{fontSize: (role === "LEADER") ? 16 : 13}}>{role}</h1>
         </div>
