@@ -132,19 +132,43 @@ export default function Home() {
   const options: any = {
     plugins: {
       legend: {
-        position: "top" as const,
+        position: "bottom" as const,
       },
       title: {
         display: true,
         text: "Packages statistics",
+        font: {
+          size: 30,
+        }
+      },
+    },
+  };
+
+  const optionsBarChart: any = {
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+      },
+      title: {
+        display: true,
+        text: "Workforce",
+        font: {
+          size: 30,
+        }
       },
     },
   };
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-bgColor">
-      <Doughnut data={usersStatistics} />
-      <Line data={packagesStatistics} options={options} />
+      <div style={{ display: "flex", gap: "20px" }}>
+        <div style={{ width: "500px", height: "500px", border: "1px solid #ccc", borderRadius: "8px", padding: "15px", backgroundColor: "white" }}>
+          <Doughnut data={usersStatistics} options={optionsBarChart}/>
+        </div>
+        <div style={{ width: "700px", height: "350px", border: "1px solid #ccc", borderRadius: "8px", padding: "15px", backgroundColor: "white" }}>
+          <Line data={packagesStatistics} options={options} />
+        </div>
+      </div>
     </div>
   );
 }
