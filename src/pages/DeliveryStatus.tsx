@@ -10,7 +10,6 @@ import Highlighter from "react-highlight-words";
 
 export default function DeliveryStatus(props: any) {
   const { role } = props;
-  const [roleAPI, setRoleAPI] = useState("");
 
   const [succeedPackages, setSucceedPackages] = useState([]);
   const [rejectedPackages, setRejectedPackages] = useState([]);
@@ -33,26 +32,27 @@ export default function DeliveryStatus(props: any) {
 
   useEffect(() => {
     setLoading(true);
+    let roleApiPrefix = "";
     if (role === "EXCHANGE_EMPLOYEE") {
-      setRoleAPI("/ex-employee");
+      roleApiPrefix = "/ex-employee";
     } else if (role === "EXCHANGE_MANAGER") {
-      setRoleAPI("/ex-manager");
+      roleApiPrefix = "/ex-manager";
     }
 
-    if (roleAPI) {
+    if (roleApiPrefix) {
       axios
         .all([
-          service.get(roleAPI + `/successful-packages`),
-          service.get(roleAPI + `/rejected-packages`),
+          service.get(roleApiPrefix + `/successful-packages`),
+          service.get(roleApiPrefix + `/rejected-packages`),
         ])
         .then(
           axios.spread((res1, res2) => {
-            const newData1 = res1.data.results.map((item: { id: any; }) => ({
+            const newData1 = res1.data.results.map((item: { id: any }) => ({
               ...item,
               key: item.id,
             }));
             setSucceedPackages(newData1);
-            const newData2 = res2.data.results.map((item: { id: any; }) => ({
+            const newData2 = res2.data.results.map((item: { id: any }) => ({
               ...item,
               key: item.id,
             }));
@@ -71,10 +71,14 @@ export default function DeliveryStatus(props: any) {
       setCurrentPageOfSucceed(1);
       setCurrentPageOfRejected(1);
     }
-  }, []);
+  }, [role]);
 
   // Search succeedPackages
-  const handleSearchSucceed = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
+  const handleSearchSucceed = (
+    selectedKeys: any[],
+    confirm: () => void,
+    dataIndex: string,
+  ) => {
     confirm();
     setSearchSucceed({ dataIndex, searchText: selectedKeys[0] });
 
@@ -168,7 +172,7 @@ export default function DeliveryStatus(props: any) {
         );
       }
     },
-    render: (text: { toString: () => string; }) =>
+    render: (text: { toString: () => string }) =>
       searchSucceed.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -185,7 +189,11 @@ export default function DeliveryStatus(props: any) {
   });
 
   // Search rejectedPackages
-  const handleSearchRejected = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
+  const handleSearchRejected = (
+    selectedKeys: any[],
+    confirm: () => void,
+    dataIndex: string,
+  ) => {
     confirm();
     setSearchRejected({ dataIndex, searchText: selectedKeys[0] });
 
@@ -279,7 +287,7 @@ export default function DeliveryStatus(props: any) {
         );
       }
     },
-    render: (text: { toString: () => string; }) =>
+    render: (text: { toString: () => string }) =>
       searchRejected.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{

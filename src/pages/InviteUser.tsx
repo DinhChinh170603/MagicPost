@@ -1,9 +1,8 @@
+import { Button, DatePicker, Form, Input, Select } from "antd";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import axios from "axios";
-import { Button, DatePicker, Form, Input, Select } from "antd";
 
 const { Option } = Select;
 
@@ -110,7 +109,6 @@ export default function InviteUser() {
       layout="vertical"
       initialValues={{ role: "", departmentId: "" }}
     >
-      {loading && <Loading />}
       <div className="flex h-full w-full flex-col p-5">
         <div className="text-3xl font-bold">Invite User</div>
         <div className="w-[60%] self-center">
@@ -153,7 +151,7 @@ export default function InviteUser() {
                 { required: true, message: "Please select a department" },
               ]}
             >
-              <Select disabled={!form.getFieldValue("role")}>
+              <Select disabled={!form.getFieldValue("role") || loading} loading={loading}>
                 {/* Replace roleDepartmentList with your actual data */}
                 {roleDepartmentList.map((department: any) => (
                   <Option key={department.id} value={department.id}>
