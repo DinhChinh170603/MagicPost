@@ -193,7 +193,7 @@ export default function GatherPointDetail() {
         );
       }
     },
-    render: (text) =>
+    render: (text: { toString: () => string; }) =>
       searchSent.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -227,7 +227,7 @@ export default function GatherPointDetail() {
       setCurrentPageOfReceived(searchedPage);
     }
   };
-  const handleResetIdReceived = (clearFilters) => {
+  const handleResetIdReceived = (clearFilters: { (): void; (): void; }) => {
     clearFilters();
     setSearchReceived({ ...searchReceived, searchText: "" });
   };
