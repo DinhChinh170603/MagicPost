@@ -302,7 +302,7 @@ const Sidebar = (props: any) => {
   };
 
   return (
-    <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto border-r-2 border-slate-200 bg-slideBar">
+    <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto bg-slideBar">
       <>
         <div style={{display: "flex", marginTop: 10, alignItems: "center"}}>
           <img src={simpleLogo} alt="Logo" className="h-10"/>
