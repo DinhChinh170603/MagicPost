@@ -57,7 +57,7 @@ function App() {
             <Sidebar role={user ? user.role : null} />
           )}
 
-          <div className="relative flex flex-1 flex-col overflow-y-auto">
+          <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
             <Topbar
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}

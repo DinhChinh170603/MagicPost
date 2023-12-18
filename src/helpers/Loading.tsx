@@ -5,8 +5,8 @@ export default function Loading(props: any) {
   return (
     <div
       className={
-        `fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center ` +
-        (props.hideBg ? "bg-[#c3c3c3]" : "bg-[rgba(60,60,60,0.5)]")
+        `${props.relative ? "absolute z-[500]" : "fixed z-[1000]"} left-0 top-0 flex h-full w-full items-center justify-center ` +
+        (props.hideBg ? "bg-[#c3c3c3]" : "bg-[rgba(101,101,101,0.3)]")
       }
     >
       <ReactLoading type="bars" color="white" height={100} width={100} />
@@ -16,8 +16,10 @@ export default function Loading(props: any) {
 
 Loading.propTypes = {
   hideBg: PropTypes.bool,
+  relative: PropTypes.bool,
 };
 
 Loading.defaultProps = {
   hideBg: false,
+  relative: false,
 };
