@@ -823,7 +823,7 @@ export default function PackageManagement(props: any) {
 
           {role === "LEADER" && (
             <div className="w-full">
-              <div className="text-[24px] font-bold">All Package</div>
+              <div className="mb-4 ml-3 text-[24px] font-bold">All Package</div>
               <SkeletonTable loading={loading} columns={columnsAll}>
                 <Table
                   className="w-full"
