@@ -1,9 +1,8 @@
+import { Button, DatePicker, Form, Input } from "antd";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import { Button, DatePicker, Form, Input } from "antd";
 
 export default function InviteEmployee(props: any) {
   const [form] = Form.useForm();
@@ -51,7 +50,6 @@ export default function InviteEmployee(props: any) {
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical">
-      {loading && <Loading />}
       <div className="flex h-full w-full flex-col p-8 pl-20">
         <div className="text-3xl font-bold">Add employee</div>
         <div className="w-[60%] self-center">
@@ -103,7 +101,7 @@ export default function InviteEmployee(props: any) {
             </Form.Item>
           </div>
           <div className="mt-4">
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
               Submit
             </Button>
           </div>
