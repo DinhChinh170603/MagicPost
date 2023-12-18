@@ -5,7 +5,7 @@ export default function Loading(props: any) {
   return (
     <div
       className={
-        `${props.relative ? "absolute" : "fixed"} left-0 top-0 z-[1000] flex h-full w-full items-center justify-center ` +
+        `${props.relative ? "absolute z-[500]" : "fixed z-[1000]"} left-0 top-0 flex h-full w-full items-center justify-center ` +
         (props.hideBg ? "bg-[#c3c3c3]" : "bg-[rgba(101,101,101,0.3)]")
       }
     >
