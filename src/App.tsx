@@ -80,6 +80,11 @@ function App() {
             controlItemBgHover: "rgba(147, 147, 147, 0.6)",
             colorBorder: "rgba(147, 147, 147, 0.4)",
           },
+          components: {
+            Table: {
+              headerBg: "#f1f5f9",
+            }
+          }
         }}
       >
         <AuthContext.Provider value={{ user, setUser }}>

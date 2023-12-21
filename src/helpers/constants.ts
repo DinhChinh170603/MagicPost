@@ -1,0 +1,3 @@
+export const SUCCESS_STATE = "SUCCESS"
+export const REJECTED_STATE = "REJECTED"
+export const IN_PROGRESS_STATE = "IN_PROGRESS"
