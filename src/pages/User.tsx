@@ -246,9 +246,11 @@ export default function User() {
               {profileUser.fullName}
             </div>
             <div className="text-gray-500">{profileUser.role}</div>
-            <Button className="mt-3" onClick={() => setModalOpen(true)}>
-              Change password
-            </Button>
+            {profileUser?.id === user?.id && (
+              <Button className="mt-3" onClick={() => setModalOpen(true)}>
+                Change password
+              </Button>
+            )}
             {avatarLink && avatarLink !== profileUser.avatar && (
               <div className="flex">
                 <Button
