@@ -63,7 +63,9 @@ function App() {
               setIsSidebarOpen={setIsSidebarOpen}
               isInMobileMode={inMobileMode}
             />
-            <div className="flex-1">{children}</div>
+            <div className="h-full w-full flex-1 bg-[#f1f5f9] px-3 pb-4 pt-5">
+              {children}
+            </div>
           </div>
         </div>
       </>
@@ -83,8 +85,8 @@ function App() {
           components: {
             Table: {
               headerBg: "#f1f5f9",
-            }
-          }
+            },
+          },
         }}
       >
         <AuthContext.Provider value={{ user, setUser }}>
@@ -93,19 +95,62 @@ function App() {
               <Routes>
                 <Route index element={getPage(<Home />)}></Route>
                 <Route path="/login" element={<Login />}></Route>
-                <Route path="/managers" element={getPage(<Managers role={user ? user.role : null} />)}></Route>
-                <Route path="/exchange-points" element={getPage(<ExchangePoints />)}></Route>
-                <Route path="/gather-points" element={getPage(<GatherPoints />)}></Route>
-                <Route path="/gather-points/:id" element={getPage(<GatherPointDetail />)}></Route>
-                <Route path="/exchange-points/:id" element={getPage(<ExchangePointDetail />)}></Route>
-                <Route path="/new-package" element={getPage(<NewPackage />)}></Route>
-                <Route path="/package-processing" element={getPage(<PackageProcessing role={user ? user.role : null}/>)}></Route>
-                <Route path="/incoming-packages" element={getPage(<IncomingPackage role={user ? user.role : null}/>)}></Route>
-                <Route path="/package-management" element={getPage(<PackageManagement role={user ? user.role : null}/>)}></Route>
-                <Route path="/delivery-status" element={getPage(<DeliveryStatus role={user ? user.role : null}/>)}></Route>
+                <Route
+                  path="/managers"
+                  element={getPage(<Managers role={user ? user.role : null} />)}
+                ></Route>
+                <Route
+                  path="/exchange-points"
+                  element={getPage(<ExchangePoints />)}
+                ></Route>
+                <Route
+                  path="/gather-points"
+                  element={getPage(<GatherPoints />)}
+                ></Route>
+                <Route
+                  path="/gather-points/:id"
+                  element={getPage(<GatherPointDetail />)}
+                ></Route>
+                <Route
+                  path="/exchange-points/:id"
+                  element={getPage(<ExchangePointDetail />)}
+                ></Route>
+                <Route
+                  path="/new-package"
+                  element={getPage(<NewPackage />)}
+                ></Route>
+                <Route
+                  path="/package-processing"
+                  element={getPage(
+                    <PackageProcessing role={user ? user.role : null} />,
+                  )}
+                ></Route>
+                <Route
+                  path="/incoming-packages"
+                  element={getPage(
+                    <IncomingPackage role={user ? user.role : null} />,
+                  )}
+                ></Route>
+                <Route
+                  path="/package-management"
+                  element={getPage(
+                    <PackageManagement role={user ? user.role : null} />,
+                  )}
+                ></Route>
+                <Route
+                  path="/delivery-status"
+                  element={getPage(
+                    <DeliveryStatus role={user ? user.role : null} />,
+                  )}
+                ></Route>
                 <Route path="/users/:id" element={getPage(<User />)}></Route>
                 <Route path="/invite" element={getPage(<InviteUser />)}></Route>
-                <Route path="/invite-employee" element={getPage(<InviteEmployee role={user ? user.role : null}/>)}></Route>
+                <Route
+                  path="/invite-employee"
+                  element={getPage(
+                    <InviteEmployee role={user ? user.role : null} />,
+                  )}
+                ></Route>
                 <Route path="*" element={getPage(<NotFound />)}></Route>
               </Routes>
             </BrowserRouter>

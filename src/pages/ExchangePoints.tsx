@@ -6,6 +6,7 @@ import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
+import { PlusCircleOutlined } from "@ant-design/icons";
 
 export default function ExchangePoints() {
   const navigate = useNavigate();
@@ -86,7 +87,9 @@ export default function ExchangePoints() {
 
   const pagination = {
     hideOnSinglePage: false,
-    pageSize: 5,
+    defaultPageSize: 10,
+    showSizeChanger: true,
+    pageSizeOptions: ["5", "10", "20", "30"],
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
@@ -114,22 +117,21 @@ export default function ExchangePoints() {
     setModalFinished((prev) => !prev);
   };
   return (
-    <>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-        <div className="flex w-[80%] justify-start">
-          <Button type="primary" onClick={() => setModalPointOpen(true)}>
-            Insert a new point
-          </Button>
-          <InsertNewPointModal
-            onSubmit={handleModalSubmit}
-            apiEndpoint="/leader/exchange-point"
-            isOpen={modalPointOpen}
-            setModalOpen={setModalPointOpen}
-          />
-        </div>
-        <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
+    <div className="pb-4">
+      <div className="flex items-center">
+        <div className="mb-4 ml-3 text-3xl font-bold">Exchange points</div>
+        <Button
+          type="primary"
+          onClick={() => setModalPointOpen(true)}
+          className="ml-auto mr-3 shadow-[0_2px_0_rgba(0,0,0,0.2),0_8px_16px_0_rgba(0,0,0,0.15)]"
+          icon={<PlusCircleOutlined />}
+        >
+          Add new exchange point
+        </Button>
+      </div>
+      <div className="rounded-xl bg-white p-3 shadow-lg">
+        <SkeletonTable loading={loading} columns={columns}>
           <Table
-            className="w-[80%]"
             columns={columns}
             dataSource={data}
             rowKey={(record) => String(record.id)}
@@ -137,6 +139,12 @@ export default function ExchangePoints() {
           />
         </SkeletonTable>
       </div>
-    </>
+      <InsertNewPointModal
+        onSubmit={handleModalSubmit}
+        apiEndpoint="/leader/exchange-point"
+        isOpen={modalPointOpen}
+        setModalOpen={setModalPointOpen}
+      />
+    </div>
   );
 }

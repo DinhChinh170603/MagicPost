@@ -7,10 +7,13 @@ import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
+import { PlusCircleOutlined, LinkOutlined } from "@ant-design/icons";
 
 const pagination = {
-  hideOnSinglePage: true,
-  pageSize: 5,
+  hideOnSinglePage: false,
+  defaultPageSize: 10,
+  showSizeChanger: true,
+  pageSizeOptions: ["5", "10", "20", "30"],
   showTotal: (total: number, range: number[]) =>
     `${range[0]}-${range[1]} of ${total} items`,
 };
@@ -137,42 +140,32 @@ export default function GatherPoints() {
   const handleModalSubmit = () => {
     setModalFinished((prev) => !prev);
   };
-
   return (
-    <>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-        <div className="flex w-[80%] justify-start gap-4">
-          <Button type="primary" onClick={() => setModalPointOpen(true)}>
-            Insert a new point
-          </Button>
-          <InsertNewPointModal
-            onSubmit={handleModalSubmit}
-            apiEndpoint="/leader/gather-point"
-            isOpen={modalPointOpen}
-            setModalOpen={setModalPointOpen}
-          />
+    <div className="pb-4">
+      <div className="flex">
+        <div className="mb-4 ml-3 text-3xl font-bold">Gather points</div>
+        <div className="ml-auto mr-3 flex gap-3">
           <Button
-            type="primary"
             onClick={() => setModalLinkOpen(true)}
             loading={modalLoading}
+            className="shadow-[0_2px_0_rgba(0,0,0,0.2),0_8px_16px_0_rgba(0,0,0,0.15)]"
+            icon={<LinkOutlined />}
           >
             Establish Connection
           </Button>
-          <EstablishConnectionModal
-            onSubmit={handleModalSubmit}
-            exchangePointsList={exchangePointsList}
-            gatherPointsList={gatherPointsList}
-            isOpen={modalLinkOpen}
-            setModalOpen={setModalLinkOpen}
-          />
+          <Button
+            type="primary"
+            onClick={() => setModalPointOpen(true)}
+            className="shadow-[0_2px_0_rgba(0,0,0,0.2),0_8px_16px_0_rgba(0,0,0,0.15)]"
+            icon={<PlusCircleOutlined />}
+          >
+            Insert a new point
+          </Button>
         </div>
-        <SkeletonTable
-          className="w-[80%]"
-          loading={tableLoading}
-          columns={columns}
-        >
+      </div>
+      <div className="rounded-xl bg-white p-3 shadow-lg">
+        <SkeletonTable loading={tableLoading} columns={columns}>
           <Table
-            className="w-[80%]"
             columns={columns}
             dataSource={gatherPointsList}
             rowKey={(record) => String(record.id)}
@@ -180,6 +173,19 @@ export default function GatherPoints() {
           />
         </SkeletonTable>
       </div>
-    </>
+      <EstablishConnectionModal
+        onSubmit={handleModalSubmit}
+        exchangePointsList={exchangePointsList}
+        gatherPointsList={gatherPointsList}
+        isOpen={modalLinkOpen}
+        setModalOpen={setModalLinkOpen}
+      />
+      <InsertNewPointModal
+        onSubmit={handleModalSubmit}
+        apiEndpoint="/leader/gather-point"
+        isOpen={modalPointOpen}
+        setModalOpen={setModalPointOpen}
+      />
+    </div>
   );
 }

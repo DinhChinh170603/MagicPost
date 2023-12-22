@@ -479,25 +479,28 @@ export default function PackageManagement(props: any) {
   });
 
   const paginationOfSent = {
-    hideOnSinglePage: true,
-    pageSize: 5,
     current: currentPageOfSent,
+    defaultPageSize: 5,
+    showSizeChanger: true,
+    pageSizeOptions: ["5", "10", "20", "30"],
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
   const paginationOfReceived = {
-    hideOnSinglePage: true,
-    pageSize: 5,
     current: currentPageOfReceived,
+    defaultPageSize: 5,
+    showSizeChanger: true,
+    pageSizeOptions: ["5", "10", "20", "30"],
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
   const paginationOfAll = {
-    hideOnSinglePage: true,
-    pageSize: 5,
     current: currentPageOfAll,
+    defaultPageSize: 5,
+    showSizeChanger: true,
+    pageSizeOptions: ["5", "10", "20", "30"],
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
@@ -612,11 +615,17 @@ export default function PackageManagement(props: any) {
       render: (text: any, record: any) => (
         <>
           {record.generalState === SUCCESS_STATE ? (
-            <div className="bg-[#9bd1f5] font-bold text-center py-1 rounded-lg">Success</div>
+            <div className="rounded-lg bg-[#9bd1f5] py-1 text-center font-bold">
+              Success
+            </div>
           ) : record.generalState === REJECTED_STATE ? (
-            <div className="bg-[#ffb1c2] font-bold text-center py-1 rounded-lg">Rejected</div>
+            <div className="rounded-lg bg-[#ffb1c2] py-1 text-center font-bold">
+              Rejected
+            </div>
           ) : (
-            <div className="bg-[#ffe6ab] font-bold text-center py-1 rounded-lg">In Progress</div>
+            <div className="rounded-lg bg-[#ffe6ab] py-1 text-center font-bold">
+              In Progress
+            </div>
           )}
         </>
       ),
@@ -843,130 +852,114 @@ export default function PackageManagement(props: any) {
 
   return (
     <>
-      <div className="flex h-full w-full bg-[#f1f5f9]">
-        <div className="mx-auto mt-8 flex w-[98%]">
-          {role !== "LEADER" && (
-            <div className="relative flex flex-grow gap-4">
-              <div className="w-1/2">
-                <div className="flex w-full flex-col gap-4">
-                  <div className="text-[22px] font-bold">Sent Packages</div>
-                  <SkeletonTable loading={loading} columns={columnsSent}>
-                    <Table
-                      className="w-full"
-                      columns={columnsSent}
-                      expandable={{
-                        expandedRowRender: (record) => (
-                          <p style={{ margin: 0 }}>{record.description}</p>
-                        ),
-                        rowExpandable: (record) => record.description !== "",
-                      }}
-                      dataSource={dataSent}
-                      pagination={paginationOfSent}
-                      idSearchInput={idSearchInputSent}
-                      onChange={(pagination) =>
-                        setCurrentPageOfSent(pagination.current)
-                      }
-                    />
-                  </SkeletonTable>
-                </div>
-              </div>
-              <div className="flex-1">
-                <div className="flex w-full flex-col gap-4">
-                  <div className="text-[22px] font-bold">Received Packages</div>
-                  <SkeletonTable loading={loading} columns={columnsReceived}>
-                    <Table
-                      className="w-full"
-                      columns={columnsReceived}
-                      expandable={{
-                        expandedRowRender: (record) => (
-                          <p style={{ margin: 0 }}>{record.description}</p>
-                        ),
-                        rowExpandable: (record) => record.description !== "",
-                      }}
-                      dataSource={dataReceived}
-                      pagination={paginationOfReceived}
-                      idSearchInput={idSearchInputReceived}
-                      onChange={(pagination) =>
-                        setCurrentPageOfReceived(pagination.current)
-                      }
-                    />
-                  </SkeletonTable>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {role === "LEADER" && (
-            <div className="w-full">
-              <div className="mb-4 ml-3 text-[24px] font-bold">
-                All Packages
-              </div>
-              <div className="mb-4 flex w-full flex-wrap justify-evenly">
-                <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 sm:basis-[45%] xl:basis-[23%] shadow-lg">
-                  <img src="/src/assets/total.svg" width={70} height={70} />
-                  <div className="flex flex-col">
-                    <span className="text-2xl font-bold">{totalCount}</span>
-                    <span className="text-sm">Total</span>
-                  </div>
-                </div>
-                <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 sm:basis-[45%] xl:basis-[23%] shadow-lg">
-                  <img
-                    src="/src/assets/successful.svg"
-                    width={70}
-                    height={70}
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-2xl font-bold">
-                      {successfulCount}
-                    </span>
-                    <span className="text-sm">Successful</span>
-                  </div>
-                </div>
-                <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 sm:basis-[45%] xl:basis-[23%] shadow-lg">
-                  <img src="/src/assets/rejected.svg" width={70} height={70} />
-                  <div className="flex flex-col">
-                    <span className="text-2xl font-bold">{rejectedCount}</span>
-                    <span className="text-sm">Rejected</span>
-                  </div>
-                </div>
-                <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 sm:basis-[45%] xl:basis-[23%] shadow-lg">
-                  <img
-                    src="/src/assets/inprogress.svg"
-                    width={70}
-                    height={70}
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-2xl font-bold">
-                      {inProgressCount}
-                    </span>
-                    <span className="text-sm">In Progress</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-white p-3 shadow-lg">
-                <SkeletonTable loading={loading} columns={columnsAll}>
+      <div className="flex justify-center pb-4">
+        {role !== "LEADER" && (
+          <div className="relative flex flex-grow gap-4">
+            <div className="w-1/2">
+              <div className="flex w-full flex-col gap-4">
+                <div className="text-[22px] font-bold">Sent Packages</div>
+                <SkeletonTable loading={loading} columns={columnsSent}>
                   <Table
                     className="w-full"
-                    columns={columnsAll}
+                    columns={columnsSent}
                     expandable={{
                       expandedRowRender: (record) => (
                         <p style={{ margin: 0 }}>{record.description}</p>
                       ),
                       rowExpandable: (record) => record.description !== "",
                     }}
-                    dataSource={dataOfAll}
-                    pagination={paginationOfAll}
-                    idSearchInput={idSearchInputByLeader}
+                    dataSource={dataSent}
+                    pagination={paginationOfSent}
+                    idSearchInput={idSearchInputSent}
                     onChange={(pagination) =>
-                      setCurrentPageOfAll(pagination.current)
+                      setCurrentPageOfSent(pagination.current)
                     }
                   />
                 </SkeletonTable>
               </div>
             </div>
-          )}
-        </div>
+            <div className="flex-1">
+              <div className="flex w-full flex-col gap-4">
+                <div className="text-[22px] font-bold">Received Packages</div>
+                <SkeletonTable loading={loading} columns={columnsReceived}>
+                  <Table
+                    className="w-full"
+                    columns={columnsReceived}
+                    expandable={{
+                      expandedRowRender: (record) => (
+                        <p style={{ margin: 0 }}>{record.description}</p>
+                      ),
+                      rowExpandable: (record) => record.description !== "",
+                    }}
+                    dataSource={dataReceived}
+                    pagination={paginationOfReceived}
+                    idSearchInput={idSearchInputReceived}
+                    onChange={(pagination) =>
+                      setCurrentPageOfReceived(pagination.current)
+                    }
+                  />
+                </SkeletonTable>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {role === "LEADER" && (
+          <div className="w-full">
+            <div className="mb-4 ml-3 text-3xl font-bold">All Packages</div>
+            <div className="mb-4 flex w-full flex-wrap justify-evenly">
+              <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
+                <img src="/src/assets/total.svg" width={70} height={70} />
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold">{totalCount}</span>
+                  <span className="text-sm">Total</span>
+                </div>
+              </div>
+              <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
+                <img src="/src/assets/successful.svg" width={70} height={70} />
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold">{successfulCount}</span>
+                  <span className="text-sm">Successful</span>
+                </div>
+              </div>
+              <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
+                <img src="/src/assets/rejected.svg" width={70} height={70} />
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold">{rejectedCount}</span>
+                  <span className="text-sm">Rejected</span>
+                </div>
+              </div>
+              <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
+                <img src="/src/assets/inprogress.svg" width={70} height={70} />
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold">{inProgressCount}</span>
+                  <span className="text-sm">In Progress</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-xl bg-white p-3 shadow-lg">
+              <SkeletonTable loading={loading} columns={columnsAll}>
+                <Table
+                  className="w-full"
+                  columns={columnsAll}
+                  expandable={{
+                    expandedRowRender: (record) => (
+                      <p style={{ margin: 0 }}>{record.description}</p>
+                    ),
+                    rowExpandable: (record) => record.description !== "",
+                  }}
+                  dataSource={dataOfAll}
+                  pagination={paginationOfAll}
+                  idSearchInput={idSearchInputByLeader}
+                  onChange={(pagination) =>
+                    setCurrentPageOfAll(pagination.current)
+                  }
+                />
+              </SkeletonTable>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
