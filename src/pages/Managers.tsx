@@ -278,7 +278,7 @@ export default function Managers(props: any) {
             </div>
           </div>
           <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-            <img src="/src/assets/EM.svg" width={70} height={70} />
+            <img src="/src/assets/EM2.svg" width={70} height={70} />
             <div className="flex flex-col">
               <span className="text-2xl font-bold">{emCount}</span>
               <span className="text-sm">Exchange managers</span>

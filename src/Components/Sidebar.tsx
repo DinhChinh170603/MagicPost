@@ -75,18 +75,6 @@ const Sidebar = (props: any) => {
                 Gather Points
               </span>
             </NavLink>
-            <NavLink
-              to="/invite"
-              end
-              className={({ isActive }) =>
-                isActive ? activeStyle : inactiveStyle
-              }
-            >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
-                <IoPersonAddSharp size={20} style={{ marginRight: 10 }} />
-                Invite
-              </span>
-            </NavLink>
           </>
         );
       case "EXCHANGE_EMPLOYEE":

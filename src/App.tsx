@@ -15,7 +15,6 @@ import ExchangePoints from "./pages/ExchangePoints";
 import GatherPointDetail from "./pages/GatherPointDetail";
 import GatherPoints from "./pages/GatherPoints";
 import Home from "./pages/Home";
-import InviteUser from "./pages/InviteUser";
 import InviteEmployee from "./pages/InviteEmployee";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -26,6 +25,7 @@ import IncomingPackage from "./pages/IncomingPackage";
 import PackageManagement from "./pages/PackageManagement";
 import DeliveryStatus from "./pages/DeliveryStatus";
 import AuthContext from "./contexts/AuthContext";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -144,13 +144,13 @@ function App() {
                   )}
                 ></Route>
                 <Route path="/users/:id" element={getPage(<User />)}></Route>
-                <Route path="/invite" element={getPage(<InviteUser />)}></Route>
                 <Route
                   path="/invite-employee"
                   element={getPage(
                     <InviteEmployee role={user ? user.role : null} />,
                   )}
                 ></Route>
+                <Route path="/change-password" element={<ChangePassword />}></Route>
                 <Route path="*" element={getPage(<NotFound />)}></Route>
               </Routes>
             </BrowserRouter>

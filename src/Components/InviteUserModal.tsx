@@ -95,6 +95,7 @@ export default function InviteUserModal(props: any) {
         setLoading(false);
         toast.error(err.response.data.message);
       });
+
   };
 
   const onClose = () => {

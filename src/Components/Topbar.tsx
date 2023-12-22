@@ -67,7 +67,7 @@ export default function Topbar(props: any) {
   return (
     <>
       {loading && <Loading hideBg={true} />}
-      <div className="sticky top-0 z-10 flex w-full items-center gap-8 self-start border-b-2 border-slate-200 bg-[rgba(255,255,255,0.95)] px-10 py-2">
+      <div className="sticky top-0 z-[700] flex w-full items-center gap-8 self-start border-b-2 border-slate-200 bg-[rgba(255,255,255,0.95)] px-10 py-2">
         {isInMobileMode && (
           <div className="-ml-8">
             <IconButton

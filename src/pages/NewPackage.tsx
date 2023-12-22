@@ -49,13 +49,13 @@ export default function NewPackage() {
   };
   return (
     <>
+      <h1 className="mb-4 ml-3 self-start text-3xl font-bold">New Package</h1>
       <Form
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        className="flex h-full w-full flex-col items-center"
+        className="flex flex-col items-center"
       >
-        <h1 className="m-4 self-start text-3xl font-bold">New Package</h1>
         <div className="flex w-[80%] flex-wrap gap-x-10 gap-y-3 p-5">
           <Form.Item
             name="senderName"
