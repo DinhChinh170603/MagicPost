@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import {
   IN_PROGRESS_STATE,
   REJECTED_STATE,
+  REJECTED_STATUS_PREFIX,
   SUCCESS_STATE,
 } from "../helpers/constants";
 import moment from "moment";
@@ -318,7 +319,7 @@ function PackageDetail() {
                     index === curPackage.status.length - 1
                       ? curPackage.generalState === SUCCESS_STATE
                         ? "green"
-                        : curPackage.generalState === REJECTED_STATE
+                        : item.detail.startsWith(REJECTED_STATUS_PREFIX)
                           ? "red"
                           : "blue"
                       : "blue",

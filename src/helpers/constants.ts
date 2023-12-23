@@ -3,3 +3,5 @@ export const REJECTED_STATE = "REJECTED";
 export const IN_PROGRESS_STATE = "IN_PROGRESS";
 
 export const FIELD_REQUIRED = "This field is required";
+
+export const REJECTED_STATUS_PREFIX = "Gói hàng không được chuyển thành công"
