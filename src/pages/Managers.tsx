@@ -9,9 +9,11 @@ import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
 import InviteUserModal from "../components/InviteUserModal";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function Managers(props: any) {
+function Managers(props: any) {
   const { role } = props;
+  const navigate = useNavigate();
   const [roleAPI, setRoleAPI] = useState("");
 
   const [data, setData] = useState([]);
@@ -171,6 +173,14 @@ export default function Managers(props: any) {
       key: "fullName",
       sorter: sortByString("fullName"),
       width: "20%",
+      render: (fullName: any, record: any) => (
+        <div
+          className="cursor-pointer hover:text-blue-500"
+          onClick={() => navigate(`/users/${record.id}`)}
+        >
+          {fullName}
+        </div>
+      ),
     },
     {
       title: "Date of Birth",
@@ -336,3 +346,5 @@ export default function Managers(props: any) {
 Managers.propTypes = {
   role: PropTypes.string,
 };
+
+export default Managers;

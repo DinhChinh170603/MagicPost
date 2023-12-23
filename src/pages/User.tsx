@@ -10,6 +10,7 @@ import axios from "axios";
 import moment from "moment";
 import { FIELD_REQUIRED } from "../helpers/constants";
 import ChangePasswordModal from "../components/ChangePasswordModal";
+import dayjs from "dayjs";
 
 const { Option } = Select;
 
@@ -99,7 +100,7 @@ export default function User() {
 
           form.setFieldsValue({
             ...res.data.results,
-            dob: moment(res.data.results.dob),
+            dob: dayjs(res.data.results.dob),
             startWorkingDate: moment(res.data.results.startWorkingDate).format(
               "DD/MM/YYYY",
             ),
