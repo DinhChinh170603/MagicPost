@@ -15,6 +15,22 @@ html {
   color: inherit;
 }
 
+.title {
+  font-size: 0.85rem; /* 12px */
+  line-height: 1rem;
+  font-weight: 800;
+}
+
+.information {
+  font-size: 0.85rem; /* 12px */
+  line-height: 1rem;
+}
+
+.dotted-line {
+  border-style: dotted;
+  border-width: 1px;
+}
+
 /* .custom-table-class tbody {
   max-height: calc(50vh - 2.5em);
   width: 100%;
