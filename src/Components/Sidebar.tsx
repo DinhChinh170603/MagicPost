@@ -2,12 +2,12 @@ import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import simpleLogo from "./../assets/simpleLogo.png";
-import gatherMana from "./../assets/GT_MN_logo.png"
-import exchangeMana from "./../assets/EC_MN_logo.png"
-import gatherEmp from "./../assets/GT_EM_logo.png"
-import exchangeEmp from "./../assets/EC_EM_logo.png"
-import leader from "./../assets/leader_logo.png"
-import { FaHome, FaExchangeAlt } from 'react-icons/fa';
+import gatherMana from "./../assets/GT_MN_logo.png";
+import exchangeMana from "./../assets/EC_MN_logo.png";
+import gatherEmp from "./../assets/GT_EM_logo.png";
+import exchangeEmp from "./../assets/EC_EM_logo.png";
+import leader from "./../assets/leader_logo.png";
+import { FaHome, FaExchangeAlt } from "react-icons/fa";
 import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
 import { PiPackageFill } from "react-icons/pi";
 import { MdOutlineZoomInMap } from "react-icons/md";
@@ -34,7 +34,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <IoPeople size={20} style={{ marginRight: 10 }} />
                 Managers
               </span>
@@ -46,7 +46,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <PiPackageFill size={20} style={{ marginRight: 10 }} />
                 All packages
               </span>
@@ -58,7 +58,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <FaExchangeAlt size={20} style={{ marginRight: 10 }} />
                 Exchange Points
               </span>
@@ -70,7 +70,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <MdOutlineZoomInMap size={20} style={{ marginRight: 10 }} />
                 Gather Points
               </span>
@@ -87,7 +87,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <LuPackagePlus size={20} style={{ marginRight: 10 }} />
                 New Package
               </span>
@@ -99,9 +99,9 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <PiPackageFill size={20} style={{ marginRight: 10 }} />
-                Package Management
+                Package History
               </span>
             </NavLink>
             <NavLink
@@ -144,7 +144,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <IoPeople size={20} style={{ marginRight: 10 }} />
                 Employees
               </span>
@@ -156,7 +156,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <IoPersonAddSharp size={20} style={{ marginRight: 10 }} />
                 Invite employee
               </span>
@@ -168,9 +168,9 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <PiPackageFill size={20} style={{ marginRight: 10 }} />
-                Package Management
+                Package History
               </span>
             </NavLink>
             <NavLink
@@ -180,7 +180,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <TbTruckDelivery size={20} style={{ marginRight: 10 }} />
                 Delivery Status
               </span>
@@ -198,7 +198,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <IoPeople size={20} style={{ marginRight: 10 }} />
                 Employees
               </span>
@@ -210,9 +210,9 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <PiPackageFill size={20} style={{ marginRight: 10 }} />
-                Package Management
+                Package History
               </span>
             </NavLink>
             <NavLink
@@ -222,7 +222,7 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <IoPersonAddSharp size={20} style={{ marginRight: 10 }} />
                 Invite Employee
               </span>
@@ -240,9 +240,9 @@ const Sidebar = (props: any) => {
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: "flex", alignItems: "center" }}>
                 <PiPackageFill size={20} style={{ marginRight: 10 }} />
-                Package Management
+                Package History
               </span>
             </NavLink>
             <NavLink
@@ -264,7 +264,7 @@ const Sidebar = (props: any) => {
               Incoming Package
             </NavLink>
           </>
-        )
+        );
 
       default:
         return <></>;
@@ -277,13 +277,29 @@ const Sidebar = (props: any) => {
       case "LEADER":
         return <img src={leader} alt="Leader Icon" style={iconStyle} />;
       case "GATHER_MANAGER":
-        return <img src={gatherMana} alt="Gather Manager Icon" style={iconStyle} />;
+        return (
+          <img src={gatherMana} alt="Gather Manager Icon" style={iconStyle} />
+        );
       case "EXCHANGE_MANAGER":
-        return <img src={exchangeMana} alt="Exchange Manager Icon" style={iconStyle}/>;
+        return (
+          <img
+            src={exchangeMana}
+            alt="Exchange Manager Icon"
+            style={iconStyle}
+          />
+        );
       case "GATHER_EMPLOYEE":
-        return <img src={gatherEmp} alt="Gather Employee Icon" style={iconStyle}/>;
+        return (
+          <img src={gatherEmp} alt="Gather Employee Icon" style={iconStyle} />
+        );
       case "EXCHANGE_EMPLOYEE":
-        return <img src={exchangeEmp} alt="Exchange Employee Icon" style={iconStyle}/>;
+        return (
+          <img
+            src={exchangeEmp}
+            alt="Exchange Employee Icon"
+            style={iconStyle}
+          />
+        );
       default:
         return <AccountCircleIcon sx={{ color: "black", fontSize: 45 }} />;
     }
@@ -292,30 +308,45 @@ const Sidebar = (props: any) => {
   return (
     <div className="flex h-full w-64 flex-col items-center gap-3 overflow-y-auto bg-slideBar">
       <>
-        <div style={{display: "flex", marginTop: 10, alignItems: "center"}}>
-          <img src={simpleLogo} alt="Logo" className="h-10"/>
-          <h1 className="font-bold text-white ml-2" style={{fontSize: 28}}>Magic Post</h1>
+        <div style={{ display: "flex", marginTop: 10, alignItems: "center" }}>
+          <img src={simpleLogo} alt="Logo" className="h-10" />
+          <h1 className="ml-2 font-bold text-white" style={{ fontSize: 28 }}>
+            Magic Post
+          </h1>
         </div>
 
-        <hr style={{ width: "60%", marginBottom: 15}} />
+        <hr style={{ width: "60%", marginBottom: 15 }} />
 
         <NavLink
           to="/"
           end
           className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
         >
-          <span style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ display: "flex", alignItems: "center" }}>
             <FaHome size={20} style={{ marginRight: 10 }} />
             Home
           </span>
         </NavLink>
         {renderNavigations(role)}
 
-        <div className="w-[80%] rounded-lg bg-bgColor" style={{ display: "flex", marginBottom: 30, padding: 10, alignItems: "center", marginTop: "auto"}}>
+        <div
+          className="w-[80%] rounded-lg bg-bgColor"
+          style={{
+            display: "flex",
+            marginBottom: 30,
+            padding: 10,
+            alignItems: "center",
+            marginTop: "auto",
+          }}
+        >
           {renderIcon(role)}
-          <h1 className="font-bold text-black ml-2 mt-1" style={{fontSize: (role === "LEADER") ? 16 : 13}}>{role}</h1>
+          <h1
+            className="ml-2 mt-1 font-bold text-black"
+            style={{ fontSize: role === "LEADER" ? 16 : 13 }}
+          >
+            {role}
+          </h1>
         </div>
-
       </>
     </div>
   );

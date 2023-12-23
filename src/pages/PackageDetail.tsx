@@ -1,0 +1,352 @@
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import { Form, Input, Skeleton, Timeline } from "antd";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import service from "../helpers/service";
+import { toast } from "react-toastify";
+import {
+  IN_PROGRESS_STATE,
+  REJECTED_STATE,
+  SUCCESS_STATE,
+} from "../helpers/constants";
+import moment from "moment";
+
+function PackageDetail() {
+  const { state } = useLocation();
+  const [form] = Form.useForm();
+
+  const [loading, setLoading] = useState(false);
+
+  const pathParams = useParams();
+
+  const [curPackage, setCurPackage] = useState(state);
+
+  const [prevInput, setPrevInput] = React.useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (state) {
+      return;
+    }
+
+    service
+      .get("/package/" + pathParams.id)
+      .then((res) => {
+        if (res.data.status === 200 && res.data.results) {
+          setCurPackage(res.data.results);
+        } else {
+          toast.error("Không tìm thấy gói hàng");
+        }
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  }, []);
+
+  const search = () => {
+    const { packageId } = form.getFieldsValue();
+    if (packageId.length !== 14) {
+      form.setFields([
+        {
+          name: "packageId",
+          errors: ["Mã đơn hàng không hợp lệ"],
+        },
+      ]);
+      return;
+    }
+
+    setLoading(true);
+    service
+      .get("/package/" + packageId)
+      .then(
+        (res) => {
+          setLoading(false);
+          if (res.data.status === 200 && res.data.results) {
+            setCurPackage(res.data.results);
+            navigate("/package-detail/" + packageId, {
+              state: res.data.results,
+            });
+          } else {
+            form.setFields([
+              {
+                name: "packageId",
+                errors: ["Không tìm thấy đơn hàng"],
+              },
+            ]);
+          }
+        },
+        () => {
+          setLoading(false);
+          form.setFields([
+            {
+              name: "packageId",
+              errors: ["Lấy thông tin gói hàng thất bại"],
+            },
+          ]);
+        },
+      )
+      .catch((err) => {
+        setLoading(false);
+        form.setFields([
+          {
+            name: "packageId",
+            errors: [err.response.data.message],
+          },
+        ]);
+      });
+  };
+  return (
+    <div className="flex h-screen w-screen flex-col items-center bg-[#f1f5f9]">
+      <div className="flex h-full w-full flex-col items-center overflow-y-auto">
+        <div className="sticky top-0 z-10 flex w-full items-center bg-white px-3 shadow-md">
+          <Form
+            form={form}
+            onFinish={search}
+            className="flex w-full items-center"
+          >
+            <img src="/src/assets/minilogo.svg" alt="logo" />
+            <div className="text-3xl font-bold">Magic Post</div>
+            <Form.Item
+              name="packageId"
+              className="absolute left-0 right-0 m-auto w-[40%]"
+            >
+              <Input
+                placeholder="Mã đơn hàng"
+                className="px-3 py-2 text-xl"
+                suffix={
+                  <div
+                    className="cursor-pointer rounded-lg bg-gray-300 px-2 py-1 hover:text-blue-600"
+                    onClick={search}
+                  >
+                    {loading ? (
+                      <LoadingOutlined className="transition-all duration-300" />
+                    ) : (
+                      <SearchOutlined className="transition-all duration-300" />
+                    )}
+                  </div>
+                }
+                onChange={(e) => {
+                  form.setFields([
+                    {
+                      name: "packageId",
+                      errors: [],
+                    },
+                  ]);
+                  if (form.getFieldValue("packageId").length === 4) {
+                    if (prevInput.length === 5) {
+                      form.setFieldValue(
+                        "packageId",
+                        e.target.value.toUpperCase().substring(0, 3),
+                      );
+                      setPrevInput(
+                        e.target.value.toUpperCase().substring(0, 3),
+                      );
+                    } else {
+                      form.setFieldValue(
+                        "packageId",
+                        (e.target.value + "_").toUpperCase(),
+                      );
+                      setPrevInput(e.target.value.toUpperCase() + "_");
+                    }
+                  } else if (form.getFieldValue("packageId").length === 9) {
+                    if (prevInput.length === 10) {
+                      form.setFieldValue(
+                        "packageId",
+                        e.target.value.toUpperCase().substring(0, 8),
+                      );
+                      setPrevInput(
+                        e.target.value.toUpperCase().substring(0, 8),
+                      );
+                    } else {
+                      form.setFieldValue(
+                        "packageId",
+                        (e.target.value + "_").toUpperCase(),
+                      );
+                      setPrevInput(e.target.value.toUpperCase() + "_");
+                    }
+                  } else {
+                    form.setFieldValue(
+                      "packageId",
+                      e.target.value.toUpperCase(),
+                    );
+                    setPrevInput(e.target.value.toUpperCase());
+                  }
+                }}
+                maxLength={14}
+              />
+            </Form.Item>
+          </Form>
+        </div>
+        {!curPackage ? (
+          <div className="mt-3 flex w-[80%] justify-evenly gap-5 rounded-lg border border-gray-300 bg-white px-6 py-3 shadow-md">
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+          </div>
+        ) : (
+          <div className="mt-3 flex w-[80%] justify-evenly rounded-lg border border-gray-300 bg-white py-3 shadow-md">
+            <div className="basis-[30%]">
+              <div className="rounded-lg bg-[#f5f5f5] p-3 font-bold">
+                THÔNG TIN ĐƠN HÀNG
+              </div>
+              <div className="px-3">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Mã đơn hàng:{" "}
+                      </td>
+                      <td className="font-semibold">{curPackage.id}</td>
+                    </tr>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Ngày gửi:{" "}
+                      </td>
+                      <td className="font-semibold">
+                        {moment(curPackage.sentAt).format("DD-MM-YYYY")}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Loại hàng:{" "}
+                      </td>
+                      <td className="font-semibold">
+                        {curPackage.packageType === "GOODS"
+                          ? "Hàng hóa"
+                          : "Tài liệu"}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Tình trạng:{" "}
+                      </td>
+                      <td className="font-semibold">
+                        {curPackage.generalState === SUCCESS_STATE ? (
+                          <div className="rounded-lg bg-[#9bd1f5] px-2 py-1 text-center">
+                            Hoàn thành
+                          </div>
+                        ) : curPackage.generalState === REJECTED_STATE ? (
+                          <div className="rounded-lg bg-[#f5a9a9] px-2 py-1 text-center">
+                            Thất bại
+                          </div>
+                        ) : (
+                          <div className="rounded-lg bg-[#ffe6ab] px-2 py-1 text-center">
+                            Đang vận chuyển
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="basis-[30%]">
+              <div className="rounded-lg bg-[#f5f5f5] p-3 font-bold">
+                NGƯỜI GỬI
+              </div>
+              <div className="px-3">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Họ và tên:
+                      </td>
+                      <td className="font-semibold">{curPackage.senderName}</td>
+                    </tr>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Điện thoại:
+                      </td>
+                      <td className="font-semibold">
+                        {curPackage.senderContact}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Địa chỉ gửi:
+                      </td>
+                      <td className="font-semibold">{curPackage.orgAddress}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="basis-[30%]">
+              <div className="rounded-lg bg-[#f5f5f5] p-3 font-bold">
+                NGƯỜI NHẬN
+              </div>
+              <div className="px-3">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Họ và tên:
+                      </td>
+                      <td className="font-semibold">
+                        {curPackage.receiverName}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Điện thoại:
+                      </td>
+                      <td className="font-semibold">
+                        {curPackage.receiverContact}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="whitespace-nowrap py-2 pr-3">
+                        Địa chỉ nhận:
+                      </td>
+                      <td className="font-semibold">{curPackage.desAddress}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="mt-3 text-3xl font-bold">Trạng thái đơn hàng</div>
+        <div className="mt-3 flex items-center justify-start rounded-lg border border-gray-300 bg-white p-10 shadow-md">
+          {curPackage ? (
+            <Timeline
+              mode="left"
+              items={curPackage.status.map((item: any, index: number) => {
+                return {
+                  color:
+                    index === curPackage.status.length - 1
+                      ? curPackage.generalState === SUCCESS_STATE
+                        ? "green"
+                        : curPackage.generalState === REJECTED_STATE
+                          ? "red"
+                          : "blue"
+                      : "blue",
+                  children: (
+                    <div className="flex gap-3">
+                      <span className="font-semibold text-[#3C50E0]">
+                        {moment(item.timestamp).format("DD/MM - hh:mm")}
+                      </span>
+                      <span>{item.detail}</span>
+                    </div>
+                  ),
+                };
+              })}
+              className={
+                "flex-1 " +
+                (curPackage.generalState === IN_PROGRESS_STATE
+                  ? "-mb-3"
+                  : "-mb-16")
+              }
+              pending={curPackage.generalState === IN_PROGRESS_STATE}
+            />
+          ) : (
+            <Skeleton active />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default PackageDetail;

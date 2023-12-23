@@ -26,6 +26,8 @@ import PackageManagement from "./pages/PackageManagement";
 import DeliveryStatus from "./pages/DeliveryStatus";
 import AuthContext from "./contexts/AuthContext";
 import ChangePassword from "./pages/ChangePassword";
+import PackageLookup from "./pages/PackageLookup";
+import PackageDetail from "./pages/PackageDetail";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -86,6 +88,9 @@ function App() {
             Table: {
               headerBg: "#f1f5f9",
             },
+            Timeline: {
+              itemPaddingBottom: 30,
+            }
           },
         }}
       >
@@ -151,6 +156,8 @@ function App() {
                   )}
                 ></Route>
                 <Route path="/change-password" element={<ChangePassword />}></Route>
+                <Route path="/package-detail" element={<PackageLookup />}></Route>
+                <Route path="/package-detail/:id" element={<PackageDetail />}></Route>
                 <Route path="*" element={getPage(<NotFound />)}></Route>
               </Routes>
             </BrowserRouter>
