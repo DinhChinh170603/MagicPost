@@ -118,7 +118,7 @@ export default function ExchangePoints() {
   };
   return (
     <div className="pb-4">
-      <div className="flex items-center">
+      <div className="flex">
         <div className="mb-4 ml-3 text-3xl font-bold">Exchange points</div>
         <Button
           type="primary"
