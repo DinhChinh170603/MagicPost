@@ -11,8 +11,9 @@ import { FaHome, FaExchangeAlt } from "react-icons/fa";
 import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
 import { PiPackageFill } from "react-icons/pi";
 import { MdOutlineZoomInMap } from "react-icons/md";
-import { TbTruckDelivery } from "react-icons/tb";
+import { TbTruckDelivery, TbPackageImport  } from "react-icons/tb";
 import { LuPackagePlus } from "react-icons/lu";
+import { IoMdTimer } from "react-icons/io";
 
 const Sidebar = (props: any) => {
   const activeStyle =
@@ -93,6 +94,30 @@ const Sidebar = (props: any) => {
               </span>
             </NavLink>
             <NavLink
+              to="/incoming-packages"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <TbPackageImport size={20} style={{ marginRight: 10 }} />
+                Incoming Package
+              </span>
+            </NavLink>
+            <NavLink
+              to="/package-processing"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <IoMdTimer size={20} style={{ marginRight: 10 }} />
+                Package Processing
+              </span>
+            </NavLink>
+            <NavLink
               to="/package-management"
               end
               className={({ isActive }) =>
@@ -105,31 +130,16 @@ const Sidebar = (props: any) => {
               </span>
             </NavLink>
             <NavLink
-              to="/package-processing"
-              end
-              className={({ isActive }) =>
-                isActive ? activeStyle : inactiveStyle
-              }
-            >
-              Package Processing
-            </NavLink>
-            <NavLink
-              to="/incoming-packages"
-              end
-              className={({ isActive }) =>
-                isActive ? activeStyle : inactiveStyle
-              }
-            >
-              Incoming Package
-            </NavLink>
-            <NavLink
               to="/delivery-status"
               end
               className={({ isActive }) =>
                 isActive ? activeStyle : inactiveStyle
               }
             >
-              Delivery Status
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <TbTruckDelivery size={20} style={{ marginRight: 10 }} />
+                Delivery Status
+              </span>
             </NavLink>
           </>
         );
@@ -234,6 +244,30 @@ const Sidebar = (props: any) => {
         return (
           <>
             <NavLink
+              to="/incoming-packages"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <TbPackageImport size={20} style={{ marginRight: 10 }} />
+                Incoming Package
+              </span>
+            </NavLink>
+            <NavLink
+              to="/package-processing"
+              end
+              className={({ isActive }) =>
+                isActive ? activeStyle : inactiveStyle
+              }
+            >
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <IoMdTimer size={20} style={{ marginRight: 10 }} />
+                Package Processing
+              </span>
+            </NavLink>
+            <NavLink
               to="/package-management"
               end
               className={({ isActive }) =>
@@ -244,24 +278,6 @@ const Sidebar = (props: any) => {
                 <PiPackageFill size={20} style={{ marginRight: 10 }} />
                 Package History
               </span>
-            </NavLink>
-            <NavLink
-              to="/package-processing"
-              end
-              className={({ isActive }) =>
-                isActive ? activeStyle : inactiveStyle
-              }
-            >
-              Package Processing
-            </NavLink>
-            <NavLink
-              to="/incoming-packages"
-              end
-              className={({ isActive }) =>
-                isActive ? activeStyle : inactiveStyle
-              }
-            >
-              Incoming Package
             </NavLink>
           </>
         );

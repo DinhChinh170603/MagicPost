@@ -190,6 +190,11 @@ export default function Home() {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-bgColor">
+      <div className="flex bg-btnHover mb-4 rounded-md shadow-lg px-5 pr-20" style={{width: "1210px"}}>
+        <span className="text-xl mt-3 font-bold">Welcome back</span>
+        <img src="/src/assets/logo_edit.png" width={130} height={100} className="ml-auto"/>
+      </div>
+
       <div
         style={{ display: "flex", gap: "20px" }}
         className="flex-col xl:flex-row"
