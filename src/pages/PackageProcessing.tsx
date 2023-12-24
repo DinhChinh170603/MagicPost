@@ -344,9 +344,9 @@ export default function PackageProcessing(props: any) {
 
   return (
     <div className="w-full">
-      <div className="mb-4 ml-3 text-3xl font-bold flex items-center">
-        <span>Package Processing</span>
-        <div className="ml-auto mr-10">
+      <div className="flex">
+        <div className="mb-4 ml-3 text-3xl font-bold">Package Processing</div>
+        <div className="ml-auto mr-3">
           <Button
             type="primary"
             onClick={start}
