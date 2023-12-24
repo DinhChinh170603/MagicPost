@@ -277,65 +277,82 @@ export default function IncomingPackage(props: any) {
       onFilter: (value: any, record: any) =>
         record.packageType.indexOf(value) === 0,
     },
+    {
+      title: "Next Destination",
+      key: "nextDestination",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text: any, record: any) => (
+        <div className="flex w-[80%] justify-start gap-4">
+          {role === "EXCHANGE_EMPLOYEE" && (
+            <Button
+              type="primary"
+              onClick={() => handleOperation("receive", record)}
+              loading={loading}
+            >
+              Confirmed from GatherPoint
+            </Button>
+          )}
+          {role === "GATHER_EMPLOYEE" && (
+            <>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("received/gather", record)}
+                loading={loading}
+              >
+                Confirm from GatherPoint
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("received/exchange", record)}
+                loading={loading}
+              >
+                Confirm from ExchangePoint
+              </Button>
+            </>
+          )}
+        </div>
+      )
+    }
   ];
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-      <div className="flex w-[80%] justify-start gap-4">
-        <Button
-          type="primary"
-          onClick={start}
-          disabled={!hasSelected}
-          loading={loading}
-        >
-          Reload
-        </Button>
-        <div className="mt-1">
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
-        </div>
-      </div>
-      <div className="flex w-[80%] justify-start gap-4">
-        {role === "EXCHANGE_EMPLOYEE" ? (
+    <div className="w-full">
+      <div className="mb-4 ml-3 text-3xl font-bold flex items-center">
+        <span>All Packages</span>
+        <div className="ml-auto mr-10">
           <Button
             type="primary"
-            onClick={() => handleOperation("receive")}
-            disabled={!hasSelected}
+            onClick={start}
             loading={loading}
           >
-            Confirmed from GatherPoint
+            Reload
           </Button>
-        ) : null}
-        {role === "GATHER_EMPLOYEE" ? (
-          <>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("received/gather")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Confirm from GatherPoint
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("received/exchange")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Confirm from ExchangePoint
-            </Button>
-          </>
-        ) : null}
+        </div>
       </div>
-      <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
-        <Table
-          className="w-[80%]"
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-          pagination={pagination}
-          idSearchInput={idSearchInput}
-        />
-      </SkeletonTable>
+
+      <div className="flex h-full w-full flex-col items-center justify-center gap-3">
+        <div className="flex w-[80%] justify-start gap-4">
+          
+          <div className="mt-1">
+            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+          </div>
+        </div>
+        <div className="rounded-xl bg-white p-3 shadow-lg w-full">
+          <SkeletonTable className="w-full" loading={loading} columns={columns}>
+            <Table
+              className="w-full"
+              // rowSelection={rowSelection}
+              columns={columns}
+              dataSource={data}
+              pagination={pagination}
+              idSearchInput={idSearchInput}
+            />
+          </SkeletonTable>
+        </div>
+      </div>
     </div>
   );
 }
