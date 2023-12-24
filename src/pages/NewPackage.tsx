@@ -60,7 +60,7 @@ export default function NewPackage() {
         >
           <span className="text-center text-2xl font-bold"> Create New Package </span>
           <hr className="w-[60%] mt-3" style={{borderWidth: 1}} />
-          <div className="flex w-[90%] flex-wrap gap-x-10 p-5">
+          <div className="flex w-[90%] flex-wrap gap-x-10 p-5 ">
             <Form.Item
               name="senderName"
               label="Sender Name"
@@ -72,7 +72,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input/>
+              <Input className="drop-shadow"/>
             </Form.Item>
             <Form.Item
               name="senderContact"
@@ -89,7 +89,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input />
+              <Input className="drop-shadow"/>
             </Form.Item>
             <Form.Item
               name="receiverName"
@@ -102,7 +102,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input />
+              <Input className="drop-shadow"/>
             </Form.Item>
             <Form.Item
               name="receiverContact"
@@ -119,7 +119,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input />
+              <Input className="drop-shadow"/>
             </Form.Item>
             <Form.Item
               name="orgAddress"
@@ -132,7 +132,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input />
+              <Input className="drop-shadow"/>
             </Form.Item>
             <Form.Item
               name="desAddress"
@@ -145,7 +145,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input />
+              <Input className="drop-shadow"/>
             </Form.Item>
             <Form.Item
               name="packageType"
@@ -169,6 +169,7 @@ export default function NewPackage() {
                     label: "Document",
                   },
                 ]}
+                className="drop-shadow"
               />
             </Form.Item>
             <Form.Item
@@ -182,7 +183,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input type="number" />
+              <Input type="number" className="drop-shadow"/>
             </Form.Item>
             <Form.Item
               name="desPointId"
@@ -215,6 +216,7 @@ export default function NewPackage() {
                 }}
                 loading={destinationLoading}
                 disabled={destinationLoading}
+                className="drop-shadow"
               />
             </Form.Item>
           </div>
