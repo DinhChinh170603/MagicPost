@@ -37,21 +37,20 @@ export default function InvoicePrintModal(props: any) {
           className="item-center flex flex-col justify-center"
         >
           <div className="flex items-center justify-around">
-            <div className="text-3xl font-bold">Magic Post</div>
+            <img src="/src/assets/logo_edit.png" width={160} height={130} className="ml-4"/>
             <div className="flex flex-col items-center">
-              <QRCode value="https://reactjs.org/" />
-              <p className="text-lg">{data.id}</p>
+              <QRCode size={130} value="https://reactjs.org/" />
+              <p className="text-md">{data.id}</p>
             </div>
           </div>
           <div className="flex items-center justify-center">
             {/* Khung to */}
-            <div className="flex h-[550px] w-[1050px] border">
+            <div className="flex h-[550px] w-[1000px] border">
               {/* Nửa thứ nhất */}
               <div className="flex-1 border border-black">
                 {/* Chia thành 5 khung nhỏ */}
                 <div className="h-[20%] flex-1 border border-black pl-1">
-                  <span className="title">1. Họ tên địa chỉ người gửi: </span>{" "}
-                  <br />
+                  <span className="title">1. Họ tên địa chỉ người gửi: </span> <br />
                   <p className="information mb-0.9">{data.senderName}</p>
                   <p className="information">{data.orgAddress}</p>
                   <div className="mt-2 flex gap-1">
@@ -129,12 +128,12 @@ export default function InvoicePrintModal(props: any) {
                   </div>
                   <span className="information">Mã hợp đồng MAGIC/POST</span>
                 </div>
-                <div className="h-[17%] flex-1 border border-black pl-1">
+                <div className="h-[15%] flex-1 border border-black pl-1">
                   <span className="title">
                     6. Chỉ dẫn của người gửi khi không phát được bưu gửi:
                   </span>
                   <br />
-                  <span className="mt-1 flex items-center gap-12">
+                  <span className="mt-1 flex items-center gap-8">
                     <span className="ml-4 flex items-center">
                       <div className="h-4 w-4 border-2 border-black"></div>
                       <div className="information ml-2">Chuyển hoàn ngay</div>
@@ -147,12 +146,12 @@ export default function InvoicePrintModal(props: any) {
                       </div>
                     </span>
 
-                    <span className="flex items-center">
+                    <span className="flex items-center ml-3">
                       <div className="h-4 w-4 border-2 border-black"></div>
                       <div className="information ml-2">Hủy</div>
                     </span>
                   </span>
-                  <span className="mt-4 flex items-center gap-16">
+                  <span className="mt-4 flex items-center gap-12">
                     <span className="ml-4 flex items-center">
                       <div className="h-4 w-4 border-2 border-black"></div>
                       <div className="information ml-2">
@@ -168,7 +167,7 @@ export default function InvoicePrintModal(props: any) {
                     </span>
                   </span>
                 </div>
-                <div className="h-[23%] flex-1 border border-black pl-1">
+                <div className="h-[25%] flex-1 border border-black pl-1">
                   <span className="title">7. Cam kết của người gửi:</span>{" "}
                   <br />
                   <p className="information">
@@ -177,13 +176,13 @@ export default function InvoicePrintModal(props: any) {
                     gửi. Trường hợp không phát được hãy thực hiện chỉ dẫn tại
                     mục 6, tôi sẽ trả cước chuyển hoàn.
                   </p>
-                  <div className="flex gap-36">
+                  <div className="flex mt-1 gap-44">
                     <div className="title">8. Ngày giờ gửi:</div>
-                    <div className="title">Chữ ký người gửi</div> <br />
+                    <div className="title">Chữ ký người gửi</div>
                   </div>
-                  <span className="information">
+                  <div className="information mt-5">
                     {moment(data.sendAt).format("HH:mm [ngày] DD-MM-YYYY")}
-                  </span>
+                  </div>
                 </div>
               </div>
 
