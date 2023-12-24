@@ -28,7 +28,7 @@ import AuthContext from "./contexts/AuthContext";
 import ChangePassword from "./pages/ChangePassword";
 import PackageLookup from "./pages/PackageLookup";
 import PackageDetail from "./pages/PackageDetail";
-import Invoice from "./pages/Invoice";
+import InvoicePrintModal from "./components/InvoicePrintModal";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -159,7 +159,7 @@ function App() {
                 <Route path="/change-password" element={<ChangePassword />}></Route>
                 <Route path="/package-detail" element={<PackageLookup />}></Route>
                 <Route path="/package-detail/:id" element={<PackageDetail />}></Route>
-                <Route path="/invoice" element={<Invoice />}></Route>
+                <Route path="/invoice" element={<InvoicePrintModal />}></Route>
                 <Route path="*" element={getPage(<NotFound />)}></Route>
               </Routes>
             </BrowserRouter>

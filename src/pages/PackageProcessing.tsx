@@ -9,10 +9,13 @@ import Highlighter from "react-highlight-words";
 import moment from "moment";
 import DeliveryFailureModal from "../components/DeliveryFailureModal";
 import download from "downloadjs";
+import InvoicePrintModal from "../components/InvoicePrintModal";
 
 export default function PackageProcessing(props: any) {
   const { role } = props;
   const [roleAPI, setRoleAPI] = useState("");
+
+  const [open, setOpen] = useState(false);
 
   const [data, setData] = useState([]);
 
@@ -409,6 +412,10 @@ export default function PackageProcessing(props: any) {
           onChange={(pagination) => setCurrentPage(pagination.current)}
         />
       </SkeletonTable>
+      <Button type="primary" onClick={() => setOpen(true)}>
+        Print
+      </Button>
+      <InvoicePrintModal open={open} setOpen={setOpen} data={data[0]} />
     </div>
   );
 }
