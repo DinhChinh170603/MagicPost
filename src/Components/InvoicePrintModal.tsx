@@ -39,7 +39,7 @@ export default function InvoicePrintModal(props: any) {
           <div className="flex items-center justify-around">
             <img src="/src/assets/logo_edit.png" width={160} height={130} className="ml-4"/>
             <div className="flex flex-col items-center">
-              <QRCode size={130} value="https://reactjs.org/" />
+              <QRCode size={130} value={"http://192.168.0.102:5173/package-detail/" + data.id} />
               <p className="text-md">{data.id}</p>
             </div>
           </div>
