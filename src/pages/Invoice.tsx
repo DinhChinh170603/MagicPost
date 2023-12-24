@@ -10,16 +10,23 @@ export default function Invoice() {
       <div className="absolute left-10 top-10">
         <ReactToPrint
           trigger={() => (
-            <Button className="btn btn-primary">In hoá đơn</Button>
+            <Button className="btn btn-primary">Print Invoice</Button>
           )}
           content={() => componentRef.current}
           documentTitle="invoice"
           pageStyle="print"
         />
       </div>
-      <div ref={componentRef} className="flex item-center justify-center">
+      <div ref={componentRef} className="flex flex-col item-center justify-center">
+        <div className="flex items-center justify-center gap-80">
+          <img src="/src/assets/logo_edit.png" width={140} height={100} className="mr-4"/>
+          <div className="flex flex-col items-center ml-12">
+            <img src="/src/assets/qr.png" width={100} height={100}/>
+            <p className="title">709_KHS_01A3</p>
+          </div>
+        </div>
         {/* Khung to */}
-        <div className="flex h-[550px] w-[1050px] border">
+        <div className="flex h-[550px] w-[1000px] border">
           {/* Nửa thứ nhất */}
           <div className="flex-1 border border-black">
             {/* Chia thành 5 khung nhỏ */}
@@ -104,12 +111,12 @@ export default function Invoice() {
               </div>
               <span className="information">Mã hợp đồng MAGIC/POST</span>
             </div>
-            <div className="h-[17%] flex-1 border border-black pl-1">
+            <div className="h-[15%] flex-1 border border-black pl-1">
               <span className="title">
                 6. Chỉ dẫn của người gửi khi không phát được bưu gửi:
               </span>
               <br />
-              <span className="mt-1 flex items-center gap-12">
+              <span className="mt-1 flex items-center gap-8">
                 <span className="ml-4 flex items-center">
                   <div className="h-4 w-4 border-2 border-black"></div>
                   <div className="information ml-2">Chuyển hoàn ngay</div>
@@ -122,12 +129,12 @@ export default function Invoice() {
                   </div>
                 </span>
 
-                <span className="flex items-center">
+                <span className="flex ml-4 items-center">
                   <div className="h-4 w-4 border-2 border-black"></div>
                   <div className="information ml-2">Hủy</div>
                 </span>
               </span>
-              <span className="mt-4 flex items-center gap-16">
+              <span className="mt-4 flex items-center gap-12">
                 <span className="ml-4 flex items-center">
                   <div className="h-4 w-4 border-2 border-black"></div>
                   <div className="information ml-2">Chuyển hoàn trước ngày</div>
@@ -141,17 +148,17 @@ export default function Invoice() {
                 </span>
               </span>
             </div>
-            <div className="h-[23%] flex-1 border border-black pl-1">
-              <span className="title">7. Cam kết của người gửi:</span> <br />
+            <div className="h-[25%] flex-1 border border-black pl-1">
+              <span className="title">7. Cam kết của người gửi:</span>
               <p className="information">
                 Tôi chấp nhận các điều khoản tại mặt sau phiếu gửi và cam đoan
                 bưu gửi này không chứa những mặt hàng nguy hiểm, cấm gửi. Trường
                 hợp không phát được hãy thực hiện chỉ dẫn tại mục 6, tôi sẽ trả
                 cước chuyển hoàn.
               </p>
-              <div className="flex gap-36">
+              <div className="flex gap-44">
                 <div className="title">8. Ngày giờ gửi:</div>
-                <div className="title">Chữ ký người gửi</div> <br />
+                <div className="title">Chữ ký người gửi</div>
               </div>
               <span className="information">07h52/18/10/2023</span>
             </div>
