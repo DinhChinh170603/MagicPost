@@ -366,19 +366,22 @@ export default function LeaderDashboard() {
             </div>
           </div>
           
-          <div
-            style={{
+          <div 
+            style={{ 
               width: "700px",
               height: "300px",
               border: "1px solid #ccc",
               borderRadius: "8px",
-              padding: "15px",
+              padding: "5px",
               backgroundColor: "white",
               position: "relative",
+              display: "flex", 
+              justifyContent: "center", 
+              alignItems: "center"
             }}
           >
             {packagesStatisticsLoading && <Loading relative />}
-            <Line data={packagesStatistics} options={options} className="m-auto"/>
+            <Line data={packagesStatistics} options={options} />
           </div>
         </div>
       </div>
