@@ -11,6 +11,7 @@ import DeliveryFailureModal from "../components/DeliveryFailureModal";
 import download from "downloadjs";
 import InvoicePrintModal from "../components/InvoicePrintModal";
 import { FiPrinter } from "react-icons/fi";
+import { EE_ROLE } from "../helpers/constants";
 export default function PackageProcessing(props: any) {
   const { role } = props;
   const [roleAPI, setRoleAPI] = useState("");
@@ -36,7 +37,7 @@ export default function PackageProcessing(props: any) {
   useEffect(() => {
     setLoading(true);
     setModalLoading(true);
-    if (role === "EXCHANGE_EMPLOYEE") {
+    if (role === EE_ROLE) {
       setRoleAPI("/ex-employee");
     } else if (role === "GATHER_EMPLOYEE") {
       setRoleAPI("/gth-employee");
@@ -44,7 +45,7 @@ export default function PackageProcessing(props: any) {
 
     if (roleAPI) {
       service
-        .get(roleAPI + `/received-packages`)
+        .get(roleAPI + `/pending-packages`)
         .then((res) => {
           if (res.data.status !== 200) {
             toast.error(res.data.message);
@@ -256,7 +257,7 @@ export default function PackageProcessing(props: any) {
   };
 
   const columns = [
-    ...(role === "EXCHANGE_EMPLOYEE"
+    ...(role === EE_ROLE
     ? [
         {
           title: "Print",
@@ -364,7 +365,7 @@ export default function PackageProcessing(props: any) {
           </div>
         </div>
         <div className="flex w-[80%] justify-start gap-4">
-          {role === "EXCHANGE_EMPLOYEE" ? (
+          {role === EE_ROLE ? (
             <>
               <Button
                 type="primary"

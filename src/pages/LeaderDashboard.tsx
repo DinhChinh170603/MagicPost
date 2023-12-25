@@ -22,13 +22,13 @@ ChartJS.register(
   LineElement,
   LinearScale,
   PointElement,
+  ArcElement,
   Title,
   Legend,
   Tooltip,
-  ArcElement,
 );
 
-export default function Home() {
+export default function LeaderDashboard() {
   const [months, setMonths] = useState(4);
 
   const [hrStatisticsLoading, setHrStatisticsLoading] = useState(false);
@@ -189,10 +189,18 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center bg-bgColor">
-      <div className="flex bg-btnHover mb-4 rounded-md shadow-lg px-5 pr-20" style={{width: "1210px"}}>
-        <span className="text-xl mt-3 font-bold">Welcome back</span>
-        <img src="/src/assets/logo_edit.png" width={130} height={100} className="ml-auto"/>
+    <div className="flex h-full w-full flex-col items-center bg-bgColor">
+      <div
+        className="mb-4 flex rounded-md bg-btnHover px-5 pr-20 shadow-lg"
+        style={{ width: "1210px" }}
+      >
+        <span className="mt-3 text-xl font-bold">Welcome back</span>
+        <img
+          src="/src/assets/logo_edit.png"
+          width={130}
+          height={100}
+          className="ml-auto"
+        />
       </div>
 
       <div

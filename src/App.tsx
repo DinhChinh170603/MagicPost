@@ -7,28 +7,30 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import InvoicePrintModal from "./components/InvoicePrintModal";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
-import Managers from "./pages/Managers";
+import AuthContext from "./contexts/AuthContext";
+import { LEADER_ROLE } from "./helpers/constants";
+import ChangePassword from "./pages/ChangePassword";
+import DeliveryStatus from "./pages/DeliveryStatus";
 import ExchangePointDetail from "./pages/ExchangePointDetail";
 import ExchangePoints from "./pages/ExchangePoints";
 import GatherPointDetail from "./pages/GatherPointDetail";
 import GatherPoints from "./pages/GatherPoints";
-import Home from "./pages/Home";
-import InviteEmployee from "./pages/InviteEmployee";
-import Login from "./pages/Login";
-import NotFound from "./pages/NotFound";
-import User from "./pages/User";
-import NewPackage from "./pages/NewPackage";
-import PackageProcessing from "./pages/PackageProcessing";
 import IncomingPackage from "./pages/IncomingPackage";
-import PackageManagement from "./pages/PackageManagement";
-import DeliveryStatus from "./pages/DeliveryStatus";
-import AuthContext from "./contexts/AuthContext";
-import ChangePassword from "./pages/ChangePassword";
-import PackageLookup from "./pages/PackageLookup";
+import InviteEmployee from "./pages/InviteEmployee";
+import LeaderDashboard from "./pages/LeaderDashboard";
+import Login from "./pages/Login";
+import Managers from "./pages/Managers";
+import NewPackage from "./pages/NewPackage";
+import NotFound from "./pages/NotFound";
 import PackageDetail from "./pages/PackageDetail";
-import InvoicePrintModal from "./components/InvoicePrintModal";
+import PackageLookup from "./pages/PackageLookup";
+import PackageManagement from "./pages/PackageManagement";
+import PackageProcessing from "./pages/PackageProcessing";
+import PointDashboard from "./pages/PointDashboard";
+import User from "./pages/User";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -91,7 +93,7 @@ function App() {
             },
             Timeline: {
               itemPaddingBottom: 30,
-            }
+            },
           },
         }}
       >
@@ -99,7 +101,12 @@ function App() {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <BrowserRouter>
               <Routes>
-                <Route index element={getPage(<Home />)}></Route>
+                <Route
+                  index
+                  element={getPage(
+                    user && user.role === LEADER_ROLE ? <LeaderDashboard /> : <PointDashboard />,
+                  )}
+                ></Route>
                 <Route path="/login" element={<Login />}></Route>
                 <Route
                   path="/managers"
@@ -156,9 +163,18 @@ function App() {
                     <InviteEmployee role={user ? user.role : null} />,
                   )}
                 ></Route>
-                <Route path="/change-password" element={<ChangePassword />}></Route>
-                <Route path="/package-detail" element={<PackageLookup />}></Route>
-                <Route path="/package-detail/:id" element={<PackageDetail />}></Route>
+                <Route
+                  path="/change-password"
+                  element={<ChangePassword />}
+                ></Route>
+                <Route
+                  path="/package-detail"
+                  element={<PackageLookup />}
+                ></Route>
+                <Route
+                  path="/package-detail/:id"
+                  element={<PackageDetail />}
+                ></Route>
                 <Route path="/invoice" element={<InvoicePrintModal />}></Route>
                 <Route path="*" element={getPage(<NotFound />)}></Route>
               </Routes>

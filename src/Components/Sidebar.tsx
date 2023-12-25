@@ -1,19 +1,20 @@
-import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import simpleLogo from "./../assets/simpleLogo.png";
-import gatherMana from "./../assets/GT_MN_logo.png";
+import PropTypes from "prop-types";
+import { FaExchangeAlt, FaHome } from "react-icons/fa";
+import { IoMdTimer } from "react-icons/io";
+import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
+import { LuPackagePlus } from "react-icons/lu";
+import { MdOutlineZoomInMap } from "react-icons/md";
+import { PiPackageFill } from "react-icons/pi";
+import { TbPackageImport, TbTruckDelivery } from "react-icons/tb";
+import { NavLink } from "react-router-dom";
+import { EE_ROLE, LEADER_ROLE } from "../helpers/constants";
+import exchangeEmp from "./../assets/EC_EM_logo.png";
 import exchangeMana from "./../assets/EC_MN_logo.png";
 import gatherEmp from "./../assets/GT_EM_logo.png";
-import exchangeEmp from "./../assets/EC_EM_logo.png";
+import gatherMana from "./../assets/GT_MN_logo.png";
 import leader from "./../assets/leader_logo.png";
-import { FaHome, FaExchangeAlt } from "react-icons/fa";
-import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
-import { PiPackageFill } from "react-icons/pi";
-import { MdOutlineZoomInMap } from "react-icons/md";
-import { TbTruckDelivery, TbPackageImport  } from "react-icons/tb";
-import { LuPackagePlus } from "react-icons/lu";
-import { IoMdTimer } from "react-icons/io";
+import simpleLogo from "./../assets/simpleLogo.png";
 
 const Sidebar = (props: any) => {
   const activeStyle =
@@ -25,7 +26,7 @@ const Sidebar = (props: any) => {
 
   const renderNavigations = (currentRole: string) => {
     switch (currentRole) {
-      case "LEADER":
+      case LEADER_ROLE:
         return (
           <>
             <NavLink
@@ -78,7 +79,7 @@ const Sidebar = (props: any) => {
             </NavLink>
           </>
         );
-      case "EXCHANGE_EMPLOYEE":
+      case EE_ROLE:
         return (
           <>
             <NavLink
@@ -290,7 +291,7 @@ const Sidebar = (props: any) => {
   const renderIcon = (currentRole: string) => {
     const iconStyle = { width: 40, height: 40 };
     switch (currentRole) {
-      case "LEADER":
+      case LEADER_ROLE:
         return <img src={leader} alt="Leader Icon" style={iconStyle} />;
       case "GATHER_MANAGER":
         return (
@@ -308,7 +309,7 @@ const Sidebar = (props: any) => {
         return (
           <img src={gatherEmp} alt="Gather Employee Icon" style={iconStyle} />
         );
-      case "EXCHANGE_EMPLOYEE":
+      case EE_ROLE:
         return (
           <img
             src={exchangeEmp}
@@ -340,7 +341,7 @@ const Sidebar = (props: any) => {
         >
           <span style={{ display: "flex", alignItems: "center" }}>
             <FaHome size={20} style={{ marginRight: 10 }} />
-            Home
+            Dashboard
           </span>
         </NavLink>
         {renderNavigations(role)}
@@ -358,7 +359,7 @@ const Sidebar = (props: any) => {
           {renderIcon(role)}
           <h1
             className="ml-2 mt-1 font-bold text-black"
-            style={{ fontSize: role === "LEADER" ? 16 : 13 }}
+            style={{ fontSize: role === LEADER_ROLE ? 16 : 13 }}
           >
             {role}
           </h1>
