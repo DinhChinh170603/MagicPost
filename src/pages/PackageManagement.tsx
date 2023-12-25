@@ -9,7 +9,12 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
 import {
+  EE_ROLE,
+  EM_ROLE,
+  GE_ROLE,
+  GM_ROLE,
   IN_PROGRESS_STATE,
+  LEADER_ROLE,
   REJECTED_STATE,
   SUCCESS_STATE,
 } from "../helpers/constants";
@@ -52,19 +57,19 @@ export default function PackageManagement(props: any) {
 
   useEffect(() => {
     setLoading(true);
-    if (role === "EXCHANGE_EMPLOYEE") {
+    if (role === EE_ROLE) {
       setRoleAPI("/ex-employee");
-    } else if (role === "GATHER_EMPLOYEE") {
+    } else if (role === GE_ROLE) {
       setRoleAPI("/gth-employee");
-    } else if (role === "LEADER") {
+    } else if (role === LEADER_ROLE) {
       setRoleAPI("/leader");
-    } else if (role === "EXCHANGE_MANAGER") {
+    } else if (role === EM_ROLE) {
       setRoleAPI("/ex-manager");
-    } else if (role === "GATHER_MANAGER") {
+    } else if (role === GM_ROLE) {
       setRoleAPI("/gth-manager");
     }
 
-    if (roleAPI && role !== "LEADER") {
+    if (roleAPI && role !== LEADER_ROLE) {
       axios
         .all([
           service.get(roleAPI + `/sent-packages`),
@@ -95,7 +100,7 @@ export default function PackageManagement(props: any) {
         });
       setCurrentPageOfSent(1);
       setCurrentPageOfReceived(1);
-    } else if (roleAPI && role === "LEADER") {
+    } else if (roleAPI && role === LEADER_ROLE) {
       service.get(roleAPI + `/all-packages`).then((res) => {
         let totalCount = 0;
         let successfulCount = 0;
@@ -853,7 +858,7 @@ export default function PackageManagement(props: any) {
   return (
     <>
       <div className="flex justify-center pb-4">
-        {role !== "LEADER" && (
+        {role !== LEADER_ROLE && (
           <div className="relative flex flex-grow gap-4">
             <div className="w-1/2">
               <div className="flex w-full flex-col gap-4">
@@ -904,7 +909,7 @@ export default function PackageManagement(props: any) {
           </div>
         )}
 
-        {role === "LEADER" && (
+        {role === LEADER_ROLE && (
           <div className="w-full">
             <div className="mb-4 ml-3 text-3xl font-bold">All Packages</div>
             <div className="mb-4 flex w-full flex-wrap justify-evenly">

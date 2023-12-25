@@ -1,16 +1,23 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Avatar, Button, DatePicker, Form, Input, Select } from "antd";
+import axios from "axios";
+import dayjs from "dayjs";
+import moment from "moment";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineCamera } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import AuthContext from "../contexts/AuthContext";
-import service from "../helpers/service";
-import axios from "axios";
-import moment from "moment";
-import { FIELD_REQUIRED } from "../helpers/constants";
 import ChangePasswordModal from "../components/ChangePasswordModal";
-import dayjs from "dayjs";
+import AuthContext from "../contexts/AuthContext";
+import {
+  EE_ROLE,
+  EM_ROLE,
+  FIELD_REQUIRED,
+  GE_ROLE,
+  GM_ROLE,
+  LEADER_ROLE,
+} from "../helpers/constants";
+import service from "../helpers/service";
 
 const { Option } = Select;
 
@@ -30,11 +37,7 @@ export default function User() {
   const imageInputRef = useRef(null);
 
   const [exchangePointsList, setExchangePointsList] = useState(null);
-  const [noManagerExchangePointsList, setNoManagerExchangePointsList] =
-    useState(null);
   const [gatherPointsList, setGatherPointsList] = useState(null);
-  const [noManagerGatherPointsList, setNoManagerGatherPointsList] =
-    useState(null);
 
   const [roleDepartmentList, setRoleDepartmentList] = useState<any>([]);
   const [departmentLoading, setDepartmentLoading] = useState(true);
@@ -42,26 +45,15 @@ export default function User() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleRoleSelection = (value: string) => {
-    if (
-      !gatherPointsList ||
-      !exchangePointsList ||
-      !noManagerGatherPointsList ||
-      !noManagerExchangePointsList
-    ) {
+    if (!gatherPointsList || !exchangePointsList) {
       return;
     }
 
     switch (value) {
-      case "GATHER_MANAGER":
-        setRoleDepartmentList(noManagerGatherPointsList);
-        break;
-      case "EXCHANGE_MANAGER":
-        setRoleDepartmentList(noManagerExchangePointsList);
-        break;
-      case "GATHER_EMPLOYEE":
+      case "GATHER_MANAGER" || "GATHER_EMPLOYEE":
         setRoleDepartmentList(gatherPointsList);
         break;
-      case "EXCHANGE_EMPLOYEE":
+      case "EXCHANGE_MANAGER" || "EXCHANGE_EMPLOYEE":
         setRoleDepartmentList(exchangePointsList);
         break;
       default:
@@ -71,22 +63,12 @@ export default function User() {
   };
 
   useEffect(() => {
-    if (
-      !gatherPointsList ||
-      !exchangePointsList ||
-      !noManagerGatherPointsList ||
-      !noManagerExchangePointsList
-    ) {
+    if (!gatherPointsList || !exchangePointsList) {
       return;
     }
     handleRoleSelection(form.getFieldValue("role"));
     form.setFieldValue("departmentId", profileUser?.departmentId);
-  }, [
-    gatherPointsList,
-    exchangePointsList,
-    noManagerGatherPointsList,
-    noManagerExchangePointsList,
-  ]);
+  }, [gatherPointsList, exchangePointsList]);
 
   useEffect(() => {
     if (!user) return;
@@ -105,7 +87,7 @@ export default function User() {
               "DD/MM/YYYY",
             ),
           });
-          if (user.role === "LEADER" && profileUser.role !== "LEADER") {
+          if (user.role === LEADER_ROLE && profileUser.role !== LEADER_ROLE) {
             setDepartmentLoading(true);
             axios
               .all([
@@ -116,16 +98,6 @@ export default function User() {
                 axios.spread((res1, res2) => {
                   setExchangePointsList(res1.data.results);
                   setGatherPointsList(res2.data.results);
-                  setNoManagerExchangePointsList(
-                    res1.data.results.filter(
-                      (exchangePoint: any) => exchangePoint.manager === null,
-                    ),
-                  );
-                  setNoManagerGatherPointsList(
-                    res2.data.results.filter(
-                      (gatherPoint: any) => gatherPoint.manager === null,
-                    ),
-                  );
                   setDepartmentLoading(false);
                 }),
                 () => {
@@ -284,14 +256,14 @@ export default function User() {
                   { type: "email", message: "Invalid email address" },
                 ]}
               >
-                <Input disabled={!user || user.role !== "LEADER"} />
+                <Input disabled={!user || user.role !== LEADER_ROLE} />
               </Form.Item>
               <Form.Item
                 name="fullName"
                 label="Full Name"
                 rules={[{ required: true, message: FIELD_REQUIRED }]}
               >
-                <Input disabled={!user || user.role !== "LEADER"} />
+                <Input disabled={!user || user.role !== LEADER_ROLE} />
               </Form.Item>
               <div className="flex gap-3">
                 <Form.Item
@@ -301,20 +273,20 @@ export default function User() {
                   className="flex-1"
                 >
                   <Select
-                    disabled={!user || user.role !== "LEADER"}
+                    disabled={!user || user.role !== LEADER_ROLE}
                     onChange={handleRoleSelection}
                   >
-                    <Option value="GATHER_MANAGER">Gather Manager</Option>
-                    <Option value="GATHER_EMPLOYEE">Gather Employee</Option>
-                    <Option value="EXCHANGE_MANAGER">Exchange Manager</Option>
-                    <Option value="EXCHANGE_EMPLOYEE">Exchange Employee</Option>
+                    <Option value={GM_ROLE}>Gather Manager</Option>
+                    <Option value={GE_ROLE}>Gather Employee</Option>
+                    <Option value={EM_ROLE}>Exchange Manager</Option>
+                    <Option value={EE_ROLE}>Exchange Employee</Option>
                   </Select>
                 </Form.Item>
                 <Form.Item
                   name="departmentId"
                   label="Department"
                   rules={
-                    profileUser.role === "LEADER"
+                    profileUser.role === LEADER_ROLE
                       ? []
                       : [{ required: true, message: FIELD_REQUIRED }]
                   }
@@ -323,9 +295,9 @@ export default function User() {
                   <Select
                     disabled={
                       !user ||
-                      user.role !== "LEADER" ||
+                      user.role !== LEADER_ROLE ||
                       !form.getFieldValue("role") ||
-                      profileUser.role === "LEADER" ||
+                      profileUser.role === LEADER_ROLE ||
                       departmentLoading
                     }
                     loading={departmentLoading}
@@ -350,13 +322,13 @@ export default function User() {
                   disabledDate={(current) =>
                     current && current.valueOf() > Date.now()
                   }
-                  disabled={!user || user.role !== "LEADER"}
+                  disabled={!user || user.role !== LEADER_ROLE}
                 />
               </Form.Item>
               <Form.Item name="startWorkingDate" label="Start Working">
                 <Input disabled />
               </Form.Item>
-              {user?.role === "LEADER" && (
+              {user?.role === LEADER_ROLE && (
                 <Form.Item>
                   <Button
                     type="primary"

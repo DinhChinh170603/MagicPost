@@ -7,6 +7,8 @@ import service from "../helpers/service";
 import axios from "axios";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import { EE_ROLE } from "../helpers/constants";
+import { roleValueMap } from "../helpers/helpers";
 
 export default function DeliveryStatus(props: any) {
   const { role } = props;
@@ -32,12 +34,7 @@ export default function DeliveryStatus(props: any) {
 
   useEffect(() => {
     setLoading(true);
-    let roleApiPrefix = "";
-    if (role === "EXCHANGE_EMPLOYEE") {
-      roleApiPrefix = "/ex-employee";
-    } else if (role === "EXCHANGE_MANAGER") {
-      roleApiPrefix = "/ex-manager";
-    }
+    const roleApiPrefix = roleValueMap[role];
 
     if (roleApiPrefix) {
       axios

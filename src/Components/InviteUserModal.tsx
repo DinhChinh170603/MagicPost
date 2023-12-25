@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import service from "../helpers/service";
 import { toast } from "react-toastify";
+import { EE_ROLE, EM_ROLE } from "../helpers/constants";
 
 const { Option } = Select;
 
@@ -35,13 +36,13 @@ export default function InviteUserModal(props: any) {
       case "GATHER_MANAGER":
         setRoleDepartmentList(noManagerGatherPointsList);
         break;
-      case "EXCHANGE_MANAGER":
+      case EM_ROLE:
         setRoleDepartmentList(noManagerExchangePointsList);
         break;
       case "GATHER_EMPLOYEE":
         setRoleDepartmentList(gatherPointsList);
         break;
-      case "EXCHANGE_EMPLOYEE":
+      case EE_ROLE:
         setRoleDepartmentList(exchangePointsList);
         break;
       default:
@@ -152,8 +153,8 @@ export default function InviteUserModal(props: any) {
           <Select onChange={handleRoleSelection}>
             <Option value="GATHER_MANAGER">Gather Manager</Option>
             <Option value="GATHER_EMPLOYEE">Gather Employee</Option>
-            <Option value="EXCHANGE_MANAGER">Exchange Manager</Option>
-            <Option value="EXCHANGE_EMPLOYEE">Exchange Employee</Option>
+            <Option value={EM_ROLE}>Exchange Manager</Option>
+            <Option value={EE_ROLE}>Exchange Employee</Option>
           </Select>
         </Form.Item>
         <Form.Item

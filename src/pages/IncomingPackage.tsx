@@ -7,6 +7,7 @@ import SkeletonTable from "../components/SkeletonTable";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
+import { EE_ROLE } from "../helpers/constants";
 
 export default function IncomingPackage(props: any) {
   const { role } = props;
@@ -26,7 +27,7 @@ export default function IncomingPackage(props: any) {
 
   useEffect(() => {
     setLoading(true);
-    if (role === "EXCHANGE_EMPLOYEE") {
+    if (role === EE_ROLE) {
       setRoleAPI("/ex-employee");
     } else if (role === "GATHER_EMPLOYEE") {
       setRoleAPI("/gth-employee");
@@ -191,16 +192,16 @@ export default function IncomingPackage(props: any) {
   });
 
   // Handling operations
-  const handleOperation = (apiEndpoint: string) => {
+  const handleOperation = (apiEndpoint: string, record: any) => {
     setLoading(true);
 
-    if (role === "EXCHANGE_EMPLOYEE") {
+    if (role === EE_ROLE) {
       setRoleAPI("/ex-employee");
     } else if (role === "GATHER_EMPLOYEE") {
       setRoleAPI("/gth-employee");
     }
 
-    const sendRequests = selectedRowKeys.map((packageId) => {
+    const sendRequests = [record.id].map((packageId) => {
       return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
     });
 
@@ -277,65 +278,82 @@ export default function IncomingPackage(props: any) {
       onFilter: (value: any, record: any) =>
         record.packageType.indexOf(value) === 0,
     },
+    {
+      title: "Next Destination",
+      key: "nextDestination",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text: any, record: any) => (
+        <div className="flex w-[80%] justify-start gap-4">
+          {role === EE_ROLE && (
+            <Button
+              type="primary"
+              onClick={() => handleOperation("receive", record)}
+              loading={loading}
+            >
+              Confirmed from GatherPoint
+            </Button>
+          )}
+          {role === "GATHER_EMPLOYEE" && (
+            <>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("received/gather", record)}
+                loading={loading}
+              >
+                Confirm from GatherPoint
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("received/exchange", record)}
+                loading={loading}
+              >
+                Confirm from ExchangePoint
+              </Button>
+            </>
+          )}
+        </div>
+      )
+    }
   ];
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-      <div className="flex w-[80%] justify-start gap-4">
-        <Button
-          type="primary"
-          onClick={start}
-          disabled={!hasSelected}
-          loading={loading}
-        >
-          Reload
-        </Button>
-        <div className="mt-1">
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
-        </div>
-      </div>
-      <div className="flex w-[80%] justify-start gap-4">
-        {role === "EXCHANGE_EMPLOYEE" ? (
+    <div className="w-full">
+      <div className="flex">
+        <div className="mb-4 ml-3 text-3xl font-bold">Incoming Package</div>
+        <div className="ml-auto mr-3">
           <Button
             type="primary"
-            onClick={() => handleOperation("receive")}
-            disabled={!hasSelected}
+            onClick={start}
             loading={loading}
           >
-            Confirmed from GatherPoint
+            Reload
           </Button>
-        ) : null}
-        {role === "GATHER_EMPLOYEE" ? (
-          <>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("received/gather")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Confirm from GatherPoint
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("received/exchange")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Confirm from ExchangePoint
-            </Button>
-          </>
-        ) : null}
+        </div>
       </div>
-      <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
-        <Table
-          className="w-[80%]"
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-          pagination={pagination}
-          idSearchInput={idSearchInput}
-        />
-      </SkeletonTable>
+
+      <div className="flex h-full w-full flex-col items-center justify-center gap-3">
+        <div className="flex w-[80%] justify-start gap-4">
+          
+          <div className="mt-1">
+            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+          </div>
+        </div>
+        <div className="rounded-xl bg-white p-3 shadow-lg w-full">
+          <SkeletonTable className="w-full" loading={loading} columns={columns}>
+            <Table
+              className="w-full"
+              // rowSelection={rowSelection}
+              columns={columns}
+              dataSource={data}
+              pagination={pagination}
+              idSearchInput={idSearchInput}
+            />
+          </SkeletonTable>
+        </div>
+      </div>
     </div>
   );
 }

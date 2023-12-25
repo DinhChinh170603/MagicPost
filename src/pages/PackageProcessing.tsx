@@ -10,7 +10,8 @@ import moment from "moment";
 import DeliveryFailureModal from "../components/DeliveryFailureModal";
 import download from "downloadjs";
 import InvoicePrintModal from "../components/InvoicePrintModal";
-
+import { FiPrinter } from "react-icons/fi";
+import { EE_ROLE } from "../helpers/constants";
 export default function PackageProcessing(props: any) {
   const { role } = props;
   const [roleAPI, setRoleAPI] = useState("");
@@ -36,7 +37,7 @@ export default function PackageProcessing(props: any) {
   useEffect(() => {
     setLoading(true);
     setModalLoading(true);
-    if (role === "EXCHANGE_EMPLOYEE") {
+    if (role === EE_ROLE) {
       setRoleAPI("/ex-employee");
     } else if (role === "GATHER_EMPLOYEE") {
       setRoleAPI("/gth-employee");
@@ -44,7 +45,7 @@ export default function PackageProcessing(props: any) {
 
     if (roleAPI) {
       service
-        .get(roleAPI + `/received-packages`)
+        .get(roleAPI + `/pending-packages`)
         .then((res) => {
           if (res.data.status !== 200) {
             toast.error(res.data.message);
@@ -248,7 +249,27 @@ export default function PackageProcessing(props: any) {
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
+  const [selectedData, setSelectedData] = useState(null);
+
+  const handlePrint = (rowData) => {
+    setOpen(true);
+    setSelectedData(rowData);
+  };
+
   const columns = [
+    ...(role === EE_ROLE
+    ? [
+        {
+          title: "Print",
+          key: "print",
+          render: (text: any, record: any) => (
+            <div>
+              <FiPrinter size={20} className="text-btnColor hover:text-btnHover" onClick={() => handlePrint(record)}></FiPrinter>
+            </div>
+          ),
+        },
+      ]
+    : []),
     {
       title: "Id",
       dataIndex: "id",
@@ -294,6 +315,14 @@ export default function PackageProcessing(props: any) {
       onFilter: (value: any, record: any) =>
         record.packageType.indexOf(value) === 0,
     },
+    {
+      title: "Next Destination",
+      key: "nextDestination",
+    },
+    {
+      title: "Action",
+      key: "action",
+    },
   ];
 
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -315,107 +344,113 @@ export default function PackageProcessing(props: any) {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-      <div className="flex w-[80%] justify-start gap-4">
-        <Button
-          type="primary"
-          onClick={start}
-          disabled={!hasSelected}
-          loading={loading}
-        >
-          Reload
-        </Button>
-        <div className="mt-1">
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+    <div className="w-full">
+      <div className="flex">
+        <div className="mb-4 ml-3 text-3xl font-bold">Package Processing</div>
+        <div className="ml-auto mr-3">
+          <Button
+            type="primary"
+            onClick={start}
+            loading={loading}
+          >
+            Reload
+          </Button>
         </div>
       </div>
-      <div className="flex w-[80%] justify-start gap-4">
-        {role === "EXCHANGE_EMPLOYEE" ? (
-          <>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("send")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Sent To GatherPoint
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("send-receiver")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Sent To Receiver
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("confirm-receiver")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Delivery Success
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => setModalReasonOpen(true)}
-              disabled={!hasSelected}
-              loading={loading || modalLoading}
-            >
-              Delivery Failure
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => downloadReport()}
-              disabled={!hasSelected}
-              loading={loading || downloadLoading}
-            >
-              {downloadLoading ? "Downloading" : "Export Invoice"}
-            </Button>
-            <DeliveryFailureModal
-              onSubmit={handleModalSubmit}
-              packageIds={selectedRowKeys}
-              isOpen={modalReasonOpen}
-              setModalOpen={setModalReasonOpen}
+
+      <div className="flex h-full w-full flex-col items-center justify-center gap-3">
+        <div className="flex w-[80%] justify-start gap-4">
+          <div className="mt-1">
+            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+          </div>
+        </div>
+        <div className="flex w-[80%] justify-start gap-4">
+          {role === EE_ROLE ? (
+            <>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("send")}
+                // disabled={!hasSelected}
+                loading={loading}
+              >
+                Sent To GatherPoint
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("send-receiver")}
+                // disabled={!hasSelected}
+                loading={loading}
+              >
+                Sent To Receiver
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("confirm-receiver")}
+                // disabled={!hasSelected}
+                loading={loading}
+              >
+                Delivery Success
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => setModalReasonOpen(true)}
+                // disabled={!hasSelected}
+                loading={loading || modalLoading}
+              >
+                Delivery Failure
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => downloadReport()}
+                // disabled={!hasSelected}
+                loading={loading || downloadLoading}
+              >
+                {downloadLoading ? "Downloading" : "Export Invoice"}
+              </Button>
+              <DeliveryFailureModal
+                onSubmit={handleModalSubmit}
+                packageIds={selectedRowKeys}
+                isOpen={modalReasonOpen}
+                setModalOpen={setModalReasonOpen}
+              />
+            </>
+          ) : null}
+          {role === "GATHER_EMPLOYEE" ? (
+            <>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("sent/gather")}
+                // disabled={!hasSelected}
+                loading={loading}
+              >
+                Forward to GatherPoint
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => handleOperation("sent/exchange")}
+                // disabled={!hasSelected}
+                loading={loading}
+              >
+                Forward to ExchangePoint
+              </Button>
+            </>
+          ) : null}
+        </div>
+        <div className="rounded-xl bg-white p-3 shadow-lg w-full">
+          <SkeletonTable className="w-full" loading={loading} columns={columns}>
+            <Table
+              className="w-full"
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={data}
+              pagination={pagination}
+              idSearchInput={idSearchInput}
+              onChange={(pagination) => setCurrentPage(pagination.current)}
             />
-          </>
-        ) : null}
-        {role === "GATHER_EMPLOYEE" ? (
-          <>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("sent/gather")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Forward to GatherPoint
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => handleOperation("sent/exchange")}
-              disabled={!hasSelected}
-              loading={loading}
-            >
-              Forward to ExchangePoint
-            </Button>
-          </>
-        ) : null}
+          </SkeletonTable>
+        </div>
+        <InvoicePrintModal open={open} setOpen={setOpen} data={selectedData} />
       </div>
-      <SkeletonTable className="w-[80%]" loading={loading} columns={columns}>
-        <Table
-          className="w-[80%]"
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-          pagination={pagination}
-          idSearchInput={idSearchInput}
-          onChange={(pagination) => setCurrentPage(pagination.current)}
-        />
-      </SkeletonTable>
-      <Button type="primary" onClick={() => setOpen(true)}>
-        Print
-      </Button>
-      <InvoicePrintModal open={open} setOpen={setOpen} data={data[0]} />
     </div>
   );
 }
