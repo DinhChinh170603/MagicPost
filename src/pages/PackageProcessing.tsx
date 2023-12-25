@@ -440,7 +440,7 @@ export default function PackageProcessing(props: any) {
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
               className="w-full"
-              // rowSelection={rowSelection}
+              rowSelection={rowSelection}
               columns={columns}
               dataSource={data}
               pagination={pagination}
