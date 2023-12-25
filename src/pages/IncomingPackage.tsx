@@ -7,6 +7,7 @@ import SkeletonTable from "../components/SkeletonTable";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
+import { EE_ROLE } from "../helpers/constants";
 
 export default function IncomingPackage(props: any) {
   const { role } = props;
@@ -26,7 +27,7 @@ export default function IncomingPackage(props: any) {
 
   useEffect(() => {
     setLoading(true);
-    if (role === "EXCHANGE_EMPLOYEE") {
+    if (role === EE_ROLE) {
       setRoleAPI("/ex-employee");
     } else if (role === "GATHER_EMPLOYEE") {
       setRoleAPI("/gth-employee");
@@ -194,7 +195,7 @@ export default function IncomingPackage(props: any) {
   const handleOperation = (apiEndpoint: string, record: any) => {
     setLoading(true);
 
-    if (role === "EXCHANGE_EMPLOYEE") {
+    if (role === EE_ROLE) {
       setRoleAPI("/ex-employee");
     } else if (role === "GATHER_EMPLOYEE") {
       setRoleAPI("/gth-employee");
@@ -286,7 +287,7 @@ export default function IncomingPackage(props: any) {
       key: "action",
       render: (text: any, record: any) => (
         <div className="flex w-[80%] justify-start gap-4">
-          {role === "EXCHANGE_EMPLOYEE" && (
+          {role === EE_ROLE && (
             <Button
               type="primary"
               onClick={() => handleOperation("receive", record)}

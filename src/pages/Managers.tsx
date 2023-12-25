@@ -1,15 +1,16 @@
 import { UserAddOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Table, Tooltip } from "antd";
+import axios from "axios";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import InviteUserModal from "../components/InviteUserModal";
 import SkeletonTable from "../components/SkeletonTable";
+import { EE_ROLE, EM_ROLE, GE_ROLE, GM_ROLE, LEADER_ROLE } from "../helpers/constants";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-import InviteUserModal from "../components/InviteUserModal";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 function Managers(props: any) {
   const { role } = props;
@@ -35,7 +36,7 @@ function Managers(props: any) {
 
   useEffect(() => {
     setLoading(true);
-    if (role === "LEADER") {
+    if (role === LEADER_ROLE) {
       setRoleAPI("/leader");
     } else if (role === "EXCHANGE_MANAGER") {
       setRoleAPI("/ex-manager");
@@ -59,16 +60,16 @@ function Managers(props: any) {
           const filteredData = res.data.results.filter(
             (record: { role: string }) => {
               switch (record.role) {
-                case "EXCHANGE_MANAGER":
+                case EM_ROLE:
                   emCount++;
                   break;
-                case "GATHER_MANAGER":
+                case GM_ROLE:
                   gmCount++;
                   break;
-                case "EXCHANGE_EMPLOYEE":
+                case EE_ROLE:
                   eeCount++;
                   break;
-                case "GATHER_EMPLOYEE":
+                case GE_ROLE:
                   geCount++;
                   break;
                 default:
@@ -77,11 +78,11 @@ function Managers(props: any) {
 
               return (
                 record.role !==
-                (role === "LEADER"
-                  ? "LEADER"
-                  : role === "EXCHANGE_MANAGER"
-                    ? "EXCHANGE_MANAGER"
-                    : "GATHER_MANAGER")
+                (role === LEADER_ROLE
+                  ? LEADER_ROLE
+                  : role === EM_ROLE
+                    ? EM_ROLE
+                    : GM_ROLE)
               );
             },
           );
@@ -200,23 +201,23 @@ function Managers(props: any) {
       dataIndex: "role",
       key: "role",
       width: "20%",
-      ...(role === "LEADER" && {
+      ...(role === LEADER_ROLE && {
         filters: [
           {
-            text: "GATHER_EMPLOYEE",
+            text: "Gather Employee",
             value: "GATHER_EMPLOYEE",
           },
           {
-            text: "GATHER_MANAGER",
+            text: "Gather Manager",
             value: "GATHER_MANAGER",
           },
           {
-            text: "EXCHANGE_MANAGER",
+            text: "Exchange Manager",
             value: "EXCHANGE_MANAGER",
           },
           {
-            text: "EXCHANGE_EMPLOYEE",
-            value: "EXCHANGE_EMPLOYEE",
+            text: "Exchange Employee",
+            value: EE_ROLE,
           },
         ],
         onFilter: (value: any, record: any) => record.role.indexOf(value) === 0,
