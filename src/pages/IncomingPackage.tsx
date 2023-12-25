@@ -191,7 +191,7 @@ export default function IncomingPackage(props: any) {
   });
 
   // Handling operations
-  const handleOperation = (apiEndpoint: string) => {
+  const handleOperation = (apiEndpoint: string, record: any) => {
     setLoading(true);
 
     if (role === "EXCHANGE_EMPLOYEE") {
@@ -200,7 +200,7 @@ export default function IncomingPackage(props: any) {
       setRoleAPI("/gth-employee");
     }
 
-    const sendRequests = selectedRowKeys.map((packageId) => {
+    const sendRequests = [record.id].map((packageId) => {
       return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
     });
 
