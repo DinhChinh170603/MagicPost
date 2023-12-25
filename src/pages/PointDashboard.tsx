@@ -8,7 +8,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { toast } from "react-toastify";
 import AuthContext from "../contexts/AuthContext";
@@ -39,6 +39,19 @@ export default function PointDashboard() {
   const [statistics, setStatistics] = React.useState<any>();
 
   const { user } = useContext<any>(AuthContext);
+  const [profileUser, setProfileUser] = useState<any>({});
+
+  useEffect (() => {
+    service
+      .get("/users/me")
+      .then((res) => {
+        setProfileUser(res.data.results);
+        console.log(profileUser);
+      })
+      .catch((err) => {
+        toast.error(err.response);
+      });
+  }, []);
 
   function extractMonthLabels(data: any) {
     const currentDate = new Date();
@@ -47,7 +60,7 @@ export default function PointDashboard() {
       const monthDate = new Date(currentDate);
       monthDate.setMonth(currentDate.getMonth() - i);
       const monthLabel = `${monthDate
-        .toLocaleString("default", {
+        .toLocaleString("en-US", {
           month: "long",
         })
         .slice(0, 3)} ${monthDate.getFullYear()}`;
@@ -152,9 +165,9 @@ export default function PointDashboard() {
     <div className="flex h-full w-full flex-col items-center">
       <div
         className="mb-4 flex rounded-md bg-btnHover px-5 pr-20 shadow-lg"
-        style={{ width: "80%" }}
+        style={{ width: "97%" }}
       >
-        <span className="mt-3 text-xl font-bold">Welcome back</span>
+        <span className="mt-3 text-xl font-bold">Welcome back, {profileUser.fullName}</span>
         <img
           src="/src/assets/logo_edit.png"
           width={130}

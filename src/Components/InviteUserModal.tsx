@@ -20,6 +20,7 @@ export default function InviteUserModal(props: any) {
     exchangePointsList,
     noManagerGatherPointsList,
     noManagerExchangePointsList,
+    currentRole,
   } = props;
 
   const handleRoleSelection = (value: string) => {
@@ -74,28 +75,40 @@ export default function InviteUserModal(props: any) {
     const { email, role, fullName, departmentId, dob } = form.getFieldsValue();
     const formData = new FormData();
     formData.append("email", email);
-    formData.append("role", role);
     formData.append("fullName", fullName);
     formData.append("departmentId", departmentId);
     formData.append("dob", dob.format("DD-MM-YYYY"));
 
     setLoading(true);
+    let roleApiPrefix = "";
+    if (currentRole === "EXCHANGE_MANAGER") {
+      roleApiPrefix = "/ex-manager";
+    } else if (currentRole === "GATHER_MANAGER") {
+      roleApiPrefix = "/gth-manager";
+    } else if (currentRole === "LEADER") {
+      roleApiPrefix = "/leader";
+      formData.append("role", role);
+    } else {
+      toast.error("Something went wrong");
+    }
 
-    service
-      .post("/leader/invite", formData)
-      .then((res) => {
-        setLoading(false);
-        if (res.data.status === 201) {
-          toast.success(res.data.message);
-          form.resetFields();
-        } else {
-          toast.error(res.data.message);
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        toast.error(err.response.data.message);
-      });
+    if (roleApiPrefix) {
+      service
+        .post(roleApiPrefix + "/invite", formData)
+        .then((res) => {
+          setLoading(false);
+          if (res.data.status === 201) {
+            toast.success(res.data.message);
+            form.resetFields();
+          } else {
+            toast.error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.error(err.response.data.message);
+        });
+    }
 
   };
 
@@ -144,38 +157,42 @@ export default function InviteUserModal(props: any) {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          className="flex-1"
-          name="role"
-          label="Role"
-          rules={[{ required: true, message: "Please select a role" }]}
-        >
-          <Select onChange={handleRoleSelection}>
-            <Option value="GATHER_MANAGER">Gather Manager</Option>
-            <Option value="GATHER_EMPLOYEE">Gather Employee</Option>
-            <Option value={EM_ROLE}>Exchange Manager</Option>
-            <Option value={EE_ROLE}>Exchange Employee</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          className="flex-1"
-          name="departmentId"
-          label="Department"
-          dependencies={["role"]}
-          rules={[{ required: true, message: "Please select a department" }]}
-        >
-          <Select
-            disabled={!form.getFieldValue("role") || !roleDepartmentList}
-            loading={!roleDepartmentList}
+        {currentRole === "LEADER" && (
+          <>
+          <Form.Item
+            className="flex-1"
+            name="role"
+            label="Role"
+            rules={[{ required: true, message: "Please select a role" }]}
           >
-            {/* Replace roleDepartmentList with your actual data */}
-            {roleDepartmentList.map((department: any) => (
-              <Option key={department.id} value={department.id}>
-                {department.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+            <Select onChange={handleRoleSelection}>
+              <Option value="GATHER_MANAGER">Gather Manager</Option>
+              <Option value="GATHER_EMPLOYEE">Gather Employee</Option>
+              <Option value={EM_ROLE}>Exchange Manager</Option>
+              <Option value={EE_ROLE}>Exchange Employee</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            className="flex-1"
+            name="departmentId"
+            label="Department"
+            dependencies={["role"]}
+            rules={[{ required: true, message: "Please select a department" }]}
+          >
+            <Select
+              disabled={!form.getFieldValue("role") || !roleDepartmentList}
+              loading={!roleDepartmentList}
+            >
+              {/* Replace roleDepartmentList with your actual data */}
+              {roleDepartmentList.map((department: any) => (
+                <Option key={department.id} value={department.id}>
+                  {department.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          </>
+        )}
         <Form.Item
           className="w-full"
           name="fullName"
@@ -215,4 +232,5 @@ InviteUserModal.propTypes = {
   noManagerExchangePointsList: PropTypes.array,
   gatherPointsList: PropTypes.array,
   noManagerGatherPointsList: PropTypes.array,
+  currentRole: PropTypes.string,
 };

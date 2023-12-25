@@ -339,6 +339,7 @@ function Managers(props: any) {
         exchangePointsList={exchangePointsList}
         noManagerGatherPointsList={noManagerGatherPointsList}
         noManagerExchangePointsList={noManagerExchangePointsList}
+        currentRole={role}
       />
     </>
   );

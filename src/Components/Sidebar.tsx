@@ -161,18 +161,6 @@ const Sidebar = (props: any) => {
               </span>
             </NavLink>
             <NavLink
-              to="/invite-employee"
-              end
-              className={({ isActive }) =>
-                isActive ? activeStyle : inactiveStyle
-              }
-            >
-              <span style={{ display: "flex", alignItems: "center" }}>
-                <IoPersonAddSharp size={20} style={{ marginRight: 10 }} />
-                Invite employee
-              </span>
-            </NavLink>
-            <NavLink
               to="/package-management"
               end
               className={({ isActive }) =>
@@ -224,18 +212,6 @@ const Sidebar = (props: any) => {
               <span style={{ display: "flex", alignItems: "center" }}>
                 <PiPackageFill size={20} style={{ marginRight: 10 }} />
                 Package History
-              </span>
-            </NavLink>
-            <NavLink
-              to="/invite-employee"
-              end
-              className={({ isActive }) =>
-                isActive ? activeStyle : inactiveStyle
-              }
-            >
-              <span style={{ display: "flex", alignItems: "center" }}>
-                <IoPersonAddSharp size={20} style={{ marginRight: 10 }} />
-                Invite Employee
               </span>
             </NavLink>
           </>
