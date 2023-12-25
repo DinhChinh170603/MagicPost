@@ -159,7 +159,6 @@ function App() {
                 <Route path="/change-password" element={<ChangePassword />}></Route>
                 <Route path="/package-detail" element={<PackageLookup />}></Route>
                 <Route path="/package-detail/:id" element={<PackageDetail />}></Route>
-                <Route path="/invoice" element={<InvoicePrintModal />}></Route>
                 <Route path="*" element={getPage(<NotFound />)}></Route>
               </Routes>
             </BrowserRouter>

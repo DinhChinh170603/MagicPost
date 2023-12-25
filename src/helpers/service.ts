@@ -28,7 +28,7 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response) => {
-    if (response.data.status === 401 && response.data.message !== "Unauthorized") {
+    if (response.data.status === 401) {
       toast.error("Your session has expired");
       setTimeout(() => {
         localStorage.removeItem("jwtToken");

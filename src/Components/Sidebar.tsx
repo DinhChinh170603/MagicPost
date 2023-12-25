@@ -29,18 +29,6 @@ const Sidebar = (props: any) => {
         return (
           <>
             <NavLink
-              to="/invoice"
-              end
-              className={({ isActive }) =>
-                isActive ? activeStyle : inactiveStyle
-              }
-            >
-              <span style={{ display: "flex", alignItems: "center" }}>
-                <IoPeople size={20} style={{ marginRight: 10 }} />
-                Invoice
-              </span>
-            </NavLink>
-            <NavLink
               to="/managers"
               end
               className={({ isActive }) =>
