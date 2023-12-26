@@ -26,6 +26,7 @@ import {
   LEADER_ROLE,
 } from "../helpers/constants";
 import service from "../helpers/service";
+import { roleNormalize } from "../helpers/helpers"
 
 const { Option } = Select;
 
@@ -250,7 +251,7 @@ export default function User() {
                 className="mt-3"
                 active
               >
-                {profileUser.role}
+                {roleNormalize.get(profileUser.role)}
               </Skeleton>
             </div>
             {profileUser?.id === user?.id && (
