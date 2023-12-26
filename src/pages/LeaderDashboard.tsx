@@ -298,21 +298,8 @@ export default function LeaderDashboard() {
         <span> months</span>
       </div>
 
-      <div
-        style={{ display: "flex", gap: "20px" }}
-        className="flex-col items-center xl:flex-row"
-      >
-        <div
-          style={{
-            width: "500px",
-            height: "500px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            padding: "15px",
-            backgroundColor: "white",
-            position: "relative",
-          }}
-        >
+      <div className="mb-4 flex w-full flex-wrap justify-evenly">
+        <div className="flex relative basis-[98%] justify-center items-center text-center border border-gray-300 bg-white p-3 shadow-md md:basis-[46%] xl:basis-[40%]">
           {hrStatisticsLoading && <Loading relative />}
 
           {totalEmployees !== -1 && (
@@ -324,21 +311,9 @@ export default function LeaderDashboard() {
           )}
           <Doughnut data={usersStatistics} options={optionsBarChart} />
         </div>
-
-        <div>
-          <div
-            style={{
-              width: "700px",
-              height: "180px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "15px",
-              backgroundColor: "white",
-              position: "relative",
-              marginBottom: 20,
-            }}
-            className="flex"
-          >
+        
+        <div  className="basis-[98%] md:basis-[98%] xl:basis-[55%] space-y-3">
+          <div className="flex relative basis-[98%] border border-gray-300 bg-white p-3 shadow-md md:basis-[98%] xl:basis-[55%]">
             <div className="w-1/2 self-center pl-3">
               <span className="text-xl">Revenue this month</span>
               <br></br>
@@ -373,27 +348,15 @@ export default function LeaderDashboard() {
                 className="ml-auto"
               />
             </div>
-          </div>
 
-          <div
-            style={{
-              width: "700px",
-              height: "300px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "5px",
-              backgroundColor: "white",
-              position: "relative",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          </div>
+          <div className="flex relative basis-[98%] justify-center items-center text-center border border-gray-300 bg-white p-3 shadow-md md:basis-[98%] xl:basis-[55%]">
             {packagesStatisticsLoading && <Loading relative />}
             <Line data={packagesStatistics} options={options} />
           </div>
         </div>
       </div>
+
     </div>
   );
 }
