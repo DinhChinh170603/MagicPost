@@ -26,6 +26,7 @@ import {
   LEADER_ROLE,
 } from "../helpers/constants";
 import service from "../helpers/service";
+import { roleNormalize } from "../helpers/helpers"
 
 const { Option } = Select;
 
@@ -187,8 +188,10 @@ export default function User() {
     <div className="pb-4">
       <div className="mb-4 ml-3 text-3xl font-bold">Profile</div>
       <div className="flex justify-center">
-        <div className="flex w-[80%] justify-center gap-3 max-md:flex-col">
-          <div className="flex flex-1 flex-col items-center">
+        <div className="flex w-[90%] justify-center gap-7 max-md:flex-col">
+          <div className="flex flex-1 flex-col items-center rounded-md bg-white p-4 shadow-md border border-gray-300 h-fit pb-7">
+            <span className="text-center text-lg text-bold"> Avatar </span>
+            <hr className="w-[80%] mt-1 mb-3" style={{borderWidth: 1}} />
             <div className="flex">
               {loading ? (
                 <Skeleton.Avatar size={130} active />
@@ -248,7 +251,7 @@ export default function User() {
                 className="mt-3"
                 active
               >
-                {profileUser.role}
+                {roleNormalize.get(profileUser.role)}
               </Skeleton>
             </div>
             {profileUser?.id === user?.id && (
@@ -278,7 +281,13 @@ export default function User() {
               </div>
             )}
           </div>
-          <div className="flex-[2]">
+
+          <div className="flex-[2] rounded-md bg-white p-4 shadow-md border border-gray-300">
+            <div className="flex items-center justify-center flex-col">
+              <span className="text-center text-lg">Information</span>
+              <hr className="w-[80%] mt-1 mb-3" style={{ borderWidth: 1 }} />
+            </div>
+          
             <Form form={form} layout="vertical" onFinish={onFinish}>
               <Form.Item
                 name="email"
@@ -288,7 +297,7 @@ export default function User() {
                   { type: "email", message: "Invalid email address" },
                 ]}
               >
-                <Input disabled={!user || user.role !== LEADER_ROLE} />
+                <Input disabled={!user || user.role !== LEADER_ROLE}/>
               </Form.Item>
               <Form.Item
                 name="fullName"
@@ -361,7 +370,7 @@ export default function User() {
                 <Input disabled />
               </Form.Item>
               {user?.role === LEADER_ROLE && (
-                <Form.Item>
+                <Form.Item className="flex items-center justify-center">
                   <Button
                     type="primary"
                     htmlType="submit"

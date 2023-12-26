@@ -506,6 +506,7 @@ export default function ExchangePointDetail() {
               items={exchangePointDetail}
             />
           </div>
+          
           <div className="relative flex flex-grow gap-6">
             <div className="w-1/2">
               <div className="flex w-full flex-col gap-4">
@@ -531,7 +532,7 @@ export default function ExchangePointDetail() {
                 </SkeletonTable>
               </div>
             </div>
-            <div className="flex-1">
+            <div className="flex-1/2">
               <div className="flex w-full flex-col gap-4">
                 <div className="text-[18px] font-bold">Received Packages</div>
                 <SkeletonTable loading={loading} columns={columnsReceived}>

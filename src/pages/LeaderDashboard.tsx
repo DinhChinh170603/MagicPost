@@ -18,7 +18,6 @@ import Loading from "../helpers/Loading";
 import service from "../helpers/service";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
-const { Option } = Select;
 
 ChartJS.register(
   CategoryScale,

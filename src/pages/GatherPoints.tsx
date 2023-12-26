@@ -90,6 +90,7 @@ export default function GatherPoints() {
                   state: { exchangePoint: exchangePoint },
                 });
               }}
+              className="hover:cursor-pointer"
             >
               {exchangePoint.id}
             </Tag>
