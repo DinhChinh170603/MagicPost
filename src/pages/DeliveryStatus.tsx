@@ -521,6 +521,7 @@ export default function DeliveryStatus(props: any) {
                 </div>
                 <SkeletonTable loading={loading} columns={columnsSucceed}>
                   <Table
+                    scroll={{x: 1000}}
                     className="w-full"
                     columns={columnsSucceed}
                     expandable={{
@@ -544,6 +545,7 @@ export default function DeliveryStatus(props: any) {
                 <div className="text-[22px] font-bold">Failed Deliveries</div>
                 <SkeletonTable loading={loading} columns={columnsRejected}>
                   <Table
+                    scroll={{x: 1000}}
                     className="w-full"
                     columns={columnsRejected}
                     expandable={{

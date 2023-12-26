@@ -512,6 +512,7 @@ export default function ExchangePointDetail() {
                 <div className="text-[18px] font-bold">Sent Packages</div>
                 <SkeletonTable loading={loading} columns={columnsSent}>
                   <Table
+                    scroll={{x: 1000}}
                     className="w-full"
                     columns={columnsSent}
                     expandable={{
@@ -535,6 +536,7 @@ export default function ExchangePointDetail() {
                 <div className="text-[18px] font-bold">Received Packages</div>
                 <SkeletonTable loading={loading} columns={columnsReceived}>
                   <Table
+                    scroll={{x: 1000}}
                     className="w-full"
                     columns={columnsReceived}
                     expandable={{

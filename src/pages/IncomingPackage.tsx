@@ -315,8 +315,8 @@ export default function IncomingPackage(props: any) {
             </>
           )}
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -324,11 +324,7 @@ export default function IncomingPackage(props: any) {
       <div className="flex">
         <div className="mb-4 ml-3 text-3xl font-bold">Incoming Package</div>
         <div className="ml-auto mr-3">
-          <Button
-            type="primary"
-            onClick={start}
-            loading={loading}
-          >
+          <Button type="primary" onClick={start} loading={loading}>
             Reload
           </Button>
         </div>
@@ -336,14 +332,14 @@ export default function IncomingPackage(props: any) {
 
       <div className="flex h-full w-full flex-col items-center justify-center gap-3">
         <div className="flex w-[80%] justify-start gap-4">
-          
           <div className="mt-1">
             {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
           </div>
         </div>
-        <div className="rounded-xl bg-white p-3 shadow-lg w-full">
+        <div className="w-full rounded-xl bg-white p-3 shadow-lg">
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
+              scroll={{ x: 1000 }}
               className="w-full"
               // rowSelection={rowSelection}
               columns={columns}

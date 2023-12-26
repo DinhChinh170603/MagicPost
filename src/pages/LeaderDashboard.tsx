@@ -16,7 +16,7 @@ import { Doughnut, Line } from "react-chartjs-2";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 const { Option } = Select;
 
@@ -43,7 +43,7 @@ export default function LeaderDashboard() {
   const [totalEmployees, setTotalEmployees] = useState(-1);
   const [thisMonthRevenue, setThisMonthRevenue] = useState(0);
   const [lastMonthRevenue, setLastMonthRevenue] = useState(0);
-  const [growthRate, setGrowthRate] = useState(0);
+  const [growthRate, setGrowthRate] = useState(1);
   const [profileUser, setProfileUser] = useState<any>({});
 
   const [packagesStatistics, setPackagesStatistics] = useState<any>({
@@ -58,7 +58,7 @@ export default function LeaderDashboard() {
     datasets: [],
   });
 
-  useEffect (() => {
+  useEffect(() => {
     service
       .get("/users/me")
       .then((res) => {
@@ -78,7 +78,7 @@ export default function LeaderDashboard() {
       case "6":
         setMonths(6);
         break;
-      case "9": 
+      case "9":
         setMonths(9);
         break;
       case "12":
@@ -87,10 +87,9 @@ export default function LeaderDashboard() {
       default:
         break;
     }
-  }
+  };
 
   React.useEffect(() => {
-    setHrStatisticsLoading(true);
     setPackagesStatisticsLoading(true);
     setRevenueLoading(true);
     service
@@ -137,7 +136,7 @@ export default function LeaderDashboard() {
         setPackagesStatisticsLoading(false);
       });
 
-      service
+    service
       .get("/leader/revenue-statistics", { params: { m: months } })
       .then((res) => {
         const statistics = res.data.results.reverse();
@@ -165,54 +164,57 @@ export default function LeaderDashboard() {
         setPackagesStatisticsLoading(false);
       });
 
-    service
-      .get("/leader/hr-statistics")
-      .then((res) => {
-        const statistics = res.data.results;
+    if (!usersStatistics.labels) {
+      setHrStatisticsLoading(true);
+      service
+        .get("/leader/hr-statistics")
+        .then((res) => {
+          const statistics = res.data.results;
 
-        setUsersStatistics({
-          labels: [
-            "Exchange point managers",
-            "Gather point managers",
-            "Exchange point employees",
-            "Gather point employees",
-          ],
-          datasets: [
-            {
-              label: "Count",
-              data: [
-                statistics.em,
-                statistics.gm,
-                statistics.ee,
-                statistics.ge,
-              ],
-              borderColor: [
-                "rgb(255, 99, 132)",
-                "rgb(54, 162, 235)",
-                "rgb(255, 205, 86)",
-                "rgb(75, 192, 192)",
-              ],
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.5)",
-                "rgba(54, 162, 235, 0.5)",
-                "rgba(255, 205, 86, 0.5)",
-                "rgba(75, 192, 192, 0.5)",
-              ],
-              borderWidth: 1,
-            },
-          ],
+          setUsersStatistics({
+            labels: [
+              "Exchange point managers",
+              "Gather point managers",
+              "Exchange point employees",
+              "Gather point employees",
+            ],
+            datasets: [
+              {
+                label: "Count",
+                data: [
+                  statistics.em,
+                  statistics.gm,
+                  statistics.ee,
+                  statistics.ge,
+                ],
+                borderColor: [
+                  "rgb(255, 99, 132)",
+                  "rgb(54, 162, 235)",
+                  "rgb(255, 205, 86)",
+                  "rgb(75, 192, 192)",
+                ],
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.5)",
+                  "rgba(54, 162, 235, 0.5)",
+                  "rgba(255, 205, 86, 0.5)",
+                  "rgba(75, 192, 192, 0.5)",
+                ],
+                borderWidth: 1,
+              },
+            ],
+          });
+
+          setTotalEmployees(
+            statistics.em + statistics.gm + statistics.ee + statistics.ge,
+          );
+
+          setHrStatisticsLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+          setHrStatisticsLoading(false);
         });
-
-        setTotalEmployees(
-          statistics.em + statistics.gm + statistics.ee + statistics.ge,
-        );
-
-        setHrStatisticsLoading(false);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-        setHrStatisticsLoading(false);
-      });
+    }
   }, [months]);
 
   useEffect(() => {
@@ -279,7 +281,9 @@ export default function LeaderDashboard() {
         className="mb-4 flex rounded-md bg-btnHover px-5 pr-20 shadow-lg"
         style={{ width: "97%" }}
       >
-        <span className="mt-3 text-xl font-bold">Welcome back, {profileUser.fullName}</span>
+        <span className="mt-3 text-xl font-bold">
+          Welcome back, {profileUser.fullName}
+        </span>
         <img
           src="/src/assets/logo_edit.png"
           width={130}
@@ -288,12 +292,12 @@ export default function LeaderDashboard() {
         />
       </div>
 
-      <div className="ml-auto mr-5 mb-3">
+      <div className="mb-3 ml-auto mr-5">
         <span>Select time range:{"\u00A0"}</span>
-        <Select onChange={monthSelection}>
+        <Select onChange={monthSelection} defaultValue={"3"}>
           <Option value="3">3</Option>
           <Option value="6">6</Option>
-          <Option value="12">9</Option>
+          <Option value="9">9</Option>
           <Option value="12">12</Option>
         </Select>
         <span> months</span>
@@ -347,14 +351,20 @@ export default function LeaderDashboard() {
               <div>
                 {growthRate >= 1 ? (
                   <span style={{ display: "flex", alignItems: "center" }}>
-                    <FaArrowUp color="green" size={20} className="mr-1"/>
-                    <span className="text-green-700 text-lg"> {Math.abs((growthRate * 100 - 100)).toFixed(1)}% {"\u00A0"}</span>
+                    <FaArrowUp color="green" size={20} className="mr-1" />
+                    <span className="text-lg text-green-700">
+                      {" "}
+                      {Math.abs(growthRate * 100 - 100).toFixed(1)}% {"\u00A0"}
+                    </span>
                     <span className="text-lg"> Since last month</span>
                   </span>
                 ) : (
                   <span style={{ display: "flex", alignItems: "center" }}>
-                    <FaArrowDown color="red" size={20} className="mr-1"/>
-                    <span className="text-red-700 text-lg"> {Math.abs((growthRate * 100 - 100)).toFixed(1)}% {"\u00A0"}</span>
+                    <FaArrowDown color="red" size={20} className="mr-1" />
+                    <span className="text-lg text-red-700">
+                      {" "}
+                      {Math.abs(growthRate * 100 - 100).toFixed(1)}% {"\u00A0"}
+                    </span>
                     <span className="text-lg"> Since last month</span>
                   </span>
                 )}
@@ -362,12 +372,16 @@ export default function LeaderDashboard() {
             </div>
             <div className="w-1/2">
               {revenueLoading && <Loading relative />}
-              <Line data={revenue} options={optionRevenue} className="ml-auto"/>
+              <Line
+                data={revenue}
+                options={optionRevenue}
+                className="ml-auto"
+              />
             </div>
           </div>
-          
-          <div 
-            style={{ 
+
+          <div
+            style={{
               width: "700px",
               height: "300px",
               border: "1px solid #ccc",
@@ -375,9 +389,9 @@ export default function LeaderDashboard() {
               padding: "5px",
               backgroundColor: "white",
               position: "relative",
-              display: "flex", 
-              justifyContent: "center", 
-              alignItems: "center"
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             {packagesStatisticsLoading && <Loading relative />}

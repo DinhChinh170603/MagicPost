@@ -47,12 +47,12 @@ export default function GatherPointDetail() {
       ])
       .then(
         axios.spread((res1, res2) => {
-          const newData1 = res1.data.results.map((item: { id: any; }) => ({
+          const newData1 = res1.data.results.map((item: { id: any }) => ({
             ...item,
             key: item.id,
           }));
           setSentPackages(newData1);
-          const newData2 = res2.data.results.map((item: { id: any; }) => ({
+          const newData2 = res2.data.results.map((item: { id: any }) => ({
             ...item,
             key: item.id,
           }));
@@ -100,7 +100,11 @@ export default function GatherPointDetail() {
   ];
 
   // searchInColumn
-  const handleSearchSent = (selectedKeys: any[], confirm: { (): void; (): void; (): void; }, dataIndex: string) => {
+  const handleSearchSent = (
+    selectedKeys: any[],
+    confirm: { (): void; (): void; (): void },
+    dataIndex: string,
+  ) => {
     confirm();
     setSearchSent({ dataIndex, searchText: selectedKeys[0] });
 
@@ -118,7 +122,7 @@ export default function GatherPointDetail() {
     } else {
     }
   };
-  const handleResetIdSent = (clearFilters: { (): void; (): void; }) => {
+  const handleResetIdSent = (clearFilters: { (): void; (): void }) => {
     clearFilters();
     setSearchSent({ ...searchSent, searchText: "" });
   };
@@ -193,7 +197,7 @@ export default function GatherPointDetail() {
         );
       }
     },
-    render: (text: { toString: () => string; }) =>
+    render: (text: { toString: () => string }) =>
       searchSent.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -210,7 +214,11 @@ export default function GatherPointDetail() {
   });
 
   // searchInColumn
-  const handleSearchReceived = (selectedKeys: any[], confirm: { (): void; (): void; (): void; }, dataIndex: string) => {
+  const handleSearchReceived = (
+    selectedKeys: any[],
+    confirm: { (): void; (): void; (): void },
+    dataIndex: string,
+  ) => {
     confirm();
     setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
 
@@ -227,7 +235,7 @@ export default function GatherPointDetail() {
       setCurrentPageOfReceived(searchedPage);
     }
   };
-  const handleResetIdReceived = (clearFilters: { (): void; (): void; }) => {
+  const handleResetIdReceived = (clearFilters: { (): void; (): void }) => {
     clearFilters();
     setSearchReceived({ ...searchReceived, searchText: "" });
   };
@@ -304,7 +312,7 @@ export default function GatherPointDetail() {
         );
       }
     },
-    render: (text: { toString: () => string; }) =>
+    render: (text: { toString: () => string }) =>
       searchReceived.dataIndex === dataIndex ? (
         <Highlighter
           highlightStyle={{
@@ -512,6 +520,7 @@ export default function GatherPointDetail() {
                 <div className="text-[18px] font-bold">Sent Packages</div>
                 <SkeletonTable loading={loading} columns={columnsSent}>
                   <Table
+                    scroll={{ x: 1000 }}
                     className="w-full"
                     columns={columnsSent}
                     expandable={{
@@ -535,6 +544,7 @@ export default function GatherPointDetail() {
                 <div className="text-[18px] font-bold">Received Packages</div>
                 <SkeletonTable loading={loading} columns={columnsReceived}>
                   <Table
+                    scroll={{ x: 1000 }}
                     className="w-full"
                     columns={columnsReceived}
                     expandable={{

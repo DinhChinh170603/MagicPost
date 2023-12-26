@@ -8,7 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InviteUserModal from "../components/InviteUserModal";
 import SkeletonTable from "../components/SkeletonTable";
-import { EE_ROLE, EM_ROLE, GE_ROLE, GM_ROLE, LEADER_ROLE } from "../helpers/constants";
+import {
+  EE_ROLE,
+  EM_ROLE,
+  GE_ROLE,
+  GM_ROLE,
+  LEADER_ROLE,
+} from "../helpers/constants";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
 
@@ -328,6 +334,7 @@ function Managers(props: any) {
               dataSource={data}
               rowKey={(record) => String(record.id)}
               pagination={pagination}
+              scroll={{ x: 1000 }}
             />
           </SkeletonTable>
         </div>

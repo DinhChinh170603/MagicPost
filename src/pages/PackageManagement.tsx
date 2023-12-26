@@ -865,6 +865,7 @@ export default function PackageManagement(props: any) {
                 <div className="text-[22px] font-bold">Sent Packages</div>
                 <SkeletonTable loading={loading} columns={columnsSent}>
                   <Table
+                    scroll={{ x: 1000 }}
                     className="w-full"
                     columns={columnsSent}
                     expandable={{
@@ -888,6 +889,7 @@ export default function PackageManagement(props: any) {
                 <div className="text-[22px] font-bold">Received Packages</div>
                 <SkeletonTable loading={loading} columns={columnsReceived}>
                   <Table
+                    scroll={{ x: 1000 }}
                     className="w-full"
                     columns={columnsReceived}
                     expandable={{
@@ -946,6 +948,7 @@ export default function PackageManagement(props: any) {
             <div className="rounded-xl bg-white p-3 shadow-lg">
               <SkeletonTable loading={loading} columns={columnsAll}>
                 <Table
+                  scroll={{ x: 1000 }}
                   className="w-full"
                   columns={columnsAll}
                   expandable={{

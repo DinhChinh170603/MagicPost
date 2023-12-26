@@ -1,17 +1,17 @@
-import { useEffect, useState, useRef, SetStateAction } from "react";
-import PropTypes from "prop-types";
-import { toast } from "react-toastify";
-import service from "../helpers/service";
-import { Button, Input, Space, Table } from "antd";
-import SkeletonTable from "../components/SkeletonTable";
 import { SearchOutlined } from "@ant-design/icons";
-import Highlighter from "react-highlight-words";
-import moment from "moment";
-import DeliveryFailureModal from "../components/DeliveryFailureModal";
+import { Button, Input, Space, Table } from "antd";
 import download from "downloadjs";
-import InvoicePrintModal from "../components/InvoicePrintModal";
+import moment from "moment";
+import PropTypes from "prop-types";
+import { SetStateAction, useEffect, useRef, useState } from "react";
+import Highlighter from "react-highlight-words";
 import { FiPrinter } from "react-icons/fi";
+import { toast } from "react-toastify";
+import DeliveryFailureModal from "../components/DeliveryFailureModal";
+import InvoicePrintModal from "../components/InvoicePrintModal";
+import SkeletonTable from "../components/SkeletonTable";
 import { EE_ROLE } from "../helpers/constants";
+import service from "../helpers/service";
 export default function PackageProcessing(props: any) {
   const { role } = props;
   const [roleAPI, setRoleAPI] = useState("");
@@ -258,18 +258,22 @@ export default function PackageProcessing(props: any) {
 
   const columns = [
     ...(role === EE_ROLE
-    ? [
-        {
-          title: "Print",
-          key: "print",
-          render: (text: any, record: any) => (
-            <div>
-              <FiPrinter size={20} className="text-btnColor hover:text-btnHover" onClick={() => handlePrint(record)}></FiPrinter>
-            </div>
-          ),
-        },
-      ]
-    : []),
+      ? [
+          {
+            title: "Print",
+            key: "print",
+            render: (text: any, record: any) => (
+              <div>
+                <FiPrinter
+                  size={20}
+                  className="text-btnColor hover:text-btnHover"
+                  onClick={() => handlePrint(record)}
+                ></FiPrinter>
+              </div>
+            ),
+          },
+        ]
+      : []),
     {
       title: "Id",
       dataIndex: "id",
@@ -348,11 +352,7 @@ export default function PackageProcessing(props: any) {
       <div className="flex">
         <div className="mb-4 ml-3 text-3xl font-bold">Package Processing</div>
         <div className="ml-auto mr-3">
-          <Button
-            type="primary"
-            onClick={start}
-            loading={loading}
-          >
+          <Button type="primary" onClick={start} loading={loading}>
             Reload
           </Button>
         </div>
@@ -436,9 +436,10 @@ export default function PackageProcessing(props: any) {
             </>
           ) : null}
         </div>
-        <div className="rounded-xl bg-white p-3 shadow-lg w-full">
+        <div className="w-full rounded-xl bg-white p-3 shadow-lg">
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
+              scroll={{ x: 1000 }}
               className="w-full"
               rowSelection={rowSelection}
               columns={columns}
