@@ -278,18 +278,13 @@ export default function LeaderDashboard() {
   return (
     <div className="flex h-full w-full flex-col items-center bg-bgColor">
       <div
-        className="mb-4 flex rounded-md bg-btnHover px-5 pr-20 shadow-lg"
+        className="mb-4 flex justify-between rounded-md bg-btnHover px-5 shadow-lg"
         style={{ width: "97%" }}
       >
         <span className="mt-3 text-xl font-bold">
           Welcome back, {profileUser.fullName}
         </span>
-        <img
-          src="/src/assets/logo_edit.png"
-          width={130}
-          height={100}
-          className="ml-auto"
-        />
+        <img src="/src/assets/logo_edit.png" width={130} height={100} />
       </div>
 
       <div className="mb-3 ml-auto mr-5">
@@ -305,7 +300,7 @@ export default function LeaderDashboard() {
 
       <div
         style={{ display: "flex", gap: "20px" }}
-        className="flex-col xl:flex-row"
+        className="flex-col items-center xl:flex-row"
       >
         <div
           style={{

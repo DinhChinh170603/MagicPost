@@ -26,8 +26,6 @@ function Managers(props: any) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [columns, setColumns] = useState(columnsWithAction);
-
   const [gmCount, setGmCount] = useState(0);
   const [emCount, setEmCount] = useState(0);
   const [geCount, setGeCount] = useState(0);
@@ -367,6 +365,8 @@ function Managers(props: any) {
       width: "15%",
     },
   ];
+
+  const [columns, setColumns] = useState(columnsWithAction);
 
   return (
     <>

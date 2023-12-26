@@ -620,20 +620,21 @@ export default function PackageManagement(props: any) {
       render: (text: any, record: any) => (
         <>
           {record.generalState === SUCCESS_STATE ? (
-            <div className="rounded-lg bg-[#9bd1f5] py-1 text-center font-bold">
+            <div className="rounded-lg bg-[#9bd1f5] px-2 py-1 text-center font-bold">
               Success
             </div>
           ) : record.generalState === REJECTED_STATE ? (
-            <div className="rounded-lg bg-[#ffb1c2] py-1 text-center font-bold">
+            <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
               Rejected
             </div>
           ) : (
-            <div className="rounded-lg bg-[#ffe6ab] py-1 text-center font-bold">
+            <div className="rounded-lg bg-[#ffe6ab] px-2 py-1 text-center font-bold">
               In Progress
             </div>
           )}
         </>
       ),
+      width: "10rem",
     },
   ];
 
