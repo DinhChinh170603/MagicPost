@@ -13,7 +13,6 @@ import { Bar, Doughnut } from "react-chartjs-2";
 import { toast } from "react-toastify";
 import AuthContext from "../contexts/AuthContext";
 import Loading from "../helpers/Loading";
-import { EE_ROLE, GE_ROLE } from "../helpers/constants";
 import { roleValueMap } from "../helpers/helpers";
 import service from "../helpers/service";
 
@@ -41,7 +40,7 @@ export default function PointDashboard() {
   const { user } = useContext<any>(AuthContext);
   const [profileUser, setProfileUser] = useState<any>({});
 
-  useEffect (() => {
+  useEffect(() => {
     service
       .get("/users/me")
       .then((res) => {
@@ -159,15 +158,18 @@ export default function PointDashboard() {
         },
       },
     },
+    maintainAspectRatio: false,
   };
 
   return (
     <div className="flex h-full w-full flex-col items-center">
       <div
-        className="mb-4 flex rounded-md bg-btnHover px-5 shadow-lg justify-between"
+        className="mb-4 flex justify-between rounded-md bg-btnHover px-5 shadow-lg"
         style={{ width: "97%" }}
       >
-        <span className="mt-3 text-xl font-bold">Welcome back, {profileUser.fullName}</span>
+        <span className="mt-3 text-xl font-bold">
+          Welcome back, {profileUser.fullName}
+        </span>
         <img
           src="/src/assets/logo_edit.png"
           width={130}
@@ -221,8 +223,8 @@ export default function PointDashboard() {
         </div>
       </div>
 
-      <div className="mb-4 flex w-full flex-wrap justify-evenly">
-        <div className="flex relative basis-[98%] justify-center items-center text-center border border-gray-300 bg-white p-3 shadow-md md:basis-[46%] xl:basis-[30%]">
+      <div className="mb-4 flex w-full flex-wrap justify-evenly max-md:gap-5">
+        <div className="relative flex basis-[98%] items-center justify-center border border-gray-300 bg-white p-3 text-center shadow-md md:basis-[46%] xl:basis-[30%]">
           {!statistics && <Loading relative />}
 
           {statistics && (
@@ -237,10 +239,10 @@ export default function PointDashboard() {
 
           <Doughnut data={doughnutStatistics} options={doughnutOptions} />
         </div>
-        
-        <div className="flex relative basis-[98%] justify-center items-center text-center border border-gray-300 bg-white p-3 shadow-md md:basis-[98%] xl:basis-[63%]">
+
+        <div className="relative flex w-full min-h-[400px] basis-[98%] items-center justify-center border border-gray-300 bg-white p-3 text-center shadow-md md:basis-[98%] xl:basis-[63%]">
           {!statistics && <Loading relative />}
-          <Bar data={barStatistics} options={barOptions}/>
+          <Bar data={barStatistics} options={barOptions} />
         </div>
       </div>
     </div>

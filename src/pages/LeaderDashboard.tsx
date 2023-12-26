@@ -250,6 +250,7 @@ export default function LeaderDashboard() {
         },
       },
     },
+    maintainAspectRatio: false,
   };
 
   const optionsBarChart: any = {
@@ -273,10 +274,11 @@ export default function LeaderDashboard() {
         display: false,
       },
     },
+    maintainAspectRatio: false,
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center bg-bgColor">
+    <div className="flex h-full w-full flex-col items-center">
       <div
         className="mb-4 flex justify-between rounded-md bg-btnHover px-5 shadow-lg"
         style={{ width: "97%" }}
@@ -298,12 +300,12 @@ export default function LeaderDashboard() {
         <span> months</span>
       </div>
 
-      <div className="mb-4 flex w-full flex-wrap justify-evenly">
-        <div className="flex relative basis-[98%] justify-center items-center text-center border border-gray-300 bg-white p-3 shadow-md md:basis-[46%] xl:basis-[40%]">
+      <div className="mb-4 flex w-full flex-wrap justify-evenly gap-3 md:gap-0">
+        <div className="relative flex basis-[98%] items-center justify-center border border-gray-300 bg-white p-3 text-center shadow-md md:basis-[46%] xl:basis-[40%]">
           {hrStatisticsLoading && <Loading relative />}
 
           {totalEmployees !== -1 && (
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center max-sm:hidden">
               <b className="text-4xl">{totalEmployees}</b>
               <br />
               <span className="text-xl">employees</span>
@@ -311,10 +313,10 @@ export default function LeaderDashboard() {
           )}
           <Doughnut data={usersStatistics} options={optionsBarChart} />
         </div>
-        
-        <div  className="basis-[98%] md:basis-[98%] xl:basis-[55%] space-y-3">
-          <div className="flex relative basis-[98%] border border-gray-300 bg-white p-3 shadow-md md:basis-[98%] xl:basis-[55%]">
-            <div className="w-1/2 self-center pl-3">
+
+        <div className="flex basis-[98%] flex-col space-y-3 md:basis-[98%] xl:basis-[55%]">
+          <div className="relative flex basis-[30%] flex-col items-center justify-between border border-gray-300 bg-white p-3 shadow-md lg:flex-row">
+            <div className="self-center pl-3">
               <span className="text-xl">Revenue this month</span>
               <br></br>
               <b className="text-4xl">{thisMonthRevenue} VND</b>
@@ -340,23 +342,21 @@ export default function LeaderDashboard() {
                 )}
               </div>
             </div>
-            <div className="w-1/2">
+            <div>
               {revenueLoading && <Loading relative />}
               <Line
                 data={revenue}
                 options={optionRevenue}
-                className="ml-auto"
+                className="max-sm:w-full"
               />
             </div>
-
           </div>
-          <div className="flex relative basis-[98%] justify-center items-center text-center border border-gray-300 bg-white p-3 shadow-md md:basis-[98%] xl:basis-[55%]">
+          <div className="relative flex w-full basis-[70%] items-center justify-center border border-gray-300 bg-white p-3 text-center shadow-md min-h-[400px]">
             {packagesStatisticsLoading && <Loading relative />}
             <Line data={packagesStatistics} options={options} />
           </div>
         </div>
       </div>
-
     </div>
   );
 }

@@ -52,6 +52,8 @@ export default function User() {
 
   const [modalOpen, setModalOpen] = useState(false);
 
+  const [editLoading, setEditLoading] = useState(false);
+
   const handleRoleSelection = (value: string) => {
     if (!gatherPointsList || !exchangePointsList) {
       return;
@@ -129,7 +131,7 @@ export default function User() {
   }, [user]);
 
   const onFinish = () => {
-    setLoading(true);
+    setEditLoading(true);
     const { fullName, role, departmentId, dob } = form.getFieldsValue();
     service
       .patch("/leader/user", {
@@ -142,16 +144,16 @@ export default function User() {
       .then((res) => {
         if (res.data.status === 200) {
           toast.success(res.data.message);
-          setLoading(false);
+          setEditLoading(false);
           setProfileUser(res.data.results);
         } else {
           toast.error(res.data.message);
-          setLoading(false);
+          setEditLoading(false);
         }
       })
       .catch((err) => {
         toast.error(err.response.data.message);
-        setLoading(false);
+        setEditLoading(false);
       });
   };
 
@@ -182,10 +184,10 @@ export default function User() {
   };
 
   return (
-    <>
+    <div className="pb-4">
       <div className="mb-4 ml-3 text-3xl font-bold">Profile</div>
       <div className="flex justify-center">
-        <div className="flex w-[80%] justify-center gap-3">
+        <div className="flex w-[80%] justify-center gap-3 max-md:flex-col">
           <div className="flex flex-1 flex-col items-center">
             <div className="flex">
               {loading ? (
@@ -295,7 +297,7 @@ export default function User() {
               >
                 <Input disabled={!user || user.role !== LEADER_ROLE} />
               </Form.Item>
-              <div className="flex gap-3">
+              <div className="flex gap-3 max-md:flex-col">
                 <Form.Item
                   name="role"
                   label="Role"
@@ -363,7 +365,7 @@ export default function User() {
                   <Button
                     type="primary"
                     htmlType="submit"
-                    loading={loading}
+                    loading={editLoading}
                     className="mt-3"
                   >
                     Save user info
@@ -375,6 +377,6 @@ export default function User() {
         </div>
       </div>
       <ChangePasswordModal open={modalOpen} setOpen={setModalOpen} />
-    </>
+    </div>
   );
 }
