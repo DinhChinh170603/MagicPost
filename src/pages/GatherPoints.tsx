@@ -166,7 +166,7 @@ export default function GatherPoints() {
       <div className="rounded-xl bg-white p-3 shadow-lg">
         <SkeletonTable loading={tableLoading} columns={columns}>
           <Table
-            scroll={{ x: 1000 }}
+            scroll={{ x: 800 }}
             columns={columns}
             dataSource={gatherPointsList}
             rowKey={(record) => String(record.id)}

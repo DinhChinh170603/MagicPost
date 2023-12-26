@@ -339,7 +339,7 @@ export default function IncomingPackage(props: any) {
         <div className="w-full rounded-xl bg-white p-3 shadow-lg">
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
-              scroll={{ x: 1000 }}
+              scroll={{ x: 800 }}
               className="w-full"
               // rowSelection={rowSelection}
               columns={columns}

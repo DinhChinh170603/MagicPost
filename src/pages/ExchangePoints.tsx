@@ -132,7 +132,7 @@ export default function ExchangePoints() {
       <div className="rounded-xl bg-white p-3 shadow-lg">
         <SkeletonTable loading={loading} columns={columns}>
           <Table
-            scroll={{ x: 1000 }}
+            scroll={{ x: 800 }}
             columns={columns}
             dataSource={data}
             rowKey={(record) => String(record.id)}

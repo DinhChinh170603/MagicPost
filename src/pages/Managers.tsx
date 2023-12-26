@@ -15,7 +15,7 @@ import {
   GM_ROLE,
   LEADER_ROLE,
 } from "../helpers/constants";
-import { sortByString } from "../helpers/helpers";
+import { roleNormalize, sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
 
 function Managers(props: any) {
@@ -25,6 +25,8 @@ function Managers(props: any) {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [columns, setColumns] = useState(columnsWithAction);
 
   const [gmCount, setGmCount] = useState(0);
   const [emCount, setEmCount] = useState(0);
@@ -48,6 +50,12 @@ function Managers(props: any) {
       setRoleAPI("/ex-manager");
     } else if (role === "GATHER_MANAGER") {
       setRoleAPI("/gth-manager");
+    }
+
+    if (role && role === LEADER_ROLE) {
+      fetchDepartments();
+    } else {
+      setColumns(columnsWithoutAction);
     }
 
     if (roleAPI) {
@@ -107,7 +115,7 @@ function Managers(props: any) {
     }
   }, [role, roleAPI]);
 
-  useEffect(() => {
+  const fetchDepartments = () => {
     axios
       .all([
         service.get("/leader/exchange-points"),
@@ -138,7 +146,7 @@ function Managers(props: any) {
         setLoading(false);
         toast.error(err.response.data.message);
       });
-  }, []);
+  };
 
   // Format to DD-MM-YYYY
   const formatDate = (date: string | number | Date) => {
@@ -173,7 +181,16 @@ function Managers(props: any) {
       });
   };
 
-  const columns = [
+  const pagination = {
+    hideOnSinglePage: false,
+    showSizeChanger: true,
+    pageSizeOptions: ["5", "10", "15", "20", "25", "30"],
+    defaultPageSize: 5,
+    showTotal: (total: number, range: number[]) =>
+      `${range[0]}-${range[1]} of ${total} items`,
+  };
+
+  const columnsWithAction = [
     {
       title: "Name",
       dataIndex: "fullName",
@@ -228,6 +245,7 @@ function Managers(props: any) {
         ],
         onFilter: (value: any, record: any) => record.role.indexOf(value) === 0,
       }),
+      render: (text: string, record: any) => roleNormalize.get(record.role),
     },
     {
       title: "Joining Date",
@@ -273,14 +291,82 @@ function Managers(props: any) {
     },
   ];
 
-  const pagination = {
-    hideOnSinglePage: false,
-    showSizeChanger: true,
-    pageSizeOptions: ["5", "10", "15", "20", "25", "30"],
-    defaultPageSize: 5,
-    showTotal: (total: number, range: number[]) =>
-      `${range[0]}-${range[1]} of ${total} items`,
-  };
+  const columnsWithoutAction = [
+    {
+      title: "Name",
+      dataIndex: "fullName",
+      key: "fullName",
+      sorter: sortByString("fullName"),
+      width: "20%",
+      render: (fullName: any, record: any) => (
+        <div
+          className="cursor-pointer hover:text-blue-500"
+          onClick={() => navigate(`/users/${record.id}`)}
+        >
+          {fullName}
+        </div>
+      ),
+    },
+    {
+      title: "Date of Birth",
+      dataIndex: "dob",
+      key: "dob",
+      render: (dob: any) => formatDate(dob),
+      width: "15%",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      width: "30%",
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+      width: "20%",
+      ...(role === LEADER_ROLE && {
+        filters: [
+          {
+            text: "Gather Employee",
+            value: "GATHER_EMPLOYEE",
+          },
+          {
+            text: "Gather Manager",
+            value: "GATHER_MANAGER",
+          },
+          {
+            text: "Exchange Manager",
+            value: "EXCHANGE_MANAGER",
+          },
+          {
+            text: "Exchange Employee",
+            value: EE_ROLE,
+          },
+        ],
+        onFilter: (value: any, record: any) => record.role.indexOf(value) === 0,
+      }),
+      render: (text: string, record: any) => roleNormalize.get(record.role),
+    },
+    {
+      title: "Joining Date",
+      dataIndex: "startWorkingDate",
+      key: "startWorkingDate",
+      sorter: (
+        a: { startWorkingDate: string | number | Date },
+        b: {
+          id(id: any): import("react").Key;
+          startWorkingDate: string | number | Date;
+        },
+      ) => {
+        const dateA = new Date(a.startWorkingDate);
+        const dateB = new Date(b.startWorkingDate);
+        return dateA - dateB;
+      },
+      render: (startWorkingDate: any) => formatDate(startWorkingDate),
+      width: "15%",
+    },
+  ];
 
   return (
     <>
@@ -334,7 +420,7 @@ function Managers(props: any) {
               dataSource={data}
               rowKey={(record) => String(record.id)}
               pagination={pagination}
-              scroll={{ x: 1000 }}
+              scroll={{ x: 800 }}
             />
           </SkeletonTable>
         </div>

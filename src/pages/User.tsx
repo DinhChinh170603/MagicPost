@@ -1,5 +1,13 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Avatar, Button, DatePicker, Form, Input, Select } from "antd";
+import {
+  Avatar,
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Select,
+  Skeleton,
+} from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 import moment from "moment";
@@ -180,27 +188,31 @@ export default function User() {
         <div className="flex w-[80%] justify-center gap-3">
           <div className="flex flex-1 flex-col items-center">
             <div className="flex">
-              <label className="relative" htmlFor="avatar">
-                <div className="relative">
-                  {avatarLink ? (
-                    <Avatar
-                      src={avatarLink}
-                      size={130}
-                      className="cursor-pointer shadow-lg"
-                    />
-                  ) : (
-                    <AccountCircleIcon
-                      className="cursor-pointer"
-                      sx={{ color: "black", fontSize: 130 }}
-                    />
-                  )}
-                  {profileUser?.id === user?.id && (
-                    <div className="absolute right-0 top-1 cursor-pointer rounded-full border border-gray-500 bg-white p-1 transition-all duration-100 hover:bg-gray-200">
-                      <AiOutlineCamera size={20} />
-                    </div>
-                  )}
-                </div>
-              </label>
+              {loading ? (
+                <Skeleton.Avatar size={130} active />
+              ) : (
+                <label className="relative" htmlFor="avatar">
+                  <div className="relative">
+                    {avatarLink ? (
+                      <Avatar
+                        src={avatarLink}
+                        size={130}
+                        className="cursor-pointer shadow-lg"
+                      />
+                    ) : (
+                      <AccountCircleIcon
+                        className="cursor-pointer"
+                        sx={{ color: "black", fontSize: 130 }}
+                      />
+                    )}
+                    {profileUser?.id === user?.id && (
+                      <div className="absolute right-0 top-1 cursor-pointer rounded-full border border-gray-500 bg-white p-1 transition-all duration-100 hover:bg-gray-200">
+                        <AiOutlineCamera size={20} />
+                      </div>
+                    )}
+                  </div>
+                </label>
+              )}
               <input
                 disabled={profileUser?.id !== user?.id}
                 ref={imageInputRef}
@@ -216,9 +228,27 @@ export default function User() {
               />
             </div>
             <div className="mt-3 text-2xl font-bold">
-              {profileUser.fullName}
+              <Skeleton
+                loading={loading}
+                paragraph={false}
+                style={{ width: 200 }}
+                className="mt-3"
+                active
+              >
+                {profileUser.fullName}
+              </Skeleton>
             </div>
-            <div className="text-gray-500">{profileUser.role}</div>
+            <div className="text-gray-500">
+              <Skeleton
+                loading={loading}
+                paragraph={false}
+                style={{ width: 200 }}
+                className="mt-3"
+                active
+              >
+                {profileUser.role}
+              </Skeleton>
+            </div>
             {profileUser?.id === user?.id && (
               <Button className="mt-3" onClick={() => setModalOpen(true)}>
                 Change password

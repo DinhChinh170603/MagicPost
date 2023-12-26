@@ -26,7 +26,7 @@ export default function SkeletonTable({
       dataSource={[...Array(rowCount)].map((_, index) => ({
         key: `key${index}`,
       }))}
-      scroll={{ x: 1000 }}
+      scroll={{ x: 800 }}
       columns={columns.map((column) => {
         return {
           key: column.key,
