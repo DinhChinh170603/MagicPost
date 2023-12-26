@@ -505,8 +505,8 @@ export default function GatherPointDetail() {
 
   return (
     <>
-      <div className="flex h-full">
-        <div className="mx-auto flex w-[96%] max-w-screen-xl flex-col pt-10">
+      <div className="h-full">
+        <div className="mx-auto w-[97%] max-w-screen-xl pt-10">
           <div className="pb-10">
             <Descriptions
               title="GatherPoint Detail"
@@ -539,7 +539,7 @@ export default function GatherPointDetail() {
                 </SkeletonTable>
               </div>
             </div>
-            <div className="flex-1">
+            <div className="w-1/2">
               <div className="flex w-full flex-col gap-4">
                 <div className="text-[18px] font-bold">Received Packages</div>
                 <SkeletonTable loading={loading} columns={columnsReceived}>

@@ -279,10 +279,6 @@ export default function IncomingPackage(props: any) {
         record.packageType.indexOf(value) === 0,
     },
     {
-      title: "Next Destination",
-      key: "nextDestination",
-    },
-    {
       title: "Action",
       key: "action",
       render: (text: any, record: any) => (

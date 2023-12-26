@@ -1,4 +1,4 @@
-import { Button, Table } from "antd";
+import { Button, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -69,15 +69,16 @@ export default function ExchangePoints() {
       width: "20%",
       render: (text: string, record: any) => {
         return record.linkedGatherPoint ? (
-          <div
+          <Tag
             onClick={() => {
               navigate(`/gather-points/${record.linkedGatherPoint.id}`, {
                 state: { gatherPoint: record.linkedGatherPoint },
               });
             }}
+            className="hover:cursor-pointer"
           >
             {record.linkedGatherPoint.id}
-          </div>
+          </Tag>
         ) : (
           ""
         );

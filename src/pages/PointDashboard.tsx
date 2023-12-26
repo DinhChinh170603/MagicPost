@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { Select } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { toast } from "react-toastify";
@@ -15,6 +16,8 @@ import AuthContext from "../contexts/AuthContext";
 import Loading from "../helpers/Loading";
 import { roleValueMap } from "../helpers/helpers";
 import service from "../helpers/service";
+
+const { Option } = Select;
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +30,9 @@ ChartJS.register(
 );
 
 export default function PointDashboard() {
+  const [months, setMonths] = useState(4);
+  const [loading, setLoading] = useState(false);
+
   const [doughnutStatistics, setDoughnutStatistics] = React.useState<any>({
     datasets: [],
   });
@@ -68,13 +74,34 @@ export default function PointDashboard() {
     return tmp.reverse();
   }
 
+  const monthSelection = (value: string) => {
+    switch (value) {
+      case "4":
+        setMonths(4);
+        break;
+      case "6":
+        setMonths(6);
+        break;
+      case "9":
+        setMonths(9);
+        break;
+      case "12":
+        setMonths(12);
+        break;
+      default:
+        break;
+    }
+  };
+
   const loadStatistics = () => {
+    setLoading(true);
     const roleApiPrefix = roleValueMap[user.role];
     service
-      .get(roleApiPrefix + "/statistics")
+      .get(roleApiPrefix + "/statistics", { params: { m : months }})
       .then((res) => {
         if (res.data.status === 200) {
           setStatistics(res.data.results);
+          setLoading(false);
           setDoughnutStatistics({
             labels: ["Incoming packages", "Pending packages"],
             datasets: [
@@ -111,10 +138,12 @@ export default function PointDashboard() {
           });
         } else {
           toast.error(res.data.message);
+          setLoading(false);
         }
       })
       .catch((err) => {
         toast.error(err.response.data.error);
+        setLoading(false);
       });
   };
 
@@ -127,8 +156,8 @@ export default function PointDashboard() {
   useEffect(() => {
     if (!user) return;
 
-    loadStatistics;
-  }, []);
+    loadStatistics();
+  }, [months]);
 
   const doughnutOptions: any = {
     plugins: {
@@ -177,6 +206,19 @@ export default function PointDashboard() {
           className="ml-auto"
         />
       </div>
+
+      {user && (user.role === "EXCHANGE_MANAGER" || user.role === "GATHER_MANAGER") &&(
+        <div className="mb-3 ml-auto mr-5">
+          <span>Select time range:{"\u00A0"}</span>
+          <Select onChange={monthSelection} defaultValue={"4"}>
+            <Option value="4">4</Option>
+            <Option value="6">6</Option>
+            <Option value="9">9</Option>
+            <Option value="12">12</Option>
+          </Select>
+          <span> months</span>
+        </div>
+      )}
 
       <div className="mb-4 flex w-full flex-wrap justify-evenly">
         <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
@@ -241,7 +283,7 @@ export default function PointDashboard() {
         </div>
 
         <div className="relative flex w-full min-h-[400px] basis-[98%] items-center justify-center border border-gray-300 bg-white p-3 text-center shadow-md md:basis-[98%] xl:basis-[63%]">
-          {!statistics && <Loading relative />}
+          {loading && <Loading relative />}
           <Bar data={barStatistics} options={barOptions} />
         </div>
       </div>
