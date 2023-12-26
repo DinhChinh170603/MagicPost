@@ -62,13 +62,13 @@ function App() {
             <Sidebar role={user ? user.role : null} />
           )}
 
-          <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+          <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-bgColor">
             <Topbar
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
               isInMobileMode={inMobileMode}
             />
-            <div className="h-full w-full flex-1 bg-[#f1f5f9] px-3 pb-4 pt-5">
+            <div className="h-full w-full flex-1 px-3 pb-4 pt-5">
               {children}
             </div>
           </div>
@@ -104,7 +104,11 @@ function App() {
                 <Route
                   index
                   element={getPage(
-                    user && user.role === LEADER_ROLE ? <LeaderDashboard /> : <PointDashboard />,
+                    user && user.role === LEADER_ROLE ? (
+                      <LeaderDashboard />
+                    ) : (
+                      <PointDashboard />
+                    ),
                   )}
                 ></Route>
                 <Route path="/login" element={<Login />}></Route>

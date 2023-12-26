@@ -72,8 +72,8 @@ export default function LeaderDashboard() {
 
   const monthSelection = (value: string) => {
     switch (value) {
-      case "3":
-        setMonths(3);
+      case "4":
+        setMonths(4);
         break;
       case "6":
         setMonths(6);
@@ -289,8 +289,8 @@ export default function LeaderDashboard() {
 
       <div className="mb-3 ml-auto mr-5">
         <span>Select time range:{"\u00A0"}</span>
-        <Select onChange={monthSelection} defaultValue={"3"}>
-          <Option value="3">3</Option>
+        <Select onChange={monthSelection} defaultValue={"4"}>
+          <Option value="4">4</Option>
           <Option value="6">6</Option>
           <Option value="9">9</Option>
           <Option value="12">12</Option>
