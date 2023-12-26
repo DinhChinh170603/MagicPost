@@ -176,7 +176,7 @@ export default function PointDashboard() {
         />
       </div>
 
-      <div className="mb-4 flex w-[80%] flex-wrap justify-evenly">
+      <div className="mb-4 flex w-full flex-wrap justify-evenly">
         <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
           <div className="flex flex-col">
             <div className="text-2xl font-bold">
@@ -221,52 +221,27 @@ export default function PointDashboard() {
         </div>
       </div>
 
-      <div
-        style={{ display: "flex", gap: "20px" }}
-        className="flex-col xl:flex-row"
-      >
-        <div
-          style={{
-            width: "500px",
-            height: "500px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            padding: "15px",
-            backgroundColor: "white",
-            position: "relative",
-          }}
-        >
+      <div className="mb-4 flex w-full flex-wrap justify-evenly">
+        <div className="flex relative basis-[98%] justify-center items-center text-center border border-gray-300 bg-white p-3 shadow-md md:basis-[46%] xl:basis-[30%]">
           {!statistics && <Loading relative />}
 
           {statistics && (
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-              <b className="text-4xl">
+              <b className="text-3xl">
                 {statistics.pending + statistics.incoming}
               </b>
               <br />
-              <span className="text-lg">awaiting packages</span>
+              <span className="text-md">awaiting packages</span>
             </div>
           )}
 
           <Doughnut data={doughnutStatistics} options={doughnutOptions} />
         </div>
-
-        {user && user.role !== EE_ROLE && user.role !== GE_ROLE && (
-          <div
-            style={{
-              width: "700px",
-              height: "350px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "15px",
-              backgroundColor: "white",
-              position: "relative",
-            }}
-          >
-            {!statistics && <Loading relative />}
-            <Bar data={barStatistics} options={barOptions} />
-          </div>
-        )}
+        
+        <div className="flex relative basis-[98%] justify-center items-center text-center border border-gray-300 bg-white p-3 shadow-md md:basis-[98%] xl:basis-[63%]">
+          {!statistics && <Loading relative />}
+          <Bar data={barStatistics} options={barOptions}/>
+        </div>
       </div>
     </div>
   );
