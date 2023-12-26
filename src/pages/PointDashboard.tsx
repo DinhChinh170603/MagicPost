@@ -101,12 +101,12 @@ export default function PointDashboard() {
               {
                 label: "Sent",
                 data: monthlyStatistics.map((item: any) => item.sent),
-                backgroundColor: "rgba(255, 99, 132, 0.5)",
+                backgroundColor: "rgba(255, 99, 132, 0.7)",
               },
               {
                 label: "Received",
                 data: monthlyStatistics.map((item: any) => item.received),
-                backgroundColor: "rgba(54, 162, 235, 0.5)",
+                backgroundColor: "rgba(54, 162, 235, 0.7)",
               },
             ],
           });
@@ -164,7 +164,7 @@ export default function PointDashboard() {
   return (
     <div className="flex h-full w-full flex-col items-center">
       <div
-        className="mb-4 flex rounded-md bg-btnHover px-5 pr-20 shadow-lg"
+        className="mb-4 flex rounded-md bg-btnHover px-5 shadow-lg justify-between"
         style={{ width: "97%" }}
       >
         <span className="mt-3 text-xl font-bold">Welcome back, {profileUser.fullName}</span>
