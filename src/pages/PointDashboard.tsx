@@ -285,7 +285,7 @@ export default function PointDashboard() {
 
         <div className="relative flex w-full min-h-[400px] basis-[98%] items-center justify-center border border-gray-300 bg-white p-3 text-center shadow-md md:basis-[98%] xl:basis-[63%]">
           {loading && <Loading relative />}
-          <Bar data={barChartData} options={barOptions} />
+          <Bar data={barStatistics} options={barOptions} />
         </div>
       </div>
     </div>
