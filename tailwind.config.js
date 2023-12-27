@@ -11,6 +11,9 @@ export default {
         btnColor: "#3C50E0",
         btnHover: "#B2B7DF",
         bgColor: "#F1F5F9",
+        successBtn: "#9bd1f5",
+        rejectedBtn: "#ffe6ab",
+        failedBtn: "#ffb1c2",
       }
     },
   },

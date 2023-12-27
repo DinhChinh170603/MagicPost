@@ -8,6 +8,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
 import { EE_ROLE } from "../helpers/constants";
+import { Form } from "antd";
 
 export default function IncomingPackage(props: any) {
   const { role } = props;
@@ -76,121 +77,6 @@ export default function IncomingPackage(props: any) {
 
   const hasSelected = selectedRowKeys.length > 0;
 
-  // searchInColumn
-  const handleSearch = (
-    selectedKeys: any[],
-    confirm: () => void,
-    dataIndex: string,
-  ) => {
-    confirm();
-    setSearch({ dataIndex, searchText: selectedKeys[0] });
-
-    // Get index of searched data's list
-    const dataIndexIndex = data.findIndex(
-      (item) => item[dataIndex] === selectedKeys[0],
-    );
-
-    // Check if it is founded
-    if (dataIndexIndex !== -1) {
-      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
-
-      // Update current page
-      setCurrentPage(searchedPage);
-    } else {
-      toast.error(
-        `The searched id ${selectedKeys[0]} is not found in the data.`,
-      );
-    }
-  };
-  const handleResetId = (clearFilters: () => void) => {
-    clearFilters();
-    setSearch({ ...search, searchText: "" });
-  };
-  const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }: {
-      setSelectedKeys: (keys: string[]) => void;
-      selectedKeys: string[];
-      confirm: () => void;
-      clearFilters: () => void;
-      close: () => void;
-    }) => (
-      <div className="p-2">
-        <Input
-          ref={dataIndex === "id" ? idSearchInput : null}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          className="mb-4 block"
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            className="w-[90px]"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleResetId(clearFilters)}
-            size="small"
-            className="w-[90px]"
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: any) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1890ff" : undefined,
-        }}
-      />
-    ),
-    onFilterDropdownOpenChange: (visible: any) => {
-      if (visible) {
-        setTimeout(
-          () => (dataIndex === "id" ? idSearchInput : null)?.select(),
-          100,
-        );
-      }
-    },
-    render: (text: { toString: () => string }) =>
-      search.dataIndex === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[search.searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-
   // Handling operations
   const handleOperation = (apiEndpoint: string, record: any) => {
     setLoading(true);
@@ -237,7 +123,6 @@ export default function IncomingPackage(props: any) {
       title: "Id",
       dataIndex: "id",
       key: "id",
-      ...getColumnSearchProps("id"),
     },
     {
       title: "From",
@@ -315,6 +200,19 @@ export default function IncomingPackage(props: any) {
     },
   ];
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    const results = data.filter((item) =>
+      item.id.toString().includes(searchQuery)
+    );
+  
+    if (results.length !== searchResult.length) {
+      setSearchResult(results);
+    }
+  }, [searchQuery, data, searchResult]);
+
   return (
     <div className="w-full">
       <div className="flex">
@@ -333,15 +231,34 @@ export default function IncomingPackage(props: any) {
           </div>
         </div>
         <div className="w-full rounded-xl bg-white p-3 shadow-lg">
+          <Form className="flex items-center justify-center mt-1">
+          <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
+            <Input
+              placeholder="Package ID"
+              className="px-2 py-1 text-lg"
+              suffix={
+                <div className="rounded-l px-2 py-1">
+                  <SearchOutlined className="transition-all duration-300" />
+                </div>
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            ></Input>
+          </Form.Item>
+        </Form>
+          
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
               scroll={{ x: 800 }}
               className="w-full"
               // rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={searchResult}
               pagination={pagination}
               idSearchInput={idSearchInput}
+              onChange={(pagination) =>
+                setCurrentPage(pagination.current)
+              }
             />
           </SkeletonTable>
         </div>

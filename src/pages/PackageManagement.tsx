@@ -1,4 +1,4 @@
-import { Table, Button, Space, Descriptions, Input } from "antd";
+import { Table, Button, Space, Descriptions, Input, Form } from "antd";
 import PropTypes from "prop-types";
 import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
@@ -861,6 +861,19 @@ export default function PackageManagement(props: any) {
     ),
   }));
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    const results = dataOfAll.filter((item) =>
+      item.id.toString().includes(searchQuery)
+    );
+  
+    if (results.length !== searchResult.length) {
+      setSearchResult(results);
+    }
+  }, [searchQuery, dataOfAll, searchResult]);
+
   return (
     <>
       <div className="flex justify-center pb-4">
@@ -952,6 +965,22 @@ export default function PackageManagement(props: any) {
             </div>
 
             <div className="rounded-xl bg-white p-3 shadow-lg">
+              <Form className="flex items-center justify-center mt-1">
+                <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
+                  <Input
+                    placeholder="Package ID"
+                    className="px-2 py-1 text-lg"
+                    suffix={
+                      <div className="rounded-l px-2 py-1">
+                        <SearchOutlined className="transition-all duration-300" />
+                      </div>
+                    }
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  ></Input>
+                </Form.Item>
+              </Form>
+              
               <SkeletonTable loading={loading} columns={columnsAll}>
                 <Table
                   scroll={{ x: 800 }}
@@ -963,7 +992,7 @@ export default function PackageManagement(props: any) {
                     ),
                     rowExpandable: (record) => record.description !== "",
                   }}
-                  dataSource={dataOfAll}
+                  dataSource={searchResult}
                   pagination={paginationOfAll}
                   idSearchInput={idSearchInputByLeader}
                   onChange={(pagination) =>

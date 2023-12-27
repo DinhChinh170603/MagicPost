@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tooltip } from "antd";
+import { Button, Input, Space, Table, Tooltip, Form } from "antd";
 import download from "downloadjs";
 import moment from "moment";
 import PropTypes from "prop-types";
@@ -345,10 +345,10 @@ export default function PackageProcessing(props: any) {
         const getActionButton = () => {
           if (record.to === "CLIENT") {
             return (
-              <div className="flex">
-                <div onClick={() => processPackage("confirm-receiver", record.id)}>Success</div>
-                <div onClick={() => setModalReasonOpen(true)}>Failed</div>
-                <div onClick={() => setModalReasonOpen(true)}>Rejected</div>
+              <div className="flex space-x-1">
+                <Button className="bg-successBtn rounded-md hover:bg-[#c1e2f7] hover:font-bold" onClick={() => processPackage("confirm-receiver", record.id)}>Success</Button>
+                <Button className="bg-rejectedBtn rounded-md hover:bg-[#fcefcf] hover:font-bold" onClick={() => setModalReasonOpen(true)}>Failed</Button>
+                <Button className="bg-failedBtn rounded-md hover:bg-[#fcd2db] hover:font-bold" onClick={() => setModalReasonOpen(true)}>Rejected</Button>
               </div>
             );
           } else if (role == EE_ROLE) {
@@ -356,18 +356,31 @@ export default function PackageProcessing(props: any) {
               record.status.length > 2 ||
               record.orgPointId === record.desPointId
             ) {
-              return <div onClick={() => processPackage("send-receiver", record.id)}>Send to receiver</div>;
+              return <Button onClick={() => processPackage("send-receiver", record.id)}>Send to receiver</Button>;
             } else {
-              return <div onClick={() => processPackage("send", record.id)}>Forward</div>;
+              return <Button type="primary" onClick={() => processPackage("send", record.id)}>Forward</Button>;
             }
           } else if (role == GE_ROLE) {
-            return <div onClick={() => processPackage("sent", record.id)}>Forward</div>;
+            return <Button type="primary" onClick={() => processPackage("sent", record.id)}>Forward</Button>;
           }
         };
         return <>{getActionButton()}</>;
       },
     },
   ];
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    const results = data.filter((item) =>
+      item.id.toString().includes(searchQuery)
+    );
+  
+    if (results.length !== searchResult.length) {
+      setSearchResult(results);
+    }
+  }, [searchQuery, data, searchResult]);
 
   return (
     <div className="w-full">
@@ -451,13 +464,29 @@ export default function PackageProcessing(props: any) {
           ) : null}
         </div>
         <div className="w-full rounded-xl bg-white p-3 shadow-lg">
+          <Form className="flex items-center justify-center mt-1">
+            <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
+              <Input
+                placeholder="Package ID"
+                className="px-2 py-1 text-lg"
+                suffix={
+                  <div className="rounded-l px-2 py-1">
+                    <SearchOutlined className="transition-all duration-300" />
+                  </div>
+                }
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              ></Input>
+            </Form.Item>
+          </Form>
+
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
               scroll={{ x: 800 }}
               className="w-full"
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={searchResult}
               pagination={pagination}
               idSearchInput={idSearchInput}
               onChange={(pagination) => setCurrentPage(pagination.current)}
