@@ -50,17 +50,20 @@ export default function NewPackage() {
   return (
     <>
       <h1 className="mb-4 ml-3 self-start text-3xl font-bold">New Package</h1>
-      
-      <div className="rounded-xl bg-white p-4 shadow-lg w-[70%] mx-auto">
+
+      <div className="mx-auto w-[70%] rounded-xl bg-white p-4 shadow-lg max-lg:w-[90%]">
         <Form
           form={form}
           onFinish={onFinish}
           layout="vertical"
           className="flex flex-col items-center"
         >
-          <span className="text-center text-2xl font-bold"> Create New Package </span>
-          <hr className="w-[60%] mt-3" style={{borderWidth: 1}} />
-          <div className="flex w-[90%] flex-wrap gap-x-10 p-5 ">
+          <span className="text-center text-2xl font-bold">
+            {" "}
+            Create New Package{" "}
+          </span>
+          <hr className="mt-3 w-[60%]" style={{ borderWidth: 1 }} />
+          <div className="flex w-[90%] flex-wrap gap-x-10 p-5 max-md:px-0 ">
             <Form.Item
               name="senderName"
               label="Sender Name"
@@ -72,7 +75,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input className="drop-shadow"/>
+              <Input className="drop-shadow" />
             </Form.Item>
             <Form.Item
               name="senderContact"
@@ -89,7 +92,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input className="drop-shadow"/>
+              <Input className="drop-shadow" />
             </Form.Item>
             <Form.Item
               name="receiverName"
@@ -102,7 +105,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input className="drop-shadow"/>
+              <Input className="drop-shadow" />
             </Form.Item>
             <Form.Item
               name="receiverContact"
@@ -119,7 +122,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input className="drop-shadow"/>
+              <Input className="drop-shadow" />
             </Form.Item>
             <Form.Item
               name="orgAddress"
@@ -132,7 +135,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input className="drop-shadow"/>
+              <Input className="drop-shadow" />
             </Form.Item>
             <Form.Item
               name="desAddress"
@@ -145,7 +148,7 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input className="drop-shadow"/>
+              <Input className="drop-shadow" />
             </Form.Item>
             <Form.Item
               name="packageType"
@@ -183,13 +186,15 @@ export default function NewPackage() {
                 },
               ]}
             >
-              <Input type="number" className="drop-shadow"/>
+              <Input type="number" className="drop-shadow" />
             </Form.Item>
             <Form.Item
               name="desPointId"
               label="Destination"
               className="w-full sm:w-[100%] lg:w-[45%]"
-              rules={[{ required: true, message: "Please select destination!" }]}
+              rules={[
+                { required: true, message: "Please select destination!" },
+              ]}
             >
               <Select
                 showSearch

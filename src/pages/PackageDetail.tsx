@@ -31,6 +31,8 @@ function PackageDetail() {
       return;
     }
 
+    setCurPackage(null);
+
     service
       .get("/package/" + pathParams.id)
       .then((res) => {
@@ -104,17 +106,19 @@ function PackageDetail() {
           <Form
             form={form}
             onFinish={search}
-            className="flex w-full items-center"
+            className="flex w-full items-center max-lg:justify-between"
           >
-            <img src="/src/assets/minilogo.svg" alt="logo" />
-            <div className="text-3xl font-bold">Magic Post</div>
+            <div className="flex items-center">
+              <img src="/src/assets/minilogo.svg" alt="logo" />
+              <div className="text-3xl font-bold max-md:hidden">Magic Post</div>
+            </div>
             <Form.Item
               name="packageId"
-              className="absolute left-0 right-0 m-auto w-[40%]"
+              className="w-[50%] lg:absolute lg:left-0 lg:right-0 lg:m-auto lg:w-[40%] m-0"
             >
               <Input
                 placeholder="Mã đơn hàng"
-                className="px-3 py-2 text-xl"
+                className="px-3 py-2 text-xl max-md:px-2 max-md:py-1 max-md:text-lg"
                 suffix={
                   <div
                     className="cursor-pointer rounded-lg bg-gray-300 px-2 py-1 hover:text-blue-600"
@@ -180,15 +184,15 @@ function PackageDetail() {
           </Form>
         </div>
         {!curPackage ? (
-          <div className="mt-3 flex w-[80%] justify-evenly gap-5 rounded-lg border border-gray-300 bg-white px-6 py-3 shadow-md">
+          <div className="mt-3 flex w-[80%] justify-evenly gap-5 rounded-lg border border-gray-300 bg-white px-6 py-3 shadow-md max-lg:flex-col">
             <Skeleton active />
             <Skeleton active />
             <Skeleton active />
           </div>
         ) : (
-          <div className="mt-3 flex w-[80%] justify-evenly rounded-lg border border-gray-300 bg-white py-3 shadow-md">
+          <div className="mt-3 flex w-[80%] justify-evenly rounded-lg border border-gray-300 bg-white shadow-md max-lg:flex-col max-md:gap-3 lg:py-3">
             <div className="basis-[30%]">
-              <div className="rounded-lg bg-[#f5f5f5] p-3 font-bold">
+              <div className="border border-gray-200 bg-[#eeeeee] p-3 font-bold lg:rounded-lg">
                 THÔNG TIN ĐƠN HÀNG
               </div>
               <div className="px-3">
@@ -243,7 +247,7 @@ function PackageDetail() {
               </div>
             </div>
             <div className="basis-[30%]">
-              <div className="rounded-lg bg-[#f5f5f5] p-3 font-bold">
+              <div className="border border-gray-200 bg-[#eeeeee] p-3 font-bold lg:rounded-lg">
                 NGƯỜI GỬI
               </div>
               <div className="px-3">
@@ -274,7 +278,7 @@ function PackageDetail() {
               </div>
             </div>
             <div className="basis-[30%]">
-              <div className="rounded-lg bg-[#f5f5f5] p-3 font-bold">
+              <div className="border border-gray-200 bg-[#eeeeee] p-3 font-bold lg:rounded-lg">
                 NGƯỜI NHẬN
               </div>
               <div className="px-3">
@@ -309,7 +313,7 @@ function PackageDetail() {
           </div>
         )}
         <div className="mt-3 text-3xl font-bold">Trạng thái đơn hàng</div>
-        <div className="mt-3 flex items-center justify-start rounded-lg border border-gray-300 bg-white p-10 shadow-md">
+        <div className="mt-3 flex items-center rounded-lg border border-gray-300 bg-white p-10 shadow-md max-lg:w-[95%]">
           {curPackage ? (
             <Timeline
               mode="left"
@@ -324,8 +328,18 @@ function PackageDetail() {
                           : "blue"
                       : "blue",
                   children: (
-                    <div className="flex gap-3">
-                      <span className="font-semibold text-[#3C50E0]">
+                    <div className="flex gap-3 max-md:flex-col max-md:gap-1">
+                      <span
+                        className={
+                          index === curPackage.status.length - 1
+                            ? curPackage.generalState === SUCCESS_STATE
+                              ? "whitespace-nowrap font-semibold text-[#52c41a]"
+                              : item.detail.startsWith(REJECTED_STATUS_PREFIX)
+                                ? "whitespace-nowrap font-semibold text-[#ff4d4f]"
+                                : "whitespace-nowrap font-semibold text-[#3C50E0]"
+                            : "whitespace-nowrap font-semibold text-[#3C50E0]"
+                        }
+                      >
                         {moment(item.timestamp).format("DD/MM - hh:mm")}
                       </span>
                       <span>{item.detail}</span>
@@ -342,7 +356,12 @@ function PackageDetail() {
               pending={curPackage.generalState === IN_PROGRESS_STATE}
             />
           ) : (
-            <Skeleton active />
+            <Skeleton
+              active
+              className="w-[700px] max-lg:w-[100%]"
+              paragraph={{ rows: 5, width: "100%" }}
+              title={false}
+            />
           )}
         </div>
       </div>
