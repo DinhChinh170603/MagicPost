@@ -522,7 +522,7 @@ export default function PackageManagement(props: any) {
       title: "Timestamp",
       dataIndex: "timestamp",
       key: "timestamp",
-      width: "60%",
+      width: "40%",
       render: (text: any, record: any) => (
         <>
           {record.timestamp
@@ -531,6 +531,11 @@ export default function PackageManagement(props: any) {
         </>
       ),
     },
+    {
+      title: "Status",
+      key: "status",
+      width: "20%",
+    }
   ];
 
   const columnsReceived = [
