@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Space, Table, Tooltip } from "antd";
 import download from "downloadjs";
 import moment from "moment";
 import PropTypes from "prop-types";
@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import DeliveryFailureModal from "../components/DeliveryFailureModal";
 import InvoicePrintModal from "../components/InvoicePrintModal";
 import SkeletonTable from "../components/SkeletonTable";
-import { EE_ROLE } from "../helpers/constants";
+import { EE_ROLE, GE_ROLE } from "../helpers/constants";
 import service from "../helpers/service";
 export default function PackageProcessing(props: any) {
   const { role } = props;
@@ -236,6 +236,25 @@ export default function PackageProcessing(props: any) {
       });
   };
 
+  const processPackage = (action: string, id: string) => {
+    setLoading(true);
+    service
+      .patch(roleAPI + `/${action}/` + id)
+      .then((res) => {
+        setLoading(false);
+        if (res.data.status === 200) {
+          toast.success(res.data.message);
+          setData(data.filter((item: any) => item.id !== id));
+        } else {
+          toast.error(res.data.message);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.response.data.message);
+      });
+  };
+
   const handleModalSubmit = () => {
     setModalFinished((prev) => !prev);
     setSelectedRowKeys([]);
@@ -260,16 +279,16 @@ export default function PackageProcessing(props: any) {
     ...(role === EE_ROLE
       ? [
           {
-            title: "Print",
+            title: "",
             key: "print",
             render: (text: any, record: any) => (
-              <div>
+              <Tooltip title="Print Invoice">
                 <FiPrinter
                   size={20}
-                  className="text-btnColor hover:text-btnHover"
+                  className="cursor-pointer text-btnColor hover:text-btnHover"
                   onClick={() => handlePrint(record)}
                 ></FiPrinter>
-              </div>
+              </Tooltip>
             ),
           },
         ]
@@ -320,32 +339,35 @@ export default function PackageProcessing(props: any) {
         record.packageType.indexOf(value) === 0,
     },
     {
-      title: "Next Destination",
-      key: "nextDestination",
-    },
-    {
       title: "Action",
       key: "action",
+      render: (text: any, record: any) => {
+        const getActionButton = () => {
+          if (record.to === "CLIENT") {
+            return (
+              <div className="flex">
+                <div onClick={() => processPackage("confirm-receiver", record.id)}>Success</div>
+                <div onClick={() => setModalReasonOpen(true)}>Failed</div>
+                <div onClick={() => setModalReasonOpen(true)}>Rejected</div>
+              </div>
+            );
+          } else if (role == EE_ROLE) {
+            if (
+              record.status.length > 2 ||
+              record.orgPointId === record.desPointId
+            ) {
+              return <div onClick={() => processPackage("send-receiver", record.id)}>Send to receiver</div>;
+            } else {
+              return <div onClick={() => processPackage("send", record.id)}>Forward</div>;
+            }
+          } else if (role == GE_ROLE) {
+            return <div onClick={() => processPackage("sent", record.id)}>Forward</div>;
+          }
+        };
+        return <>{getActionButton()}</>;
+      },
     },
   ];
-
-  const [downloadLoading, setDownloadLoading] = useState(false);
-
-  const downloadReport = () => {
-    setDownloadLoading(true);
-    service
-      .get(roleAPI + "/report/" + selectedRowKeys[0], {
-        responseType: "arraybuffer",
-      })
-      .then((res) => {
-        download(res.data, "report.pdf", res.headers["content-type"]);
-        setDownloadLoading(false);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-        setLoading(false);
-      });
-  };
 
   return (
     <div className="w-full">
@@ -398,14 +420,6 @@ export default function PackageProcessing(props: any) {
                 loading={loading || modalLoading}
               >
                 Delivery Failure
-              </Button>
-              <Button
-                type="primary"
-                onClick={() => downloadReport()}
-                // disabled={!hasSelected}
-                loading={loading || downloadLoading}
-              >
-                {downloadLoading ? "Downloading" : "Export Invoice"}
               </Button>
               <DeliveryFailureModal
                 onSubmit={handleModalSubmit}
