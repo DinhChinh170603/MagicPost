@@ -1,14 +1,12 @@
-import { Table, Button, Space, Descriptions, Input } from "antd";
+import { Table, Button, Space, Descriptions, Input, Form } from "antd";
 import PropTypes from "prop-types";
 import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
 import axios from "axios";
-import { SearchOutlined } from "@ant-design/icons";
-import Highlighter from "react-highlight-words";
-import { EE_ROLE } from "../helpers/constants";
 import { roleValueMap } from "../helpers/helpers";
+import { SearchOutlined } from "@ant-design/icons";
 
 export default function DeliveryStatus(props: any) {
   const { role } = props;
@@ -16,19 +14,7 @@ export default function DeliveryStatus(props: any) {
   const [succeedPackages, setSucceedPackages] = useState([]);
   const [rejectedPackages, setRejectedPackages] = useState([]);
 
-  const [searchSucceed, setSearchSucceed] = useState({
-    dataIndex: "",
-    searchText: "",
-  });
-  const idSearchInputSucceed = useRef(null);
-  const [currentPageOfSucceed, setCurrentPageOfSucceed] = useState(1);
-
-  const [searchRejected, setSearchRejected] = useState({
-    dataIndex: "",
-    searchText: "",
-  });
-  const idSearchInputRejected = useRef(null);
-  const [currentPageOfRejected, setCurrentPageOfRejected] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [loading, setLoading] = useState(false);
 
@@ -65,298 +51,69 @@ export default function DeliveryStatus(props: any) {
           setLoading(false);
           toast.error(err.response.data.message);
         });
-      setCurrentPageOfSucceed(1);
-      setCurrentPageOfRejected(1);
+      setCurrentPage(1);
     }
   }, [role]);
 
-  // Search succeedPackages
-  const handleSearchSucceed = (
-    selectedKeys: any[],
-    confirm: () => void,
-    dataIndex: string,
-  ) => {
-    confirm();
-    setSearchSucceed({ dataIndex, searchText: selectedKeys[0] });
-
-    // Get index of searched data's list
-    const dataIndexIndex = succeedPackages.findIndex(
-      (item) => item[dataIndex] === selectedKeys[0],
-    );
-
-    // Check if it is founded
-    if (dataIndexIndex !== -1) {
-      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
-
-      // Update current page
-      setCurrentPageOfSucceed(searchedPage);
-    }
-  };
-  const handleResetIdSucceed = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchSucceed({ ...searchSucceed, searchText: "" });
-  };
-  const getColumnSearchPropsSucceed = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }: {
-      setSelectedKeys: (keys: string[]) => void;
-      selectedKeys: string[];
-      confirm: () => void;
-      clearFilters: () => void;
-      close: () => void;
-    }) => (
-      <div className="p-2">
-        <Input
-          ref={dataIndex === "id" ? idSearchInputSucceed : null}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearchSucceed(selectedKeys, confirm, dataIndex)
-          }
-          className="mb-4 block"
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() =>
-              handleSearchSucceed(selectedKeys, confirm, dataIndex)
-            }
-            icon={<SearchOutlined />}
-            size="small"
-            className="w-[90px]"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleResetIdSucceed(clearFilters)}
-            size="small"
-            className="w-[90px]"
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: any) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1890ff" : undefined,
-        }}
-      />
-    ),
-    onFilterDropdownOpenChange: (visible: any) => {
-      if (visible) {
-        setTimeout(
-          () => (dataIndex === "id" ? idSearchInputSucceed : null)?.select(),
-          100,
-        );
-      }
-    },
-    render: (text: { toString: () => string }) =>
-      searchSucceed.dataIndex === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[searchSucceed.searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-
-  // Search rejectedPackages
-  const handleSearchRejected = (
-    selectedKeys: any[],
-    confirm: () => void,
-    dataIndex: string,
-  ) => {
-    confirm();
-    setSearchRejected({ dataIndex, searchText: selectedKeys[0] });
-
-    // Get index of searched data's list
-    const dataIndexIndex = rejectedPackages.findIndex(
-      (item) => item[dataIndex] === selectedKeys[0],
-    );
-
-    // Check if it is founded
-    if (dataIndexIndex !== -1) {
-      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
-
-      // Update current page
-      setCurrentPageOfRejected(searchedPage);
-    }
-  };
-  const handleResetIdRejected = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchRejected({ ...searchRejected, searchText: "" });
-  };
-  const getColumnSearchPropsRejected = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }: {
-      setSelectedKeys: (keys: string[]) => void;
-      selectedKeys: string[];
-      confirm: () => void;
-      clearFilters: () => void;
-      close: () => void;
-    }) => (
-      <div className="p-2">
-        <Input
-          ref={dataIndex === "id" ? idSearchInputRejected : null}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearchRejected(selectedKeys, confirm, dataIndex)
-          }
-          className="mb-4 block"
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() =>
-              handleSearchRejected(selectedKeys, confirm, dataIndex)
-            }
-            icon={<SearchOutlined />}
-            size="small"
-            className="w-[90px]"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleResetIdRejected(clearFilters)}
-            size="small"
-            className="w-[90px]"
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: any) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1890ff" : undefined,
-        }}
-      />
-    ),
-    onFilterDropdownOpenChange: (visible: any) => {
-      if (visible) {
-        setTimeout(
-          () => (dataIndex === "id" ? idSearchInputRejected : null)?.select(),
-          100,
-        );
-      }
-    },
-    render: (text: { toString: () => string }) =>
-      searchRejected.dataIndex === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[searchRejected.searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-
-  const paginationOfSucceed = {
+  const pagination = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPageOfSucceed,
+    current: currentPage,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
-  const paginationOfRejected = {
-    hideOnSinglePage: true,
-    pageSize: 5,
-    current: currentPageOfRejected,
-    showTotal: (total: number, range: number[]) =>
-      `${range[0]}-${range[1]} of ${total} items`,
-  };
-
-  const columnsSucceed = [
+  const columns = [
     {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
-      width: "25%",
-      ...getColumnSearchPropsSucceed("id"),
+      width: "20%",
     },
     {
       title: "Receiver Name",
       dataIndex: "receiverName",
       key: "receiverName",
-      width: "25%",
+      width: "20%",
     },
     {
-      title: "Last Status",
+      title: "State",
+      key: "state",
+      width: "10%",
+      filters: [
+        {
+          text: "Success",
+          value: "success",
+        },
+        {
+          text: "Rejected",
+          value: "rejected",
+        },
+      ],
+      onFilter: (value: any, record: any) =>
+        record.source.indexOf(value) === 0,
+      render: (text:any, record:any) => (
+        <>
+          {(record.source === "rejected") ? (
+            <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
+              Rejected
+            </div>
+          ):(
+            <div className="rounded-lg bg-[#9bd1f5] px-2 py-1 text-center font-bold">
+              Success
+            </div>
+          )}
+        </>
+      )
+    },
+    {
+      title: "Detail",
       dataIndex: "lastStatus",
-      key: "lastStatus",
+      key: "detail",
       width: "50%",
-    },
-  ];
-
-  const columnsRejected = [
-    {
-      title: "Package ID",
-      dataIndex: "id",
-      key: "id",
-      width: "25%",
-      ...getColumnSearchPropsRejected("id"),
-    },
-    {
-      title: "Receiver Name",
-      dataIndex: "receiverName",
-      key: "receiverName",
-      width: "25%",
-    },
-    {
-      title: "Reason",
-      dataIndex: "reason",
-      key: "reason",
-      width: "50%",
+      render: (text:any, record:any) => {
+        return text || record.reason;
+      },
     },
   ];
 
@@ -488,6 +245,7 @@ export default function DeliveryStatus(props: any) {
   const dataSucceed = succeedPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
+    timestamp: pkg.timestamp,
     receiverName: pkg.receiverName,
     lastStatus: pkg.status[pkg.status.length - 1]
       ? pkg.status[pkg.status.length - 1].detail
@@ -495,11 +253,13 @@ export default function DeliveryStatus(props: any) {
     description: (
       <Descriptions size="small" bordered items={packageDetailSucceed(pkg)} />
     ),
+    source: 'success',
   }));
 
   const dataRejected = rejectedPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
+    timestamp: pkg.timestamp,
     receiverName: pkg.receiverName,
     reason: pkg.rejectDetails[pkg.rejectDetails.length - 1]
       ? pkg.rejectDetails[pkg.rejectDetails.length - 1].reason
@@ -507,63 +267,98 @@ export default function DeliveryStatus(props: any) {
     description: (
       <Descriptions size="small" bordered items={packageDetailRejected(pkg)} />
     ),
+    source: 'rejected',
   }));
+
+  const statusData = [...dataSucceed, ...dataRejected].map((item, index) => ({
+    ...item,
+    key: index,
+  }));
+  
+  statusData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    const results = statusData.filter((item) =>
+      item.id.toString().includes(searchQuery)
+    );
+  
+    if (results.length !== searchResult.length) {
+      setSearchResult(results);
+    }
+  }, [searchQuery, statusData, searchResult]);
 
   return (
     <>
-      <div className="flex justify-center pb-4">
-          <div className="relative flex flex-grow gap-4">
-            <div className="w-1/2">
-              <div className="flex w-full flex-col gap-4">
-                <div className="text-[22px] font-bold">
-                  Successful Deliveries
-                </div>
-                <SkeletonTable loading={loading} columns={columnsSucceed}>
-                  <Table
-                    scroll={{x: 800}}
-                    className="w-full"
-                    columns={columnsSucceed}
-                    expandable={{
-                      expandedRowRender: (record) => (
-                        <p style={{ margin: 0 }}>{record.description}</p>
-                      ),
-                      rowExpandable: (record) => record.description !== "",
-                    }}
-                    dataSource={dataSucceed}
-                    pagination={paginationOfSucceed}
-                    idSearchInput={idSearchInputSucceed}
-                    onChange={(pagination) =>
-                      setCurrentPageOfSucceed(pagination.current)
-                    }
-                  />
-                </SkeletonTable>
-              </div>
+      <div className="mb-4 ml-3 text-3xl font-bold">Delivery Status</div>
+      
+      <div className="mb-5 flex w-full flex-wrap justify-evenly">
+        <div className="flex basis-[98%] mb-2 items-center border border-gray-300 bg-white p-3 px-5 shadow-md xl:basis-[47%]">
+          <div className="flex flex-col">
+            <div className="text-3xl font-bold">
+              {dataSucceed.length}
             </div>
-            <div className="flex-1">
-              <div className="flex w-full flex-col gap-4">
-                <div className="text-[22px] font-bold">Failed Deliveries</div>
-                <SkeletonTable loading={loading} columns={columnsRejected}>
-                  <Table
-                    scroll={{x: 800}}
-                    className="w-full"
-                    columns={columnsRejected}
-                    expandable={{
-                      expandedRowRender: (record) => (
-                        <p style={{ margin: 0 }}>{record.description}</p>
-                      ),
-                      rowExpandable: (record) => record.description !== "",
-                    }}
-                    dataSource={dataRejected}
-                    pagination={paginationOfRejected}
-                    idSearchInput={idSearchInputRejected}
-                    onChange={(pagination) =>
-                      setCurrentPageOfRejected(pagination.current)
-                    }
-                  />
-                </SkeletonTable>
-              </div>
-            </div>
+            <div className="text-base">Successful Packages</div>
           </div>
+          <img
+            className="ml-auto py-1"
+            width={80}
+            height={80}
+            src="/src/assets/successful.svg"
+          />
+        </div>
+        <div className="flex basis-[98%] mb-2 items-center border border-gray-300 bg-white p-3 px-5 shadow-md xl:basis-[47%]">
+          <div className="flex flex-col">
+            <div className="text-3xl font-bold">
+              {dataRejected.length}
+            </div>
+            <div className="text-base">Rejected Packages</div>
+          </div>
+          <img
+            className="ml-auto py-1"
+            width={80}
+            height={80}
+            src="/src/assets/rejected.svg"
+          />
+        </div>
+      </div>
+      
+      <div className="rounded-xl w-[97] bg-white p-3 shadow-lg">
+        <Form className="flex items-center justify-center mt-1">
+          <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
+            <Input
+              placeholder="Package ID"
+              className="px-2 py-1 text-lg"
+              suffix={
+                <div className="rounded-l px-2 py-1">
+                  <SearchOutlined className="transition-all duration-300" />
+                </div>
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            ></Input>
+          </Form.Item>
+        </Form>
+        <SkeletonTable loading={loading} columns={columns}>
+          <Table
+            scroll={{x: 800}}
+            className="w-full"
+            columns={columns}
+            expandable={{
+              expandedRowRender: (record) => (
+                <p style={{ margin: 0 }}>{record.description}</p>
+              ),
+              rowExpandable: (record) => record.description !== "",
+            }}
+            dataSource={searchResult}
+            pagination={pagination}
+            onChange={(pagination) =>
+              setCurrentPage(pagination.current)
+            }
+          />
+        </SkeletonTable>  
       </div>
     </>
   );

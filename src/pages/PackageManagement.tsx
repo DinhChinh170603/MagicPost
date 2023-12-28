@@ -660,8 +660,8 @@ export default function PackageManagement(props: any) {
     <>
       <div className="flex justify-center pb-4">
         {role !== LEADER_ROLE && (
-          <div>
-            <b className="flex items-center justify-center text-2xl mb-5">Packages History</b>
+          <div className="w-full">
+            <div className="mb-4 ml-3 text-3xl font-bold">Packages History</div>
             <div className="rounded-xl w-[97] bg-white p-3 shadow-lg min-h-[78%]">
               <Form className="flex items-center justify-center mt-1">
                 <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
