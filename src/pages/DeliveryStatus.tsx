@@ -350,13 +350,13 @@ export default function DeliveryStatus(props: any) {
       title: "Receiver Name",
       dataIndex: "receiverName",
       key: "receiverName",
-      width: "28%",
+      width: "25%",
     },
     {
       title: "Reason",
       dataIndex: "reason",
       key: "reason",
-      width: "47%",
+      width: "50%",
     },
   ];
 
@@ -511,8 +511,7 @@ export default function DeliveryStatus(props: any) {
 
   return (
     <>
-      <div className="flex h-full w-full">
-        <div className="mx-auto mt-8 flex w-[98%]">
+      <div className="flex justify-center pb-4">
           <div className="relative flex flex-grow gap-4">
             <div className="w-1/2">
               <div className="flex w-full flex-col gap-4">
@@ -521,7 +520,7 @@ export default function DeliveryStatus(props: any) {
                 </div>
                 <SkeletonTable loading={loading} columns={columnsSucceed}>
                   <Table
-                    scroll={{x: 1000}}
+                    scroll={{x: 800}}
                     className="w-full"
                     columns={columnsSucceed}
                     expandable={{
@@ -545,7 +544,7 @@ export default function DeliveryStatus(props: any) {
                 <div className="text-[22px] font-bold">Failed Deliveries</div>
                 <SkeletonTable loading={loading} columns={columnsRejected}>
                   <Table
-                    scroll={{x: 1000}}
+                    scroll={{x: 800}}
                     className="w-full"
                     columns={columnsRejected}
                     expandable={{
@@ -565,7 +564,6 @@ export default function DeliveryStatus(props: any) {
               </div>
             </div>
           </div>
-        </div>
       </div>
     </>
   );
