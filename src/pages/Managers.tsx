@@ -1,6 +1,7 @@
 import { UserAddOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Table, Tooltip } from "antd";
 import axios from "axios";
+import moment from "moment";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -256,9 +257,10 @@ function Managers(props: any) {
           startWorkingDate: string | number | Date;
         },
       ) => {
-        const dateA = new Date(a.startWorkingDate);
-        const dateB = new Date(b.startWorkingDate);
-        return dateA - dateB;
+        return (
+          moment(a.startWorkingDate).valueOf() -
+          moment(b.startWorkingDate).valueOf()
+        );
       },
       render: (startWorkingDate: any) => formatDate(startWorkingDate),
       width: "15%",
@@ -357,9 +359,10 @@ function Managers(props: any) {
           startWorkingDate: string | number | Date;
         },
       ) => {
-        const dateA = new Date(a.startWorkingDate);
-        const dateB = new Date(b.startWorkingDate);
-        return dateA - dateB;
+        return (
+          moment(a.startWorkingDate).valueOf() -
+          moment(b.startWorkingDate).valueOf()
+        );
       },
       render: (startWorkingDate: any) => formatDate(startWorkingDate),
       width: "15%",

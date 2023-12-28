@@ -12,7 +12,6 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import AuthContext from "./contexts/AuthContext";
 import { LEADER_ROLE } from "./helpers/constants";
-import ChangePassword from "./pages/ChangePassword";
 import DeliveryStatus from "./pages/DeliveryStatus";
 import ExchangePointDetail from "./pages/ExchangePointDetail";
 import ExchangePoints from "./pages/ExchangePoints";
@@ -169,10 +168,6 @@ function App() {
                   )}
                 ></Route>
                 <Route
-                  path="/change-password"
-                  element={<ChangePassword />}
-                ></Route>
-                <Route
                   path="/package-detail"
                   element={<PackageLookup />}
                 ></Route>
@@ -181,7 +176,7 @@ function App() {
                   element={<PackageDetail />}
                 ></Route>
                 <Route path="/invoice" element={<InvoicePrintModal />}></Route>
-                <Route path="*" element={getPage(<NotFound />)}></Route>
+                <Route path="*" element={<NotFound />}></Route>
               </Routes>
             </BrowserRouter>
             <ToastContainer />

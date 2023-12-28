@@ -1,3 +1,4 @@
+import { Select } from "antd";
 import {
   ArcElement,
   CategoryScale,
@@ -10,14 +11,14 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { Select } from "antd";
 import React, { useEffect, useState } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
+const { Option } = Select;
 
 ChartJS.register(
   CategoryScale,
@@ -350,7 +351,7 @@ export default function LeaderDashboard() {
               />
             </div>
           </div>
-          <div className="relative flex w-full basis-[70%] items-center justify-center border border-gray-300 bg-white p-3 text-center shadow-md min-h-[400px]">
+          <div className="relative flex min-h-[400px] w-full basis-[70%] items-center justify-center border border-gray-300 bg-white p-3 text-center shadow-md">
             {packagesStatisticsLoading && <Loading relative />}
             <Line data={packagesStatistics} options={options} />
           </div>

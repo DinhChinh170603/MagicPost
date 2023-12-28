@@ -1,3 +1,4 @@
+import { LinkOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +8,6 @@ import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-import { PlusCircleOutlined, LinkOutlined } from "@ant-design/icons";
 
 const pagination = {
   hideOnSinglePage: false,

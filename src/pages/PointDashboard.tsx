@@ -1,3 +1,4 @@
+import { Select } from "antd";
 import {
   BarElement,
   CategoryScale,
@@ -8,7 +9,6 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { Select } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { toast } from "react-toastify";
