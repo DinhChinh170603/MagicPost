@@ -1,3 +1,6 @@
+import { SearchOutlined } from "@ant-design/icons";
+import { Descriptions, DescriptionsProps, Form, Input, Table } from "antd";
+import axios from "axios";
 import {
   BarElement,
   CategoryScale,
@@ -8,23 +11,13 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import {
-  Table,
-  Descriptions,
-  DescriptionsProps,
-  Form,
-  Input,
-} from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import { useEffect, useState, useRef } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
-import axios from "axios";
-import { useLocation } from "react-router-dom";
-import Loading from "../helpers/Loading";
-import moment from "moment";
-import { Bar } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -43,8 +36,6 @@ export default function ExchangePointDetail() {
   const [sentPackages, setSentPackages] = useState([]);
   const [receivedPackages, setReceivedPackages] = useState([]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -56,12 +47,12 @@ export default function ExchangePointDetail() {
       ])
       .then(
         axios.spread((res1, res2) => {
-          const newData1 = res1.data.results.map((item: { id: any; }) => ({
+          const newData1 = res1.data.results.map((item: { id: any }) => ({
             ...item,
             key: item.id,
           }));
           setSentPackages(newData1);
-          const newData2 = res2.data.results.map((item: { id: any; }) => ({
+          const newData2 = res2.data.results.map((item: { id: any }) => ({
             ...item,
             key: item.id,
           }));
@@ -77,7 +68,6 @@ export default function ExchangePointDetail() {
         setLoading(false);
         toast.error(err.response.data.message);
       });
-    setCurrentPage(1);
   }, []);
 
   const exchangePointDetail: DescriptionsProps["items"] = [
@@ -110,7 +100,6 @@ export default function ExchangePointDetail() {
   const pagination = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPage,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
@@ -155,23 +144,22 @@ export default function ExchangePointDetail() {
           value: "received",
         },
       ],
-      onFilter: (value: any, record: any) =>
-        record.source.indexOf(value) === 0,
-        
+      onFilter: (value: any, record: any) => record.source.indexOf(value) === 0,
+
       render: (text: any, record: any) => (
         <>
-          {(record.source === "sent") ? (
+          {record.source === "sent" ? (
             <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
               Sent
             </div>
-          ):(
+          ) : (
             <div className="rounded-lg bg-[#9bd1f5] px-2 py-1 text-center font-bold">
               Received
             </div>
           )}
         </>
-      )
-    }
+      ),
+    },
   ];
 
   type PackageDetail = {
@@ -291,7 +279,7 @@ export default function ExchangePointDetail() {
     description: (
       <Descriptions size="small" bordered items={packageDetailSent(pkg)} />
     ),
-    source: 'sent',
+    source: "sent",
   }));
 
   const dataReceived = receivedPackages.map((pkg: any) => ({
@@ -302,41 +290,42 @@ export default function ExchangePointDetail() {
     description: (
       <Descriptions size="small" bordered items={packageDetailReceived(pkg)} />
     ),
-    source: 'received',
+    source: "received",
   }));
 
   const historyData = [...dataSent, ...dataReceived].map((item, index) => ({
     ...item,
     key: index,
   }));
-  
-  historyData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  historyData.sort(
+    (a, b) => moment(b.timestamp).valueOf() - moment(a.timestamp).valueOf(),
+  );
 
   //Search
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState<any>([]);
 
   useEffect(() => {
     const results = historyData.filter((item) =>
-      item.id.toString().includes(searchQuery)
+      item.id.toString().includes(searchQuery),
     );
-  
+
     if (results.length !== searchResult.length) {
       setSearchResult(results);
     }
-  }, [searchQuery, historyData, searchResult]);
-  
+  }, [searchQuery, historyData]);
 
   //chart
   const extractMonthLabels = () => {
     const currentDate = new Date();
     const labels = [];
-  
+
     for (let i = 3; i >= 0; i--) {
       const monthDate = new Date(currentDate);
-      
+
       monthDate.setMonth(currentDate.getMonth() - i);
-  
+
       const label = `${monthDate
         .toLocaleString("en-US", {
           month: "long",
@@ -344,29 +333,29 @@ export default function ExchangePointDetail() {
         .slice(0, 3)} ${monthDate.getFullYear()}`;
       labels.push(label);
     }
-  
+
     return labels;
   };
 
   const labels = extractMonthLabels();
 
-  const countPackagesByMonth = (data) => {
-    const packagesByMonth = {};
-  
-    data.forEach((item) => {
+  const countPackagesByMonth = (data: any) => {
+    const packagesByMonth: any = {};
+
+    data.forEach((item: any) => {
       const timestampDate = new Date(item.timestamp);
       const monthYear = `${timestampDate
         .toLocaleString("en-US", {
           month: "long",
         })
         .slice(0, 3)} ${timestampDate.getFullYear()}`;
-  
+
       if (!packagesByMonth[monthYear]) {
         packagesByMonth[monthYear] = 0;
       }
       packagesByMonth[monthYear]++;
     });
-  
+
     return packagesByMonth;
   };
 
@@ -377,14 +366,14 @@ export default function ExchangePointDetail() {
     labels: labels,
     datasets: [
       {
-        label: 'Sent',
+        label: "Sent",
         data: countSent,
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
       {
-        label: 'Received',
+        label: "Received",
         data: countReceived,
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
   };
@@ -407,91 +396,85 @@ export default function ExchangePointDetail() {
 
   return (
     <>
-    <b className="text-2xl flex items-center justify-center mb-5"> ExchangePoint Detail</b>
-    <div className="rounded-xl w-[97] bg-white p-3 shadow-lg mb-10">
-      <Descriptions
-        bordered
-        items={exchangePointDetail}
-      />
-    </div>
+      <b className="mb-5 flex items-center justify-center text-2xl">
+        {" "}
+        ExchangePoint Detail
+      </b>
+      <div className="mb-10 w-[97] rounded-xl bg-white p-3 shadow-lg">
+        <Descriptions bordered items={exchangePointDetail} />
+      </div>
 
-    <b className="flex items-center justify-center text-2xl mb-5">Overview</b>
-    <div className="mb-4 flex w-full flex-wrap justify-evenly gap-3 md:gap-0">
-      
-      <div className="flex basis-[98%] flex-col space-y-3 md:basis-[98%] xl:basis-[35%]">
-        <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
-          <div className="flex flex-col">
-            <div className="text-2xl font-bold">
-              {dataSent.length}
+      <b className="mb-5 flex items-center justify-center text-2xl">Overview</b>
+      <div className="mb-4 flex w-full flex-wrap justify-evenly gap-3 md:gap-0">
+        <div className="flex basis-[98%] flex-col space-y-3 md:basis-[98%] xl:basis-[35%]">
+          <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
+            <div className="flex flex-col">
+              <div className="text-2xl font-bold">{dataSent.length}</div>
+              <div className="text-base">Sent Records</div>
             </div>
-            <div className="text-base">Sent Records</div>
+            <img
+              className="ml-auto"
+              width={70}
+              height={70}
+              src="/src/assets/inprogress.svg"
+            />
           </div>
-          <img
-            className="ml-auto"
-            width={70}
-            height={70}
-            src="/src/assets/inprogress.svg"
-          />
+
+          <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
+            <div className="flex flex-col">
+              <div className="text-2xl font-bold">{dataReceived.length}</div>
+              <div className="text-base">Received Records</div>
+            </div>
+            <img
+              className="ml-auto"
+              width={70}
+              height={70}
+              src="/src/assets/received.svg"
+            />
+          </div>
         </div>
 
-        <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
-          <div className="flex flex-col">
-            <div className="text-2xl font-bold">
-              {dataReceived.length}
-            </div>
-            <div className="text-base">Received Records</div>
-          </div>
-          <img
-            className="ml-auto"
-            width={70}
-            height={70}
-            src="/src/assets/received.svg"
-          />
+        <div className="flex min-h-[300px] basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[60%]">
+          <Bar data={barChartData} options={barOptions} />
         </div>
       </div>
-      
-      <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[60%]">
-        <Bar data={barChartData} options={barOptions}/>
-      </div>
-    </div>
 
-    <b className="flex items-center justify-center text-2xl mb-5">Packages History</b>
-    <div className="rounded-xl w-[97] bg-white p-3 shadow-lg min-h-[78%]">
-      <Form className="flex items-center justify-center mt-1">
-        <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
-          <Input
-            placeholder="Package ID"
-            className="px-2 py-1 text-lg"
-            suffix={
-              <div className="rounded-l px-2 py-1">
-                <SearchOutlined className="transition-all duration-300" />
-              </div>
-            }
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          ></Input>
-        </Form.Item>
-      </Form>
-      
-      <SkeletonTable loading={loading} columns={columns}>
-        <Table
-          scroll={{ x: 800 }}
-          className="w-full"
-          columns={columns}
-          expandable={{
-            expandedRowRender: (record) => (
-              <p style={{ margin: 0 }}>{record.description}</p>
-            ),
-            rowExpandable: (record) => record.description !== "",
-          }}
-          dataSource={searchResult}
-          pagination={pagination}
-          onChange={(pagination) =>
-            setCurrentPage(pagination.current)
-          }
-        />
-      </SkeletonTable>
-    </div>
+      <b className="mb-5 flex items-center justify-center text-2xl">
+        Packages History
+      </b>
+      <div className="min-h-[78%] w-[97] rounded-xl bg-white p-3 shadow-lg">
+        <Form className="mt-1 flex items-center justify-center">
+          <Form.Item className="mx-auto basis-[90%] md:basis-[60%] xl:basis-[40%]">
+            <Input
+              placeholder="Package ID"
+              className="px-2 py-1 text-lg"
+              suffix={
+                <div className="rounded-l px-2 py-1">
+                  <SearchOutlined className="transition-all duration-300" />
+                </div>
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            ></Input>
+          </Form.Item>
+        </Form>
+
+        <SkeletonTable loading={loading} columns={columns}>
+          <Table
+            scroll={{ x: 800 }}
+            className="w-full"
+            columns={columns}
+            expandable={{
+              expandedRowRender: (record) => (
+                <p style={{ margin: 0 }}>{record.description}</p>
+              ),
+              rowExpandable: (record) => record.description !== "",
+            }}
+            dataSource={searchResult}
+            pagination={pagination}
+          />
+        </SkeletonTable>
+      </div>
     </>
   );
 }

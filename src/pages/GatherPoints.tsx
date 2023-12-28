@@ -1,3 +1,4 @@
+import { LinkOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +8,6 @@ import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
-import { PlusCircleOutlined, LinkOutlined } from "@ant-design/icons";
 
 const pagination = {
   hideOnSinglePage: false,
@@ -143,8 +143,8 @@ export default function GatherPoints() {
   };
   return (
     <div className="pb-4">
-      <div className="flex">
-        <div className="mb-4 ml-3 text-3xl font-bold">Gather points</div>
+      <div className="mb-4 flex max-md:flex-col max-md:gap-4">
+        <div className=" ml-3 text-3xl font-bold">Gather points</div>
         <div className="ml-auto mr-3 flex gap-3">
           <Button
             onClick={() => setModalLinkOpen(true)}

@@ -1,15 +1,15 @@
+import { FileSearchOutlined } from "@ant-design/icons";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { IconButton } from "@mui/material";
-import { Avatar, Dropdown, MenuProps } from "antd";
+import { Avatar, Dropdown, MenuProps, Tooltip } from "antd";
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import AuthContext from "../contexts/AuthContext";
 import Loading from "../helpers/Loading";
 import service from "../helpers/service";
-import AuthContext from "../contexts/AuthContext";
 
 export default function Topbar(props: any) {
   const navigate = useNavigate();
@@ -79,10 +79,12 @@ export default function Topbar(props: any) {
           </div>
         )}
         <div className="relative ml-auto flex items-center gap-8">
-          <NotificationsNoneIcon
-            className="cursor-pointer"
-            sx={{ color: "black", fontSize: "2rem" }}
-          />
+          <Tooltip title="Lookup package">
+            <FileSearchOutlined
+              className="cursor-pointer text-[30px] text-btnColor transition-all duration-100 hover:text-btnHover"
+              onClick={() => window.open("/package-detail", "_blank")}
+            />
+          </Tooltip>
           <div className="relative">
             <Dropdown
               menu={{ items: userMenuItems }}

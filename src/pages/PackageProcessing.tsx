@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Table, Tooltip } from "antd";
+import { Button, Input, Table, Tooltip } from "antd";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import Loading from "../helpers/Loading";
 import { EE_ROLE, GE_ROLE } from "../helpers/constants";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
+import BulkActionModal from "../components/BulkActionModal";
 export default function PackageProcessing(props: any) {
   const { role } = props;
   const [roleAPI, setRoleAPI] = useState("");
@@ -21,12 +22,17 @@ export default function PackageProcessing(props: any) {
   const [data, setData] = useState<any>([]);
 
   const [modalReasonOpen, setModalReasonOpen] = useState(false);
+  const [actionModalOpen, setActionModalOpen] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
   const [processLoading, setProcessLoading] = useState(false);
 
   const [rejectedId, setRejectedId] = useState("");
+
+  const [forwardablePackages, setForwardablePackages] = useState<any>([]);
+  const [sendablePackagesToReceiver, setSendablePackagesToReceiver] =
+    useState<any>([]);
 
   useEffect(() => {
     loadData();
@@ -49,10 +55,31 @@ export default function PackageProcessing(props: any) {
             setLoading(false);
             return;
           }
-          const newData = res.data.results.map((item: { id: any }) => ({
-            ...item,
-            key: item.id,
-          }));
+          setSendablePackagesToReceiver([]);
+          setForwardablePackages([]);
+          const newData = res.data.results.map((item: any) => {
+            if (item.to === "Client") {
+              /* empty */
+            } else if (role == EE_ROLE) {
+              if (
+                item.status.length > 2 ||
+                item.orgPointId === item.desPointId
+              ) {
+                setSendablePackagesToReceiver((prev: any) => [
+                  ...prev,
+                  item.id,
+                ]);
+              } else {
+                setForwardablePackages((prev: any) => [...prev, item.id]);
+              }
+            } else if (role == GE_ROLE) {
+              setForwardablePackages((prev: any) => [...prev, item.id]);
+            }
+            return {
+              ...item,
+              key: item.id,
+            };
+          });
           setData(newData);
           setLoading(false);
         })
@@ -252,7 +279,7 @@ export default function PackageProcessing(props: any) {
     if (results.length !== searchResult.length) {
       setSearchResult(results);
     }
-  }, [searchQuery, data, searchResult]);
+  }, [searchQuery, data]);
 
   return (
     <div className="w-full">
@@ -268,22 +295,22 @@ export default function PackageProcessing(props: any) {
 
       <div className="flex h-full w-full flex-col items-center justify-center gap-3">
         <div className="w-full rounded-xl bg-white p-3 shadow-lg">
-          <Form className="mt-1 flex items-center justify-center">
-            <Form.Item className="mx-auto basis-[90%] md:basis-[60%] xl:basis-[40%]">
-              <Input
-                placeholder="Package ID"
-                className="px-2 py-1 text-lg"
-                suffix={
-                  <div className="rounded-l px-2 py-1">
-                    <SearchOutlined className="transition-all duration-300" />
-                  </div>
-                }
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              ></Input>
-            </Form.Item>
-          </Form>
-
+          <div className="mb-4 flex w-full items-center justify-between gap-3 rounded-lg bg-white">
+            <Input
+              placeholder="Package ID"
+              className="w-[30%] px-2 py-1"
+              suffix={
+                <div className="rounded-l px-2 py-1">
+                  <SearchOutlined className="transition-all duration-300" />
+                </div>
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button type="primary" onClick={() => setActionModalOpen(true)} loading={loading}>
+              Bulk Action
+            </Button>
+          </div>
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
               scroll={{ x: 800 }}
@@ -301,6 +328,14 @@ export default function PackageProcessing(props: any) {
         setModalOpen={setModalReasonOpen}
         packageId={rejectedId}
         onRejectSuccess={onActionSuccess}
+      />
+      <BulkActionModal
+        open={actionModalOpen}
+        setOpen={setActionModalOpen}
+        forwardable={forwardablePackages}
+        sendableToReceiver={sendablePackagesToReceiver}
+        onActionSuccess={onActionSuccess}
+        roleAPI={roleAPI}
       />
     </div>
   );

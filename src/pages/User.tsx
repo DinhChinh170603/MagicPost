@@ -25,8 +25,8 @@ import {
   GM_ROLE,
   LEADER_ROLE,
 } from "../helpers/constants";
-import service from "../helpers/service";
 import { roleNormalize } from "../helpers/helpers";
+import service from "../helpers/service";
 
 const { Option } = Select;
 

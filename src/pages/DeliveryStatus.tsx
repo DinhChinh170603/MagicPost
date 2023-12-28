@@ -1,20 +1,19 @@
-import { Table, Button, Space, Descriptions, Input, Form } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import { Descriptions, Form, Input, Table } from "antd";
+import axios from "axios";
+import moment from "moment";
 import PropTypes from "prop-types";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
-import service from "../helpers/service";
-import axios from "axios";
 import { roleValueMap } from "../helpers/helpers";
-import { SearchOutlined } from "@ant-design/icons";
+import service from "../helpers/service";
 
 export default function DeliveryStatus(props: any) {
   const { role } = props;
 
   const [succeedPackages, setSucceedPackages] = useState([]);
   const [rejectedPackages, setRejectedPackages] = useState([]);
-
-  const [currentPage, setCurrentPage] = useState(1);
 
   const [loading, setLoading] = useState(false);
 
@@ -51,14 +50,12 @@ export default function DeliveryStatus(props: any) {
           setLoading(false);
           toast.error(err.response.data.message);
         });
-      setCurrentPage(1);
     }
   }, [role]);
 
   const pagination = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPage,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
@@ -90,28 +87,27 @@ export default function DeliveryStatus(props: any) {
           value: "rejected",
         },
       ],
-      onFilter: (value: any, record: any) =>
-        record.source.indexOf(value) === 0,
-      render: (text:any, record:any) => (
+      onFilter: (value: any, record: any) => record.source.indexOf(value) === 0,
+      render: (text: any, record: any) => (
         <>
-          {(record.source === "rejected") ? (
+          {record.source === "rejected" ? (
             <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
               Rejected
             </div>
-          ):(
+          ) : (
             <div className="rounded-lg bg-[#9bd1f5] px-2 py-1 text-center font-bold">
               Success
             </div>
           )}
         </>
-      )
+      ),
     },
     {
       title: "Detail",
       dataIndex: "lastStatus",
       key: "detail",
       width: "50%",
-      render: (text:any, record:any) => {
+      render: (text: any, record: any) => {
         return text || record.reason;
       },
     },
@@ -253,7 +249,7 @@ export default function DeliveryStatus(props: any) {
     description: (
       <Descriptions size="small" bordered items={packageDetailSucceed(pkg)} />
     ),
-    source: 'success',
+    source: "success",
   }));
 
   const dataRejected = rejectedPackages.map((pkg: any) => ({
@@ -267,24 +263,26 @@ export default function DeliveryStatus(props: any) {
     description: (
       <Descriptions size="small" bordered items={packageDetailRejected(pkg)} />
     ),
-    source: 'rejected',
+    source: "rejected",
   }));
 
   const statusData = [...dataSucceed, ...dataRejected].map((item, index) => ({
     ...item,
     key: index,
   }));
-  
-  statusData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResult, setSearchResult] = useState([]);
+  statusData.sort(
+    (a, b) => moment(b.timestamp).valueOf() - moment(a.timestamp).valueOf(),
+  );
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState<any>([]);
 
   useEffect(() => {
     const results = statusData.filter((item) =>
-      item.id.toString().includes(searchQuery)
+      item.id.toString().includes(searchQuery),
     );
-  
+
     if (results.length !== searchResult.length) {
       setSearchResult(results);
     }
@@ -293,13 +291,11 @@ export default function DeliveryStatus(props: any) {
   return (
     <>
       <div className="mb-4 ml-3 text-3xl font-bold">Delivery Status</div>
-      
+
       <div className="mb-5 flex w-full flex-wrap justify-evenly">
-        <div className="flex basis-[98%] mb-2 items-center border border-gray-300 bg-white p-3 px-5 shadow-md xl:basis-[47%]">
+        <div className="mb-2 flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md xl:basis-[47%]">
           <div className="flex flex-col">
-            <div className="text-3xl font-bold">
-              {dataSucceed.length}
-            </div>
+            <div className="text-3xl font-bold">{dataSucceed.length}</div>
             <div className="text-base">Successful Packages</div>
           </div>
           <img
@@ -309,11 +305,9 @@ export default function DeliveryStatus(props: any) {
             src="/src/assets/successful.svg"
           />
         </div>
-        <div className="flex basis-[98%] mb-2 items-center border border-gray-300 bg-white p-3 px-5 shadow-md xl:basis-[47%]">
+        <div className="mb-2 flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md xl:basis-[47%]">
           <div className="flex flex-col">
-            <div className="text-3xl font-bold">
-              {dataRejected.length}
-            </div>
+            <div className="text-3xl font-bold">{dataRejected.length}</div>
             <div className="text-base">Rejected Packages</div>
           </div>
           <img
@@ -324,10 +318,10 @@ export default function DeliveryStatus(props: any) {
           />
         </div>
       </div>
-      
-      <div className="rounded-xl w-[97] bg-white p-3 shadow-lg">
-        <Form className="flex items-center justify-center mt-1">
-          <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
+
+      <div className="w-[97] rounded-xl bg-white p-3 shadow-lg">
+        <Form className="mt-1 flex items-center justify-center">
+          <Form.Item className="mx-auto basis-[90%] md:basis-[60%] xl:basis-[40%]">
             <Input
               placeholder="Package ID"
               className="px-2 py-1 text-lg"
@@ -343,7 +337,7 @@ export default function DeliveryStatus(props: any) {
         </Form>
         <SkeletonTable loading={loading} columns={columns}>
           <Table
-            scroll={{x: 800}}
+            scroll={{ x: 800 }}
             className="w-full"
             columns={columns}
             expandable={{
@@ -354,11 +348,8 @@ export default function DeliveryStatus(props: any) {
             }}
             dataSource={searchResult}
             pagination={pagination}
-            onChange={(pagination) =>
-              setCurrentPage(pagination.current)
-            }
           />
-        </SkeletonTable>  
+        </SkeletonTable>
       </div>
     </>
   );

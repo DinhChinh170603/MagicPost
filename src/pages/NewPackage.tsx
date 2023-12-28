@@ -1,9 +1,9 @@
-import { Button, Form, Input, Select, Tooltip } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import service from "../helpers/service";
 
-export default function NewPackage() {
+function NewPackage() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [destinationLoading, setDestinationLoading] = useState(false);
@@ -212,9 +212,7 @@ export default function NewPackage() {
                 optionRender={(option: any) => {
                   return (
                     <>
-                      <span>
-                        {option.label}
-                      </span>
+                      <span>{option.label}</span>
                     </>
                   );
                 }}
@@ -233,3 +231,5 @@ export default function NewPackage() {
     </>
   );
 }
+
+export default NewPackage;

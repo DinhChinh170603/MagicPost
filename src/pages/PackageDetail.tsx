@@ -1,8 +1,8 @@
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { Form, Input, Skeleton, Timeline } from "antd";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import service from "../helpers/service";
 import { toast } from "react-toastify";
 import {
   IN_PROGRESS_STATE,
@@ -10,7 +10,7 @@ import {
   REJECTED_STATUS_PREFIX,
   SUCCESS_STATE,
 } from "../helpers/constants";
-import moment from "moment";
+import service from "../helpers/service";
 
 function PackageDetail() {
   const { state } = useLocation();
@@ -190,7 +190,7 @@ function PackageDetail() {
             <Skeleton active />
           </div>
         ) : (
-          <div className="mt-3 flex w-[80%] justify-evenly rounded-lg border border-gray-300 bg-white shadow-md max-lg:flex-col max-md:gap-3 lg:py-3">
+          <div className="mt-3 flex w-[80%] justify-evenly rounded-lg border border-gray-300 bg-white shadow-md max-lg:flex-col max-lg:pb-3 max-md:gap-3 lg:py-3">
             <div className="basis-[30%]">
               <div className="border border-gray-200 bg-[#eeeeee] p-3 font-bold lg:rounded-lg">
                 THÔNG TIN ĐƠN HÀNG
@@ -313,7 +313,7 @@ function PackageDetail() {
           </div>
         )}
         <div className="mt-3 text-3xl font-bold">Trạng thái đơn hàng</div>
-        <div className="mt-3 flex items-center rounded-lg border border-gray-300 bg-white p-10 shadow-md max-lg:w-[95%]">
+        <div className="mt-3 flex items-center rounded-lg border border-gray-300 bg-white p-10 shadow-md max-lg:w-[95%] lg:max-w-[60%]">
           {curPackage ? (
             <Timeline
               mode="left"
@@ -346,7 +346,8 @@ function PackageDetail() {
                         {item.detail +
                           (index === curPackage.status.length - 1 &&
                           curPackage.generalState === REJECTED_STATE
-                            ? ". Lí do: " + curPackage.rejectDetails[
+                            ? ". Lí do: " +
+                              curPackage.rejectDetails[
                                 curPackage.rejectDetails.length - 1
                               ].reason
                             : "")}
