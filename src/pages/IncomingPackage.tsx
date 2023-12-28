@@ -1,13 +1,14 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Table } from "antd";
+import { Button, Input, Table } from "antd";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import BulkReceiveModal from "../components/BulkReceiveModal";
 import SkeletonTable from "../components/SkeletonTable";
+import Loading from "../helpers/Loading";
 import { EE_ROLE } from "../helpers/constants";
 import service from "../helpers/service";
-import Loading from "../helpers/Loading";
 
 export default function IncomingPackage(props: any) {
   const { role } = props;
@@ -17,6 +18,8 @@ export default function IncomingPackage(props: any) {
 
   const [loading, setLoading] = useState(false);
   const [processLoading, setProcessLoading] = useState(false);
+
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -43,7 +46,7 @@ export default function IncomingPackage(props: any) {
 
   const onConfirmSuccess = (id: string) => {
     setData((data) => data.filter((item: any) => item.id !== id));
-  }
+  };
 
   const pagination = {
     hideOnSinglePage: true,
@@ -102,33 +105,13 @@ export default function IncomingPackage(props: any) {
       key: "action",
       render: (text: any, record: any) => (
         <div className="flex w-[80%] justify-start gap-4">
-          {role === EE_ROLE && (
-            <Button
-              type="primary"
-              onClick={() => receive(record.id)}
-              loading={loading}
-            >
-              Confirmed from GatherPoint
-            </Button>
-          )}
-          {role === "GATHER_EMPLOYEE" && (
-            <>
-              <Button
-                type="primary"
-                onClick={() => receive(record.id)}
-                loading={loading}
-              >
-                Confirm from GatherPoint
-              </Button>
-              <Button
-                type="primary"
-                onClick={() => receive(record.id)}
-                loading={loading}
-              >
-                Confirm from ExchangePoint
-              </Button>
-            </>
-          )}
+          <Button
+            type="primary"
+            onClick={() => receive(record.id)}
+            loading={loading}
+          >
+            Received
+          </Button>
         </div>
       ),
     },
@@ -164,21 +147,22 @@ export default function IncomingPackage(props: any) {
 
       <div className="flex h-full w-full flex-col items-center justify-center gap-3">
         <div className="w-full rounded-xl bg-white p-3 shadow-lg">
-          <Form className="mt-1 flex items-center justify-center">
-            <Form.Item className="mx-auto basis-[90%] md:basis-[60%] xl:basis-[40%]">
-              <Input
-                placeholder="Package ID"
-                className="px-2 py-1 text-lg"
-                suffix={
-                  <div className="rounded-l px-2 py-1">
-                    <SearchOutlined className="transition-all duration-300" />
-                  </div>
-                }
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              ></Input>
-            </Form.Item>
-          </Form>
+          <div className="mb-4 flex w-full items-center justify-between gap-3 rounded-lg bg-white">
+            <Input
+              placeholder="Package ID"
+              className="w-[30%] px-2 py-1"
+              suffix={
+                <div className="rounded-l px-2 py-1">
+                  <SearchOutlined className="transition-all duration-300" />
+                </div>
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button type="primary" onClick={() => setOpen(true)} loading={loading}>
+              Bulk Receive
+            </Button>
+          </div>
 
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
@@ -191,6 +175,13 @@ export default function IncomingPackage(props: any) {
           </SkeletonTable>
         </div>
       </div>
+      <BulkReceiveModal
+        open={open}
+        setOpen={setOpen}
+        roleAPI={roleAPI}
+        data={data}
+        onActionSuccess={onConfirmSuccess}
+      />
     </div>
   );
 

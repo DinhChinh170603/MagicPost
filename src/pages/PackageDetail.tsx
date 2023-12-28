@@ -313,7 +313,7 @@ function PackageDetail() {
           </div>
         )}
         <div className="mt-3 text-3xl font-bold">Trạng thái đơn hàng</div>
-        <div className="mt-3 flex items-center rounded-lg border border-gray-300 bg-white p-10 shadow-md max-lg:w-[95%]">
+        <div className="mt-3 flex items-center rounded-lg border border-gray-300 bg-white p-10 shadow-md max-lg:w-[95%] lg:max-w-[60%]">
           {curPackage ? (
             <Timeline
               mode="left"
