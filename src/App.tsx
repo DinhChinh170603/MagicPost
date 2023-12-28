@@ -55,6 +55,7 @@ function App() {
               open={isSidebarOpen}
               onClose={() => setIsSidebarOpen(false)}
               anchor="left"
+              onClick={() => setIsSidebarOpen(false)}
             >
               <Sidebar role={user ? user.role : null} />
             </Drawer>

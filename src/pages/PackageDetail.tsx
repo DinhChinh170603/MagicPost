@@ -190,7 +190,7 @@ function PackageDetail() {
             <Skeleton active />
           </div>
         ) : (
-          <div className="mt-3 flex w-[80%] justify-evenly rounded-lg border border-gray-300 bg-white shadow-md max-lg:flex-col max-md:gap-3 lg:py-3">
+          <div className="mt-3 flex w-[80%] justify-evenly rounded-lg border border-gray-300 bg-white shadow-md max-lg:flex-col max-md:gap-3 lg:py-3 max-lg:pb-3">
             <div className="basis-[30%]">
               <div className="border border-gray-200 bg-[#eeeeee] p-3 font-bold lg:rounded-lg">
                 THÔNG TIN ĐƠN HÀNG
