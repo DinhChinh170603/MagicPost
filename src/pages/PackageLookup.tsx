@@ -64,13 +64,13 @@ export default function PackageLookup() {
   };
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center gap-5 bg-[#f1f5f9] max-lg:flex-col">
+    <div className="flex h-screen w-screen items-center justify-center gap-5 bg-[#f1f5f9] max-lg:flex-col" style = {{backgroundImage: "url('/src/assets/BG_lookup.png')", backgroundSize: 'cover'}}>
       <div className="flex flex-col items-center">
         <img
           src="/src/assets/biglogo.svg"
-          className="max-lg:h-[80%] animate-updown max-lg:w-[80%]"
+          className="h-[80%] animate-updown"
         />
-        <h1 className="-mt-5 text-[80px] font-bold max-lg:-mt-10 max-lg:text-[50px]">
+        <h1 className="text-[80px] font-bold max-lg:-mt-5 max-lg:text-[50px]">
           Magic Post
         </h1>
       </div>

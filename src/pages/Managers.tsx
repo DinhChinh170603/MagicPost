@@ -104,7 +104,7 @@ function Managers(props: any) {
           setEmCount(emCount);
           setGeCount(geCount);
           setEeCount(eeCount);
-          setData(filteredData);
+          setData(filteredData.reverse());
           setLoading(false);
         })
         .catch((err) => {
@@ -113,6 +113,19 @@ function Managers(props: any) {
         });
     }
   }, [role, roleAPI]);
+
+  const [profileUser, setProfileUser] = useState<any>({});
+  useEffect(() => {
+    service
+      .get("/users/me")
+      .then((res) => {
+        setProfileUser(res.data.results);
+        console.log(profileUser);
+      })
+      .catch((err) => {
+        toast.error(err.response);
+      });
+  }, []);
 
   const fetchDepartments = () => {
     axios
@@ -300,7 +313,7 @@ function Managers(props: any) {
       width: "20%",
       render: (fullName: any, record: any) => (
         <div
-          className="cursor-pointer hover:text-blue-500"
+          className="cursor-pointer hover:text-btnColor hover:font-bold"
           onClick={() => navigate(`/users/${record.id}`)}
         >
           {fullName}
@@ -375,36 +388,78 @@ function Managers(props: any) {
     <>
       <div className="pb-4">
         <div className="mb-4 ml-3 text-3xl font-bold">Subordinates</div>
-        <div className="mb-4 flex w-full flex-wrap justify-evenly">
-          <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-            <img src="/src/assets/GM.svg" width={70} height={70} />
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold">{gmCount}</span>
-              <span className="text-sm">Gather managers</span>
+
+        {role === "LEADER" && (
+          <div className="mb-4 flex w-full flex-wrap justify-evenly">
+            <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
+              <img src="/src/assets/GM.svg" width={70} height={70} />
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">{gmCount}</span>
+                <span className="text-sm">Gather managers</span>
+              </div>
+            </div>
+            <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
+              <img src="/src/assets/EM2.svg" width={70} height={70} />
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">{emCount}</span>
+                <span className="text-sm">Exchange managers</span>
+              </div>
+            </div>
+            <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
+              <img src="/src/assets/GE.svg" width={70} height={70} />
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">{geCount}</span>
+                <span className="text-sm">Gather employees</span>
+              </div>
+            </div>
+            <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
+              <img src="/src/assets/EE.svg" width={70} height={70} />
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">{eeCount}</span>
+                <span className="text-sm">Exchange employees</span>
+              </div>
             </div>
           </div>
-          <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-            <img src="/src/assets/EM2.svg" width={70} height={70} />
+        )}
+        
+        {role === "GATHER_MANAGER" && (
+          <div
+            className="mb-4 flex justify-between items-center rounded-md bg-white px-5 shadow-lg w-[98%] mx-auto"
+          >
             <div className="flex flex-col">
-              <span className="text-2xl font-bold">{emCount}</span>
-              <span className="text-sm">Exchange managers</span>
+              <div className="text-xl">
+                <span className="font-bold">Gather Point: {' '}</span>
+                {profileUser.departmentId}
+              </div>
+              <div className="mt-3 text-xl">
+                <span className="font-bold">Number Of Employees: {' '}</span>
+                {geCount}
+              </div>
             </div>
+            
+            <img src="/src/assets/GE.svg" width={100} height={100} className="m-3"/>
           </div>
-          <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-            <img src="/src/assets/GE.svg" width={70} height={70} />
+        )}
+
+        {role === "EXCHANGE_MANAGER" && (
+          <div
+            className="mb-4 flex justify-between items-center rounded-md bg-white px-5 shadow-lg w-[98%] mx-auto"
+          >
             <div className="flex flex-col">
-              <span className="text-2xl font-bold">{geCount}</span>
-              <span className="text-sm">Gather employees</span>
+              <div className="text-xl">
+                <span className="font-bold">Exchange Point: {' '}</span>
+                {profileUser.departmentId}
+              </div>
+              <div className="mt-3 text-xl">
+                <span className="font-bold">Number Of Employees: {' '}</span>
+                {eeCount}
+              </div>
             </div>
+            
+            <img src="/src/assets/EE.svg" width={100} height={100} className="m-3"/>
           </div>
-          <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-            <img src="/src/assets/EE.svg" width={70} height={70} />
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold">{eeCount}</span>
-              <span className="text-sm">Exchange employees</span>
-            </div>
-          </div>
-        </div>
+        )}
+
         <div className="mb-2 flex w-full justify-end">
           <Button
             className="mr-3"
@@ -415,6 +470,7 @@ function Managers(props: any) {
             Invite
           </Button>
         </div>
+
         <div className="rounded-xl bg-white p-3 shadow-lg">
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table

@@ -2,7 +2,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import React from "react";
 import { toast } from "react-toastify";
-import logo from "../assets/biglogo.svg";
+import logo from "../assets/logo_animate.gif";
 import service from "../helpers/service";
 
 export default function Login() {
@@ -59,9 +59,12 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen w-full">
-      <div className="flex flex-1 flex-col items-center justify-center bg-gray-300">
-        <img src={logo} className="h-[50%] w-[50%] animate-running" alt="logo" />
+    <div className="flex flex-col md:flex-row h-screen w-full">
+      <div className="flex-1 flex-col flex items-center justify-center bg-gray-300 md:flex-col" style={{ backgroundImage: "url('/src/assets/BG.png')", backgroundSize: '100% 100%'}}>
+        <img src={logo} className="h-[50%] animate-updown" alt="logo" />
+        <b className="text-[70px] max-lg:-mt-5 max-lg:text-[50px]">
+          Magic Post
+        </b>
       </div>
 
       {!forgotPassword ? (
@@ -71,7 +74,7 @@ export default function Login() {
 
             <Form.Item
               name="email"
-              className="w-[40%]"
+              className="w-[80%] md:w-[50%]"
               rules={[
                 { required: true, message: "Please enter your email!" },
                 { type: "email", message: "Please enter a valid email!" },
@@ -87,7 +90,7 @@ export default function Login() {
             {/* Password Field */}
             <Form.Item
               name="password"
-              className="w-[40%]"
+              className="w-[80%] md:w-[50%]"
               rules={[
                 { required: true, message: "Please enter your password!" },
               ]}
@@ -127,7 +130,7 @@ export default function Login() {
 
             <Form.Item
               name="email"
-              className="w-[40%]"
+              className="w-[80%] md:w-[50%]"
               rules={[
                 { required: true, message: "Please enter your email!" },
                 { type: "email", message: "Please enter a valid email!" },

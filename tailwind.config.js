@@ -17,19 +17,13 @@ export default {
       },
       animation: {
         updown: 'updown 3s ease-in-out infinite',
-        running: 'running 0.5s ease-in-out infinite'
       },
       keyframes: {
         updown: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-30px)' },
-        },
-        running: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-5px)' },
+          '50%': { transform: 'translateY(-25px)' },
         },
       },
-      
     },
   },
   plugins: [],
