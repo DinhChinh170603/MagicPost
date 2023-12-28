@@ -269,7 +269,7 @@ export default function PackageProcessing(props: any) {
   const [searchResult, setSearchResult] = useState([]);
 
   useEffect(() => {
-    const results = data.filter((item: any) =>
+    const results = data.reverse().filter((item: any) =>
       item.id
         .toString()
         .toLowerCase()

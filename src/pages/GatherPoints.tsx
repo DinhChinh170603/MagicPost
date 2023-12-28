@@ -90,7 +90,7 @@ export default function GatherPoints() {
                   state: { exchangePoint: exchangePoint },
                 });
               }}
-              className="hover:cursor-pointer"
+              className="hover:cursor-pointer hover:font-bold hover:text-btnColor"
             >
               {exchangePoint.id}
             </Tag>
@@ -108,7 +108,7 @@ export default function GatherPoints() {
       .then(
         (res) => {
           setTableLoading(false);
-          setGatherPointsList(res.data.results);
+          setGatherPointsList(res.data.results.reverse());
         },
         (rej) => {
           setTableLoading(false);

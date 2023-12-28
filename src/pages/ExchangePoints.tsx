@@ -75,7 +75,7 @@ export default function ExchangePoints() {
                 state: { gatherPoint: record.linkedGatherPoint },
               });
             }}
-            className="hover:cursor-pointer"
+            className="hover:cursor-pointer hover:font-bold hover:text-btnColor"
           >
             {record.linkedGatherPoint.id}
           </Tag>
@@ -105,7 +105,7 @@ export default function ExchangePoints() {
           setLoading(false);
           return;
         }
-        setData(res.data.results);
+        setData(res.data.results.reverse());
         setLoading(false);
       })
       .catch((err) => {

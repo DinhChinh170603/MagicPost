@@ -14,7 +14,16 @@ export default {
         successBtn: "#9bd1f5",
         rejectedBtn: "#ffe6ab",
         failedBtn: "#ffb1c2",
-      }
+      },
+      animation: {
+        updown: 'updown 3s ease-in-out infinite',
+      },
+      keyframes: {
+        updown: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-25px)' },
+        },
+      },
     },
   },
   plugins: [],

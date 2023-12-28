@@ -442,7 +442,7 @@ export default function GatherPointDetail() {
       <b className="mb-5 flex items-center justify-center text-2xl">
         Packages History
       </b>
-      <div className="min-h-[78%] w-[97] rounded-xl bg-white p-3 shadow-lg">
+      <div className="w-[97] rounded-xl bg-white p-3 shadow-lg">
         <Form className="mt-1 flex items-center justify-center">
           <Form.Item className="mx-auto basis-[90%] md:basis-[60%] xl:basis-[40%]">
             <Input

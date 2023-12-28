@@ -509,11 +509,11 @@ export default function PackageManagement(props: any) {
   useEffect(() => {
     if (role !== LEADER_ROLE) return;
 
-    const resultsByLeader = dataOfAll.filter((item: any) =>
+    const resultsByLeader = dataOfAll.reverse().filter((item: any) =>
       item.id
         .toString()
         .toLowerCase()
-        .includes(searchQuery.toLowerCase().trim()),
+        .includes(searchQueryByLeader.toLowerCase().trim()),
     );
 
     if (resultsByLeader.length !== searchResultByLeader.length) {
@@ -523,7 +523,7 @@ export default function PackageManagement(props: any) {
 
   useEffect(() => {
     if (role === LEADER_ROLE) return;
-    const results = historyData.filter((item: any) =>
+    const results = historyData.reverse().filter((item: any) =>
       item.id
         .toString()
         .toLowerCase()
