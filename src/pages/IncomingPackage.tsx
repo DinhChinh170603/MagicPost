@@ -25,7 +25,7 @@ export default function IncomingPackage(props: any) {
   const receive = (id: string) => {
     setProcessLoading(true);
     service
-      .post(roleAPI + `/receive/${id}`)
+      .patch(roleAPI + `/receive/${id}`)
       .then((res) => {
         setProcessLoading(false);
         if (res.data.status !== 200) {
