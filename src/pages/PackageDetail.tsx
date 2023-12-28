@@ -114,7 +114,7 @@ function PackageDetail() {
             </div>
             <Form.Item
               name="packageId"
-              className="w-[50%] lg:absolute lg:left-0 lg:right-0 lg:m-auto lg:w-[40%] m-0"
+              className="m-0 w-[50%] lg:absolute lg:left-0 lg:right-0 lg:m-auto lg:w-[40%]"
             >
               <Input
                 placeholder="Mã đơn hàng"
@@ -342,7 +342,15 @@ function PackageDetail() {
                       >
                         {moment(item.timestamp).format("DD/MM - hh:mm")}
                       </span>
-                      <span>{item.detail}</span>
+                      <span>
+                        {item.detail +
+                          (index === curPackage.status.length - 1 &&
+                          curPackage.generalState === REJECTED_STATE
+                            ? ". Lí do: " + curPackage.rejectDetails[
+                                curPackage.rejectDetails.length - 1
+                              ].reason
+                            : "")}
+                      </span>
                     </div>
                   ),
                 };

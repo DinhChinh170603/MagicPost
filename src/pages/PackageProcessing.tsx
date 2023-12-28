@@ -18,7 +18,7 @@ export default function PackageProcessing(props: any) {
 
   const [open, setOpen] = useState(false);
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
 
   const [modalReasonOpen, setModalReasonOpen] = useState(false);
 
@@ -71,7 +71,16 @@ export default function PackageProcessing(props: any) {
         setProcessLoading(false);
         if (res.data.status === 200) {
           toast.success(res.data.message);
-          onRejectSuccess(id);
+          if (action === "send-receiver") {
+            setData((data: any) =>
+              data.map((item: any) => ({
+                ...item,
+                to: item.id === id ? "Client" : null,
+              })),
+            );
+          } else {
+            onActionSuccess(id);
+          }
         } else {
           toast.error(res.data.message);
         }
@@ -82,9 +91,9 @@ export default function PackageProcessing(props: any) {
       });
   };
 
-  const onRejectSuccess = (id: string) => {
-    setData((data) => data.filter((item: any) => item.id !== id));
-  }
+  const onActionSuccess = (id: string) => {
+    setData((data: any) => data.filter((item: any) => item.id !== id));
+  };
 
   const pagination = {
     hideOnSinglePage: true,
@@ -291,7 +300,7 @@ export default function PackageProcessing(props: any) {
         isOpen={modalReasonOpen}
         setModalOpen={setModalReasonOpen}
         packageId={rejectedId}
-        onRejectSuccess={onRejectSuccess}
+        onRejectSuccess={onActionSuccess}
       />
     </div>
   );

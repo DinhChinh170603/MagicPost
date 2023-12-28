@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import service from "../helpers/service";
@@ -191,7 +191,7 @@ export default function NewPackage() {
             <Form.Item
               name="desPointId"
               label="Destination"
-              className="w-full sm:w-[100%] lg:w-[45%]"
+              className="w-full sm:w-[100%] lg:w-[95%]"
               rules={[
                 { required: true, message: "Please select destination!" },
               ]}
@@ -206,14 +206,13 @@ export default function NewPackage() {
                   destinations &&
                   destinations.map((d) => ({
                     value: d.id,
-                    label: d.location,
+                    label: d.id + " - " + d.location,
                   }))
                 }
                 optionRender={(option: any) => {
                   return (
                     <>
-                      <span className="mr-2">{option.value}</span>
-                      <span className="text-sm text-gray-500">
+                      <span>
                         {option.label}
                       </span>
                     </>
