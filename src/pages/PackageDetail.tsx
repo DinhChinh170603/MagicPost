@@ -109,7 +109,7 @@ function PackageDetail() {
             className="flex w-full items-center max-lg:justify-between"
           >
             <div className="flex items-center">
-              <img src="/src/assets/minilogo.svg" alt="logo" />
+              <img src="/src/assets/minilogo.svg" alt="logo" className="pb-1"/>
               <div className="text-3xl font-bold max-md:hidden">Magic Post</div>
             </div>
             <Form.Item

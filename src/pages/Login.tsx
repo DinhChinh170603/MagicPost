@@ -2,7 +2,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import React from "react";
 import { toast } from "react-toastify";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/biglogo.svg";
 import service from "../helpers/service";
 
 export default function Login() {
@@ -61,7 +61,7 @@ export default function Login() {
   return (
     <div className="flex h-screen w-full">
       <div className="flex flex-1 flex-col items-center justify-center bg-gray-300">
-        <img src={logo} className="h-[50%] w-[50%]" alt="logo" />
+        <img src={logo} className="h-[50%] w-[50%] animate-running" alt="logo" />
       </div>
 
       {!forgotPassword ? (

@@ -68,12 +68,13 @@ export default function PackageLookup() {
       <div className="flex flex-col items-center">
         <img
           src="/src/assets/biglogo.svg"
-          className="max-lg:h-[80%] max-lg:w-[80%]"
+          className="max-lg:h-[80%] animate-updown max-lg:w-[80%]"
         />
         <h1 className="-mt-5 text-[80px] font-bold max-lg:-mt-10 max-lg:text-[50px]">
           Magic Post
         </h1>
       </div>
+
       <div className="flex w-[30%] flex-col items-center gap-3 max-lg:w-[90%]">
         <h2 className="text-3xl font-bold">Tra cứu đơn hàng</h2>
         <Form form={form} onFinish={search} className="w-full">
