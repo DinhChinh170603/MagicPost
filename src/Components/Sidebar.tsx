@@ -2,13 +2,14 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PropTypes from "prop-types";
 import { FaExchangeAlt, FaHome } from "react-icons/fa";
 import { IoMdTimer } from "react-icons/io";
-import { IoPeople, IoPersonAddSharp } from "react-icons/io5";
+import { IoPeople } from "react-icons/io5";
 import { LuPackagePlus } from "react-icons/lu";
 import { MdOutlineZoomInMap } from "react-icons/md";
 import { PiPackageFill } from "react-icons/pi";
 import { TbPackageImport, TbTruckDelivery } from "react-icons/tb";
 import { NavLink } from "react-router-dom";
 import { EE_ROLE, LEADER_ROLE } from "../helpers/constants";
+import { roleNormalize } from "../helpers/helpers";
 import exchangeEmp from "./../assets/EC_EM_logo.png";
 import exchangeMana from "./../assets/EC_MN_logo.png";
 import gatherEmp from "./../assets/GT_EM_logo.png";
@@ -335,9 +336,9 @@ const Sidebar = (props: any) => {
           {renderIcon(role)}
           <h1
             className="ml-2 mt-1 font-bold text-black"
-            style={{ fontSize: role === LEADER_ROLE ? 16 : 13 }}
+            style={{ fontSize: role === LEADER_ROLE ? 16 : 15 }}
           >
-            {role}
+            {roleNormalize.get(role)}
           </h1>
         </div>
       </>

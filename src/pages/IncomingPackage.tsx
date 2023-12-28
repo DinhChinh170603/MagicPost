@@ -1,14 +1,13 @@
-import { useEffect, useState, useRef, SetStateAction } from "react";
-import PropTypes from "prop-types";
-import { toast } from "react-toastify";
-import service from "../helpers/service";
-import { Button, Input, Space, Table } from "antd";
-import SkeletonTable from "../components/SkeletonTable";
 import { SearchOutlined } from "@ant-design/icons";
-import Highlighter from "react-highlight-words";
+import { Button, Form, Input, Table } from "antd";
 import moment from "moment";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import SkeletonTable from "../components/SkeletonTable";
 import { EE_ROLE } from "../helpers/constants";
-import { Form } from "antd";
+import service from "../helpers/service";
+import Loading from "../helpers/Loading";
 
 export default function IncomingPackage(props: any) {
   const { role } = props;
@@ -16,104 +15,39 @@ export default function IncomingPackage(props: any) {
 
   const [data, setData] = useState([]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [search, setSearch] = useState({
-    dataIndex: "",
-    searchText: "",
-  });
-  const idSearchInput = useRef(null);
-  const [currentPage, setCurrentPage] = useState(1);
-
   const [loading, setLoading] = useState(false);
+  const [processLoading, setProcessLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    if (role === EE_ROLE) {
-      setRoleAPI("/ex-employee");
-    } else if (role === "GATHER_EMPLOYEE") {
-      setRoleAPI("/gth-employee");
-    }
-
-    if (roleAPI) {
-      service
-        .get(roleAPI + `/incoming-packages`)
-        .then((res) => {
-          if (res.data.status !== 200) {
-            toast.error(res.data.message);
-            setLoading(false);
-            return;
-          }
-          const newData = res.data.results.map((item: { id: any }) => ({
-            ...item,
-            key: item.id,
-          }));
-          setData(newData);
-          setLoading(false);
-        })
-        .catch((err) => {
-          toast.error(err.response.data.message);
-        });
-    }
-    setCurrentPage(1);
+    loadData();
   }, [role, roleAPI]);
 
-  // rowSelection
-  const start = () => {
-    setLoading(true);
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
-  const onSelectChange = (newSelectedRowKeys: SetStateAction<never[]>) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
-  const hasSelected = selectedRowKeys.length > 0;
-
-  // Handling operations
-  const handleOperation = (apiEndpoint: string, record: any) => {
-    setLoading(true);
-
-    if (role === EE_ROLE) {
-      setRoleAPI("/ex-employee");
-    } else if (role === "GATHER_EMPLOYEE") {
-      setRoleAPI("/gth-employee");
-    }
-
-    const sendRequests = [record.id].map((packageId) => {
-      return service.patch(roleAPI + `/${apiEndpoint}/` + packageId);
-    });
-
-    Promise.all(sendRequests)
-      .then((responses) => {
-        setLoading(false);
-
-        responses.forEach((res) => {
-          if (res.data.status === 200) {
-            toast.success(res.data.message);
-            setSelectedRowKeys([]);
-          } else {
-            toast.error(res.data.message);
-          }
-        });
+  const receive = (id: string) => {
+    setProcessLoading(true);
+    service
+      .post(roleAPI + `/receive/${id}`)
+      .then((res) => {
+        setProcessLoading(false);
+        if (res.data.status !== 200) {
+          toast.error(res.data.message);
+          return;
+        }
+        toast.success(res.data.message);
+        onConfirmSuccess(id);
       })
       .catch((err) => {
-        setLoading(false);
+        setProcessLoading(false);
         toast.error(err.response.data.message);
       });
   };
 
+  const onConfirmSuccess = (id: string) => {
+    setData((data) => data.filter((item: any) => item.id !== id));
+  }
+
   const pagination = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPage,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
@@ -171,7 +105,7 @@ export default function IncomingPackage(props: any) {
           {role === EE_ROLE && (
             <Button
               type="primary"
-              onClick={() => handleOperation("receive", record)}
+              onClick={() => receive(record.id)}
               loading={loading}
             >
               Confirmed from GatherPoint
@@ -181,14 +115,14 @@ export default function IncomingPackage(props: any) {
             <>
               <Button
                 type="primary"
-                onClick={() => handleOperation("received/gather", record)}
+                onClick={() => receive(record.id)}
                 loading={loading}
               >
                 Confirm from GatherPoint
               </Button>
               <Button
                 type="primary"
-                onClick={() => handleOperation("received/exchange", record)}
+                onClick={() => receive(record.id)}
                 loading={loading}
               >
                 Confirm from ExchangePoint
@@ -200,14 +134,17 @@ export default function IncomingPackage(props: any) {
     },
   ];
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
   useEffect(() => {
-    const results = data.filter((item) =>
-      item.id.toString().includes(searchQuery)
+    const results = data.filter((item: any) =>
+      item.id
+        .toString()
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase().trim()),
     );
-  
+
     if (results.length !== searchResult.length) {
       setSearchResult(results);
     }
@@ -215,56 +152,77 @@ export default function IncomingPackage(props: any) {
 
   return (
     <div className="w-full">
+      {processLoading && <Loading />}
       <div className="flex">
         <div className="mb-4 ml-3 text-3xl font-bold">Incoming Package</div>
         <div className="ml-auto mr-3">
-          <Button type="primary" onClick={start} loading={loading}>
+          <Button type="primary" onClick={loadData} loading={loading}>
             Reload
           </Button>
         </div>
       </div>
 
       <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-        <div className="flex w-[80%] justify-start gap-4">
-          <div className="mt-1">
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
-          </div>
-        </div>
         <div className="w-full rounded-xl bg-white p-3 shadow-lg">
-          <Form className="flex items-center justify-center mt-1">
-          <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
-            <Input
-              placeholder="Package ID"
-              className="px-2 py-1 text-lg"
-              suffix={
-                <div className="rounded-l px-2 py-1">
-                  <SearchOutlined className="transition-all duration-300" />
-                </div>
-              }
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            ></Input>
-          </Form.Item>
-        </Form>
-          
+          <Form className="mt-1 flex items-center justify-center">
+            <Form.Item className="mx-auto basis-[90%] md:basis-[60%] xl:basis-[40%]">
+              <Input
+                placeholder="Package ID"
+                className="px-2 py-1 text-lg"
+                suffix={
+                  <div className="rounded-l px-2 py-1">
+                    <SearchOutlined className="transition-all duration-300" />
+                  </div>
+                }
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              ></Input>
+            </Form.Item>
+          </Form>
+
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
               scroll={{ x: 800 }}
               className="w-full"
-              // rowSelection={rowSelection}
               columns={columns}
               dataSource={searchResult}
               pagination={pagination}
-              idSearchInput={idSearchInput}
-              onChange={(pagination) =>
-                setCurrentPage(pagination.current)
-              }
             />
           </SkeletonTable>
         </div>
       </div>
     </div>
   );
+
+  function loadData() {
+    setLoading(true);
+    if (role === EE_ROLE) {
+      setRoleAPI("/ex-employee");
+    } else if (role === "GATHER_EMPLOYEE") {
+      setRoleAPI("/gth-employee");
+    }
+
+    if (roleAPI) {
+      service
+        .get(roleAPI + `/incoming-packages`)
+        .then((res) => {
+          if (res.data.status !== 200) {
+            toast.error(res.data.message);
+            setLoading(false);
+            return;
+          }
+          const newData = res.data.results.map((item: { id: any }) => ({
+            ...item,
+            key: item.id,
+          }));
+          setData(newData);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+        });
+    }
+  }
 }
 
 IncomingPackage.propTypes = {
