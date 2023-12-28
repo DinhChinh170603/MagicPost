@@ -32,19 +32,7 @@ export default function PackageManagement(props: any) {
   const [rejectedCount, setRejectedCount] = useState(0);
   const [inProgressCount, setInProgressCount] = useState(0);
 
-  const [searchSent, setSearchSent] = useState({
-    dataIndex: "",
-    searchText: "",
-  });
-  const idSearchInputSent = useRef(null);
-  const [currentPageOfSent, setCurrentPageOfSent] = useState(1);
-
-  const [searchReceived, setSearchReceived] = useState({
-    dataIndex: "",
-    searchText: "",
-  });
-  const idSearchInputReceived = useRef(null);
-  const [currentPageOfReceived, setCurrentPageOfReceived] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [searchByLeader, setSearchByLeader] = useState({
     dataIndex: "",
@@ -98,8 +86,7 @@ export default function PackageManagement(props: any) {
           setLoading(false);
           toast.error(err.response.data.message);
         });
-      setCurrentPageOfSent(1);
-      setCurrentPageOfReceived(1);
+      setCurrentPage(1);
     } else if (roleAPI && role === LEADER_ROLE) {
       service.get(roleAPI + `/all-packages`).then((res) => {
         let totalCount = 0;
@@ -139,234 +126,6 @@ export default function PackageManagement(props: any) {
       });
     }
   }, [role, roleAPI]);
-
-  // searchInColumn
-  const handleSearchSent = (
-    selectedKeys: any[],
-    confirm: () => void,
-    dataIndex: string,
-  ) => {
-    confirm();
-    setSearchSent({ dataIndex, searchText: selectedKeys[0] });
-
-    // Get index of searched data's list
-    const dataIndexIndex = sentPackages.findIndex(
-      (item) => item[dataIndex] === selectedKeys[0],
-    );
-
-    // Check if it is founded
-    if (dataIndexIndex !== -1) {
-      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
-
-      // Update current page
-      setCurrentPageOfSent(searchedPage);
-    }
-  };
-  const handleResetIdSent = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchSent({ ...searchSent, searchText: "" });
-  };
-  const getColumnSearchPropsSent = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }: {
-      setSelectedKeys: (keys: string[]) => void;
-      selectedKeys: string[];
-      confirm: () => void;
-      clearFilters: () => void;
-      close: () => void;
-    }) => (
-      <div className="p-2">
-        <Input
-          ref={dataIndex === "id" ? idSearchInputSent : null}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearchSent(selectedKeys, confirm, dataIndex)
-          }
-          className="mb-4 block"
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearchSent(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            className="w-[90px]"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleResetIdSent(clearFilters)}
-            size="small"
-            className="w-[90px]"
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: any) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1890ff" : undefined,
-        }}
-      />
-    ),
-    onFilterDropdownOpenChange: (visible: any) => {
-      if (visible) {
-        setTimeout(
-          () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
-          100,
-        );
-      }
-    },
-    render: (text: { toString: () => string }) =>
-      searchSent.dataIndex === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[searchSent.searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-
-  // Search in receivedPackages
-  const handleSearchReceived = (
-    selectedKeys: any[],
-    confirm: () => void,
-    dataIndex: string,
-  ) => {
-    confirm();
-    setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
-
-    // Get index of searched data's list
-    const dataIndexIndex = receivedPackages.findIndex(
-      (item) => item[dataIndex] === selectedKeys[0],
-    );
-
-    // Check if it is founded
-    if (dataIndexIndex !== -1) {
-      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
-
-      // Update current page
-      setCurrentPageOfReceived(searchedPage);
-    }
-  };
-  const handleResetIdReceived = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchReceived({ ...searchReceived, searchText: "" });
-  };
-  const getColumnSearchPropsReceived = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }: {
-      setSelectedKeys: (keys: string[]) => void;
-      selectedKeys: string[];
-      confirm: () => void;
-      clearFilters: () => void;
-      close: () => void;
-    }) => (
-      <div className="p-2">
-        <Input
-          ref={dataIndex === "id" ? idSearchInputReceived : null}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearchReceived(selectedKeys, confirm, dataIndex)
-          }
-          className="mb-4 block"
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() =>
-              handleSearchReceived(selectedKeys, confirm, dataIndex)
-            }
-            icon={<SearchOutlined />}
-            size="small"
-            className="w-[90px]"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleResetIdReceived(clearFilters)}
-            size="small"
-            className="w-[90px]"
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: any) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1890ff" : undefined,
-        }}
-      />
-    ),
-    onFilterDropdownOpenChange: (visible: any) => {
-      if (visible) {
-        setTimeout(
-          () => (dataIndex === "id" ? idSearchInputReceived : null)?.select(),
-          100,
-        );
-      }
-    },
-    render: (text: { toString: () => string }) =>
-      searchReceived.dataIndex === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[searchReceived.searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
 
   // Search in allPackage
   const handleSearchByLeader = (
@@ -462,7 +221,7 @@ export default function PackageManagement(props: any) {
     onFilterDropdownOpenChange: (visible: any) => {
       if (visible) {
         setTimeout(
-          () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
+          () => (dataIndex === "id" ? idSearchInputByLeader : null)?.select(),
           100,
         );
       }
@@ -483,20 +242,10 @@ export default function PackageManagement(props: any) {
       ),
   });
 
-  const paginationOfSent = {
-    current: currentPageOfSent,
-    defaultPageSize: 5,
-    showSizeChanger: true,
-    pageSizeOptions: ["5", "10", "20", "30"],
-    showTotal: (total: number, range: number[]) =>
-      `${range[0]}-${range[1]} of ${total} items`,
-  };
-
-  const paginationOfReceived = {
-    current: currentPageOfReceived,
-    defaultPageSize: 5,
-    showSizeChanger: true,
-    pageSizeOptions: ["5", "10", "20", "30"],
+  const pagination = {
+    hideOnSinglePage: true,
+    pageSize: 5,
+    current: currentPage,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
@@ -510,19 +259,18 @@ export default function PackageManagement(props: any) {
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
-  const columnsSent = [
+  const columns = [
     {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
-      width: "40%",
-      ...getColumnSearchPropsSent("id"),
+      width: "10%",
     },
     {
       title: "Timestamp",
       dataIndex: "timestamp",
       key: "timestamp",
-      width: "40%",
+      width: "20%",
       render: (text: any, record: any) => (
         <>
           {record.timestamp
@@ -532,36 +280,42 @@ export default function PackageManagement(props: any) {
       ),
     },
     {
-      title: "Status",
+      title: "Last Status",
+      dataIndex: "status",
       key: "status",
-      width: "20%",
+      width: "55%",
+    },
+    {
+      title: "State",
+      key: "state",
+      width: "15%",
+      filters: [
+        {
+          text: "Sent",
+          value: "sent",
+        },
+        {
+          text: "Received",
+          value: "received",
+        },
+      ],
+      onFilter: (value: any, record: any) =>
+        record.source.indexOf(value) === 0,
+        
+      render: (text: any, record: any) => (
+        <>
+          {(record.source === "sent") ? (
+            <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
+              Sent
+            </div>
+          ):(
+            <div className="rounded-lg bg-[#9bd1f5] px-2 py-1 text-center font-bold">
+              Received
+            </div>
+          )}
+        </>
+      )
     }
-  ];
-
-  const columnsReceived = [
-    {
-      title: "Package ID",
-      dataIndex: "id",
-      key: "id",
-      width: "40%",
-      ...getColumnSearchPropsReceived("id"),
-    },
-    {
-      title: "Timestamp",
-      dataIndex: "timestamp",
-      key: "timestamp",
-      width: "60%",
-      render: (text: any, record: any) => {
-        console.log(record);
-        return (
-          <>
-            {record.timestamp
-              ? moment(record.timestamp).format("DD-MM-YYYY [at] HH:mm")
-              : null}
-          </>
-        );
-      },
-    },
   ];
 
   const columnsAll = [
@@ -832,9 +586,11 @@ export default function PackageManagement(props: any) {
     id: pkg.id,
     senderName: pkg.senderName,
     timestamp: pkg.timestamp,
+    status: pkg.status[pkg.status.length - 1].detail,
     description: (
       <Descriptions size="small" bordered items={packageDetailSent(pkg)} />
     ),
+    source: 'sent',
   }));
 
   const dataReceived = receivedPackages.map((pkg: any) => ({
@@ -842,9 +598,11 @@ export default function PackageManagement(props: any) {
     id: pkg.id,
     senderName: pkg.senderName,
     timestamp: pkg.timestamp,
+    status: pkg.status[pkg.status.length - 1].detail,
     description: (
       <Descriptions size="small" bordered items={packageDetailReceived(pkg)} />
     ),
+    source: 'received',
   }));
 
   const dataOfAll = allPackage.map((pkg: any) => ({
@@ -861,71 +619,84 @@ export default function PackageManagement(props: any) {
     ),
   }));
 
+  const historyData = [...dataSent, ...dataReceived].map((item, index) => ({
+    ...item,
+    key: index,
+  }));
+
+  historyData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  //Search
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResult, setSearchResult] = useState([]);
 
-  useEffect(() => {
-    const results = dataOfAll.filter((item) =>
-      item.id.toString().includes(searchQuery)
-    );
+  const [searchQueryByLeader, setSearchQueryByLeader] = useState('');
+  const [searchResultByLeader, setSearchResultByLeader] = useState([]);
+
   
-    if (results.length !== searchResult.length) {
-      setSearchResult(results);
-    }
-  }, [searchQuery, dataOfAll, searchResult]);
+  if (role === LEADER_ROLE) {
+    useEffect(() => {
+      const resultsByLeader = dataOfAll.filter((item) =>
+      item.id.toString().includes(searchQuery)
+      );
+      
+      if (resultsByLeader.length !== searchResultByLeader.length) {
+        setSearchResultByLeader(resultsByLeader);
+      }
+    }, [searchQueryByLeader, dataOfAll, searchResultByLeader]);
+  } else if (role !== LEADER_ROLE) {
+    useEffect(() => {
+      const results = historyData.filter((item) =>
+        item.id.toString().includes(searchQuery)
+      );
+    
+      if (results.length !== searchResult.length) {
+        setSearchResult(results);
+      }
+    }, [searchQuery, historyData, searchResult]);
+  }
 
   return (
     <>
       <div className="flex justify-center pb-4">
         {role !== LEADER_ROLE && (
-          <div className="relative flex flex-grow gap-4">
-            <div className="w-1/2">
-              <div className="flex w-full flex-col gap-4">
-                <div className="text-[22px] font-bold">Sent Packages</div>
-                <SkeletonTable loading={loading} columns={columnsSent}>
-                  <Table
-                    scroll={{ x: 800 }}
-                    className="w-full"
-                    columns={columnsSent}
-                    expandable={{
-                      expandedRowRender: (record) => (
-                        <p style={{ margin: 0 }}>{record.description}</p>
-                      ),
-                      rowExpandable: (record) => record.description !== "",
-                    }}
-                    dataSource={dataSent}
-                    pagination={paginationOfSent}
-                    idSearchInput={idSearchInputSent}
-                    onChange={(pagination) =>
-                      setCurrentPageOfSent(pagination.current)
+          <div>
+            <b className="flex items-center justify-center text-2xl mb-5">Packages History</b>
+            <div className="rounded-xl w-[97] bg-white p-3 shadow-lg min-h-[78%]">
+              <Form className="flex items-center justify-center mt-1">
+                <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
+                  <Input
+                    placeholder="Package ID"
+                    className="px-2 py-1 text-lg"
+                    suffix={
+                      <div className="rounded-l px-2 py-1">
+                        <SearchOutlined className="transition-all duration-300" />
+                      </div>
                     }
-                  />
-                </SkeletonTable>
-              </div>
-            </div>
-            <div className="flex-1">
-              <div className="flex w-full flex-col gap-4">
-                <div className="text-[22px] font-bold">Received Packages</div>
-                <SkeletonTable loading={loading} columns={columnsReceived}>
-                  <Table
-                    scroll={{ x: 800 }}
-                    className="w-full"
-                    columns={columnsReceived}
-                    expandable={{
-                      expandedRowRender: (record) => (
-                        <p style={{ margin: 0 }}>{record.description}</p>
-                      ),
-                      rowExpandable: (record) => record.description !== "",
-                    }}
-                    dataSource={dataReceived}
-                    pagination={paginationOfReceived}
-                    idSearchInput={idSearchInputReceived}
-                    onChange={(pagination) =>
-                      setCurrentPageOfReceived(pagination.current)
-                    }
-                  />
-                </SkeletonTable>
-              </div>
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  ></Input>
+                </Form.Item>
+              </Form>
+              
+              <SkeletonTable loading={loading} columns={columns}>
+                <Table
+                  scroll={{ x: 1200 }}
+                  className="w-full"
+                  columns={columns}
+                  expandable={{
+                    expandedRowRender: (record) => (
+                      <p style={{ margin: 0 }}>{record.description}</p>
+                    ),
+                    rowExpandable: (record) => record.description !== "",
+                  }}
+                  dataSource={searchResult}
+                  pagination={pagination}
+                  onChange={(pagination) =>
+                    setCurrentPage(pagination.current)
+                  }
+                />
+              </SkeletonTable>
             </div>
           </div>
         )}
@@ -976,7 +747,7 @@ export default function PackageManagement(props: any) {
                       </div>
                     }
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => setSearchQueryByLeader(e.target.value)}
                   ></Input>
                 </Form.Item>
               </Form>
@@ -992,7 +763,7 @@ export default function PackageManagement(props: any) {
                     ),
                     rowExpandable: (record) => record.description !== "",
                   }}
-                  dataSource={searchResult}
+                  dataSource={searchResultByLeader}
                   pagination={paginationOfAll}
                   idSearchInput={idSearchInputByLeader}
                   onChange={(pagination) =>

@@ -1,19 +1,40 @@
 import {
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
+} from "chart.js";
+import {
   Table,
-  Button,
-  Space,
   Descriptions,
-  Input,
   DescriptionsProps,
+  Form,
+  Input,
 } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
 import axios from "axios";
-import { SearchOutlined } from "@ant-design/icons";
-import Highlighter from "react-highlight-words";
+import { useLocation } from "react-router-dom";
+import Loading from "../helpers/Loading";
+import moment from "moment";
+import { Bar } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  BarElement,
+  Title,
+  Legend,
+  Tooltip,
+);
 
 export default function ExchangePointDetail() {
   const { state } = useLocation();
@@ -22,19 +43,7 @@ export default function ExchangePointDetail() {
   const [sentPackages, setSentPackages] = useState([]);
   const [receivedPackages, setReceivedPackages] = useState([]);
 
-  const [searchSent, setSearchSent] = useState({
-    dataIndex: "",
-    searchText: "",
-  });
-  const idSearchInputSent = useRef(null);
-  const [currentPageOfSent, setCurrentPageOfSent] = useState(1);
-
-  const [searchReceived, setSearchReceived] = useState({
-    dataIndex: "",
-    searchText: "",
-  });
-  const idSearchInputReceived = useRef(null);
-  const [currentPageOfReceived, setCurrentPageOfReceived] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [loading, setLoading] = useState(false);
 
@@ -68,8 +77,7 @@ export default function ExchangePointDetail() {
         setLoading(false);
         toast.error(err.response.data.message);
       });
-    setCurrentPageOfSent(1);
-    setCurrentPageOfReceived(1);
+    setCurrentPage(1);
   }, []);
 
   const exchangePointDetail: DescriptionsProps["items"] = [
@@ -99,273 +107,71 @@ export default function ExchangePointDetail() {
     },
   ];
 
-  // searchInColumn
-  const handleSearchSent = (selectedKeys: any[], confirm: { (): void; (): void; (): void; }, dataIndex: string) => {
-    confirm();
-    setSearchSent({ dataIndex, searchText: selectedKeys[0] });
-
-    // Get index of searched data's list
-    const dataIndexIndex = receivedPackages.findIndex(
-      (item) => item[dataIndex] === selectedKeys[0],
-    );
-
-    // Check if it is founded
-    if (dataIndexIndex !== -1) {
-      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
-
-      // Update current page
-      setCurrentPageOfSent(searchedPage);
-    }
-  };
-  const handleResetIdSent = (clearFilters: { (): void; (): void; }) => {
-    clearFilters();
-    setSearchSent({ ...searchSent, searchText: "" });
-  };
-  const getColumnSearchPropsSent = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }: {
-      setSelectedKeys: (keys: string[]) => void;
-      selectedKeys: string[];
-      confirm: () => void;
-      clearFilters: () => void;
-      close: () => void;
-    }) => (
-      <div className="p-2">
-        <Input
-          ref={dataIndex === "id" ? idSearchInputSent : null}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearchSent(selectedKeys, confirm, dataIndex)
-          }
-          className="mb-4 block"
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearchSent(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            className="w-[90px]"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleResetIdSent(clearFilters)}
-            size="small"
-            className="w-[90px]"
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: any) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1890ff" : undefined,
-        }}
-      />
-    ),
-    onFilterDropdownOpenChange: (visible: any) => {
-      if (visible) {
-        setTimeout(
-          () => (dataIndex === "id" ? idSearchInputSent : null)?.select(),
-          100,
-        );
-      }
-    },
-    render: (text: { toString: () => string; }) =>
-      searchSent.dataIndex === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[searchSent.searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-
-  // searchInColumn
-  const handleSearchReceived = (selectedKeys: any[], confirm: { (): void; (): void; (): void; }, dataIndex: string) => {
-    confirm();
-    setSearchReceived({ dataIndex, searchText: selectedKeys[0] });
-
-    // Get index of searched data's list
-    const dataIndexIndex = receivedPackages.findIndex(
-      (item) => item[dataIndex] === selectedKeys[0],
-    );
-
-    // Check if it is founded
-    if (dataIndexIndex !== -1) {
-      const searchedPage = Math.ceil((dataIndexIndex + 1) / 5);
-
-      // Update current page
-      setCurrentPageOfReceived(searchedPage);
-    } else {
-    }
-  };
-  const handleResetIdReceived = (clearFilters: { (): void; (): void; }) => {
-    clearFilters();
-    setSearchReceived({ ...searchReceived, searchText: "" });
-  };
-  const getColumnSearchPropsReceived = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }: {
-      setSelectedKeys: (keys: string[]) => void;
-      selectedKeys: string[];
-      confirm: () => void;
-      clearFilters: () => void;
-      close: () => void;
-    }) => (
-      <div className="p-2">
-        <Input
-          ref={dataIndex === "id" ? idSearchInputSent : null}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearchReceived(selectedKeys, confirm, dataIndex)
-          }
-          className="mb-4 block"
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() =>
-              handleSearchReceived(selectedKeys, confirm, dataIndex)
-            }
-            icon={<SearchOutlined />}
-            size="small"
-            className="w-[90px]"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleResetIdReceived(clearFilters)}
-            size="small"
-            className="w-[90px]"
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: any) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? "#1890ff" : undefined,
-        }}
-      />
-    ),
-    onFilterDropdownOpenChange: (visible: any) => {
-      if (visible) {
-        setTimeout(
-          () => (dataIndex === "id" ? idSearchInputReceived : null)?.select(),
-          100,
-        );
-      }
-    },
-    render: (text: { toString: () => string; }) =>
-      searchReceived.dataIndex === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: "#ffc069",
-            padding: 0,
-          }}
-          searchWords={[searchReceived.searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-
-  const paginationOfSent = {
+  const pagination = {
     hideOnSinglePage: true,
     pageSize: 5,
-    current: currentPageOfSent,
+    current: currentPage,
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
   };
 
-  const paginationOfReceived = {
-    hideOnSinglePage: true,
-    pageSize: 5,
-    current: currentPageOfReceived,
-    showTotal: (total: number, range: number[]) =>
-      `${range[0]}-${range[1]} of ${total} items`,
-  };
-
-  const columnsSent = [
+  const columns = [
     {
       title: "Package ID",
       dataIndex: "id",
       key: "id",
-      width: "32%",
-      ...getColumnSearchPropsSent("id"),
+      width: "10%",
+    },
+    {
+      title: "Timestamp",
+      dataIndex: "timestamp",
+      key: "timestamp",
+      width: "20%",
+      render: (text: any, record: any) => (
+        <>
+          {record.timestamp
+            ? moment(record.timestamp).format("DD-MM-YYYY [at] HH:mm")
+            : null}
+        </>
+      ),
     },
     {
       title: "Last Status",
       dataIndex: "status",
       key: "status",
-      width: "68%",
-    },
-  ];
-
-  const columnsReceived = [
-    {
-      title: "Package ID",
-      dataIndex: "id",
-      key: "id",
-      width: "32%",
-      ...getColumnSearchPropsReceived("id"),
+      width: "55%",
     },
     {
-      title: "Last Status",
-      dataIndex: "status",
-      key: "status",
-      width: "68%",
-    },
+      title: "State",
+      key: "state",
+      width: "15%",
+      filters: [
+        {
+          text: "Sent",
+          value: "sent",
+        },
+        {
+          text: "Received",
+          value: "received",
+        },
+      ],
+      onFilter: (value: any, record: any) =>
+        record.source.indexOf(value) === 0,
+        
+      render: (text: any, record: any) => (
+        <>
+          {(record.source === "sent") ? (
+            <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
+              Sent
+            </div>
+          ):(
+            <div className="rounded-lg bg-[#9bd1f5] px-2 py-1 text-center font-bold">
+              Received
+            </div>
+          )}
+        </>
+      )
+    }
   ];
 
   type PackageDetail = {
@@ -480,85 +286,212 @@ export default function ExchangePointDetail() {
   const dataSent = sentPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
+    timestamp: pkg.timestamp,
     status: pkg.status[pkg.status.length - 1].detail,
     description: (
       <Descriptions size="small" bordered items={packageDetailSent(pkg)} />
     ),
+    source: 'sent',
   }));
 
   const dataReceived = receivedPackages.map((pkg: any) => ({
     key: pkg.id,
     id: pkg.id,
+    timestamp: pkg.timestamp,
     status: pkg.status[pkg.status.length - 1].detail,
     description: (
       <Descriptions size="small" bordered items={packageDetailReceived(pkg)} />
     ),
+    source: 'received',
   }));
+
+  const historyData = [...dataSent, ...dataReceived].map((item, index) => ({
+    ...item,
+    key: index,
+  }));
+  
+  historyData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  //Search
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    const results = historyData.filter((item) =>
+      item.id.toString().includes(searchQuery)
+    );
+  
+    if (results.length !== searchResult.length) {
+      setSearchResult(results);
+    }
+  }, [searchQuery, historyData, searchResult]);
+  
+
+  //chart
+  const extractMonthLabels = () => {
+    const currentDate = new Date();
+    const labels = [];
+  
+    for (let i = 3; i >= 0; i--) {
+      const monthDate = new Date(currentDate);
+      
+      monthDate.setMonth(currentDate.getMonth() - i);
+  
+      const label = `${monthDate
+        .toLocaleString("en-US", {
+          month: "long",
+        })
+        .slice(0, 3)} ${monthDate.getFullYear()}`;
+      labels.push(label);
+    }
+  
+    return labels;
+  };
+
+  const labels = extractMonthLabels();
+
+  const countPackagesByMonth = (data) => {
+    const packagesByMonth = {};
+  
+    data.forEach((item) => {
+      const timestampDate = new Date(item.timestamp);
+      const monthYear = `${timestampDate
+        .toLocaleString("en-US", {
+          month: "long",
+        })
+        .slice(0, 3)} ${timestampDate.getFullYear()}`;
+  
+      if (!packagesByMonth[monthYear]) {
+        packagesByMonth[monthYear] = 0;
+      }
+      packagesByMonth[monthYear]++;
+    });
+  
+    return packagesByMonth;
+  };
+
+  const countSent = countPackagesByMonth(dataSent);
+  const countReceived = countPackagesByMonth(dataReceived);
+
+  const barChartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Sent',
+        data: countSent,
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: 'Received',
+        data: countReceived,
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  };
+
+  const barOptions: any = {
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+      },
+      title: {
+        display: true,
+        text: "Packages statistics",
+        font: {
+          size: 30,
+        },
+      },
+    },
+    maintainAspectRatio: false,
+  };
 
   return (
     <>
-      <div className="flex h-full">
-        <div className="mx-auto flex w-[98%] max-w-screen-xl flex-col pt-10">
-          <div className="pb-10">
-            <Descriptions
-              title="ExchangePoint Detail"
-              bordered
-              items={exchangePointDetail}
-            />
-          </div>
-          
-          <div className="relative flex flex-grow gap-6">
-            <div className="w-1/2">
-              <div className="flex w-full flex-col gap-4">
-                <div className="text-[18px] font-bold">Sent Packages</div>
-                <SkeletonTable loading={loading} columns={columnsSent}>
-                  <Table
-                    scroll={{x: 1000}}
-                    className="w-full"
-                    columns={columnsSent}
-                    expandable={{
-                      expandedRowRender: (record) => (
-                        <p style={{ margin: 0 }}>{record.description}</p>
-                      ),
-                      rowExpandable: (record) => record.description !== "",
-                    }}
-                    dataSource={dataSent}
-                    pagination={paginationOfSent}
-                    idSearchInput={idSearchInputSent}
-                    onChange={(pagination) =>
-                      setCurrentPageOfSent(pagination.current)
-                    }
-                  />
-                </SkeletonTable>
-              </div>
+    <b className="text-2xl flex items-center justify-center mb-5"> ExchangePoint Detail</b>
+    <div className="rounded-xl w-[97] bg-white p-3 shadow-lg mb-10">
+      <Descriptions
+        bordered
+        items={exchangePointDetail}
+      />
+    </div>
+
+    <b className="flex items-center justify-center text-2xl mb-5">Overview</b>
+    <div className="mb-4 flex w-full flex-wrap justify-evenly gap-3 md:gap-0">
+      
+      <div className="flex basis-[98%] flex-col space-y-3 md:basis-[98%] xl:basis-[35%]">
+        <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
+          <div className="flex flex-col">
+            <div className="text-2xl font-bold">
+              {dataSent.length}
             </div>
-            <div className="flex-1/2">
-              <div className="flex w-full flex-col gap-4">
-                <div className="text-[18px] font-bold">Received Packages</div>
-                <SkeletonTable loading={loading} columns={columnsReceived}>
-                  <Table
-                    scroll={{x: 1000}}
-                    className="w-full"
-                    columns={columnsReceived}
-                    expandable={{
-                      expandedRowRender: (record) => (
-                        <p style={{ margin: 0 }}>{record.description}</p>
-                      ),
-                      rowExpandable: (record) => record.description !== "",
-                    }}
-                    dataSource={dataReceived}
-                    pagination={paginationOfReceived}
-                    idSearchInput={idSearchInputReceived}
-                    onChange={(pagination) =>
-                      setCurrentPageOfReceived(pagination.current)
-                    }
-                  />
-                </SkeletonTable>
-              </div>
-            </div>
+            <div className="text-base">Sent Records</div>
           </div>
+          <img
+            className="ml-auto"
+            width={70}
+            height={70}
+            src="/src/assets/inprogress.svg"
+          />
+        </div>
+
+        <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
+          <div className="flex flex-col">
+            <div className="text-2xl font-bold">
+              {dataReceived.length}
+            </div>
+            <div className="text-base">Received Records</div>
+          </div>
+          <img
+            className="ml-auto"
+            width={70}
+            height={70}
+            src="/src/assets/received.svg"
+          />
         </div>
       </div>
+      
+      <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[60%]">
+        <Bar data={barChartData} options={barOptions}/>
+      </div>
+    </div>
+
+    <b className="flex items-center justify-center text-2xl mb-5">Packages History</b>
+    <div className="rounded-xl w-[97] bg-white p-3 shadow-lg min-h-[78%]">
+      <Form className="flex items-center justify-center mt-1">
+        <Form.Item className="basis-[90%] mx-auto md:basis-[60%] xl:basis-[40%]">
+          <Input
+            placeholder="Package ID"
+            className="px-2 py-1 text-lg"
+            suffix={
+              <div className="rounded-l px-2 py-1">
+                <SearchOutlined className="transition-all duration-300" />
+              </div>
+            }
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          ></Input>
+        </Form.Item>
+      </Form>
+      
+      <SkeletonTable loading={loading} columns={columns}>
+        <Table
+          scroll={{ x: 800 }}
+          className="w-full"
+          columns={columns}
+          expandable={{
+            expandedRowRender: (record) => (
+              <p style={{ margin: 0 }}>{record.description}</p>
+            ),
+            rowExpandable: (record) => record.description !== "",
+          }}
+          dataSource={searchResult}
+          pagination={pagination}
+          onChange={(pagination) =>
+            setCurrentPage(pagination.current)
+          }
+        />
+      </SkeletonTable>
+    </div>
     </>
   );
 }
