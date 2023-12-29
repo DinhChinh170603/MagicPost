@@ -517,7 +517,7 @@ function Managers(props: any) {
         <div className="rounded-xl bg-white p-3 shadow-lg">
           <div className="mb-4 flex w-full items-center justify-center rounded-lg bg-white">
             <Input
-              placeholder="Package ID"
+              placeholder="Employee Name"
               className="w-[97%] px-2 py-1 md:w-[30%]"
               suffix={
                 <div className="rounded-l px-2 py-1">
