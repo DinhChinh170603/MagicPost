@@ -286,7 +286,7 @@ export default function LeaderDashboard() {
         <span className="mt-3 text-xl font-bold">
           Welcome back, {profileUser.fullName}
         </span>
-        <img src="/src/assets/logo_edit.png" width={130} height={100} />
+        <img src="/assets/logo_edit.png" width={130} height={100} />
       </div>
 
       <div className="mb-3 ml-auto mr-5">

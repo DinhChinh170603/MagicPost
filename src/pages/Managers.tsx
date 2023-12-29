@@ -52,7 +52,7 @@ function Managers(props: any) {
       setRoleAPI("/gth-manager");
     }
 
-    if (role && role === LEADER_ROLE) {
+    if (role && role === LEADER_ROLE && roleAPI === "/leader") {
       fetchDepartments();
     } else {
       setColumns(columnsWithoutAction);
@@ -387,28 +387,28 @@ function Managers(props: any) {
         {role === "LEADER" && (
           <div className="mb-4 flex w-full flex-wrap justify-evenly">
             <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-              <img src="/src/assets/GM.svg" width={70} height={70} />
+              <img src="/assets/GM.svg" width={70} height={70} />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold">{gmCount}</span>
                 <span className="text-sm">Gather managers</span>
               </div>
             </div>
             <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-              <img src="/src/assets/EM2.svg" width={70} height={70} />
+              <img src="/assets/EM2.svg" width={70} height={70} />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold">{emCount}</span>
                 <span className="text-sm">Exchange managers</span>
               </div>
             </div>
             <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-              <img src="/src/assets/GE.svg" width={70} height={70} />
+              <img src="/assets/GE.svg" width={70} height={70} />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold">{geCount}</span>
                 <span className="text-sm">Gather employees</span>
               </div>
             </div>
             <div className="flex basis-[98%] items-center gap-3 border border-gray-300 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-              <img src="/src/assets/EE.svg" width={70} height={70} />
+              <img src="/assets/EE.svg" width={70} height={70} />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold">{eeCount}</span>
                 <span className="text-sm">Exchange employees</span>
@@ -443,7 +443,7 @@ function Managers(props: any) {
             </div>
 
             <img
-              src="/src/assets/GE.svg"
+              src="/assets/GE.svg"
               width={100}
               height={100}
               className="m-3"
@@ -477,7 +477,7 @@ function Managers(props: any) {
             </div>
 
             <img
-              src="/src/assets/EE.svg"
+              src="/assets/EE.svg"
               width={100}
               height={100}
               className="m-3"
