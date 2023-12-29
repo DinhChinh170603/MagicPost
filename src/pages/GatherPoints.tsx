@@ -1,5 +1,5 @@
 import { LinkOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Table, Tag, Tooltip } from "antd";
+import { Button, Popconfirm, Table, Tag, Tooltip, Input } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import EstablishConnectionModal from "../components/EstablishConnectionModal";
 import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
+import { SearchOutlined } from "@ant-design/icons";
 import service from "../helpers/service";
 import { AiOutlineDelete } from "react-icons/ai";
 
@@ -200,6 +201,24 @@ export default function GatherPoints() {
       });
   }, []);
 
+
+  //search
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    const results = gatherPointsList.filter((item: any) =>
+      item.id
+        .toString()
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase().trim()),
+    );
+
+    if (results.length !== searchResult.length) {
+      setSearchResult(results);
+    }
+  }, [searchQuery, gatherPointsList]);
+
   return (
     <div className="pb-4">
       <div className="mb-4 flex max-md:flex-col max-md:gap-4">
@@ -224,11 +243,25 @@ export default function GatherPoints() {
         </div>
       </div>
       <div className="rounded-xl bg-white p-3 shadow-lg">
+        <div className="mb-4 flex w-full items-center justify-center rounded-lg bg-white">
+          <Input
+            placeholder="Name GatherPoint"
+            className="w-[97%] px-2 py-1 md:w-[30%]"
+            suffix={
+              <div className="rounded-l px-2 py-1">
+                <SearchOutlined className="transition-all duration-300" />
+              </div>
+            }
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
         <SkeletonTable loading={tableLoading} columns={columns}>
           <Table
             scroll={{ x: 800 }}
             columns={columns}
-            dataSource={gatherPointsList}
+            dataSource={searchResult}
             rowKey={(record) => String(record.id)}
             pagination={pagination}
           />
