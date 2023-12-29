@@ -103,7 +103,7 @@ export default function IncomingPackage(props: any) {
     {
       title: "Action",
       key: "action",
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <div className="flex w-[80%] justify-start gap-4">
           <Button
             type="primary"

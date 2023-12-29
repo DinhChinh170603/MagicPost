@@ -59,8 +59,14 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-full">
-      <div className="flex-1 flex-col flex items-center justify-center bg-gray-300 md:flex-col" style={{ backgroundImage: "url('/src/assets/BG.png')", backgroundSize: '100% 100%'}}>
+    <div className="flex h-screen w-full flex-col lg:flex-row">
+      <div
+        className="flex flex-1 flex-col items-center justify-center bg-gray-300 md:flex-col"
+        style={{
+          backgroundImage: "url('/src/assets/BG.png')",
+          backgroundSize: "100% 100%",
+        }}
+      >
         <img src={logo} className="h-[50%] animate-updown" alt="logo" />
         <b className="text-[70px] max-lg:-mt-5 max-lg:text-[50px]">
           Magic Post

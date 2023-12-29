@@ -88,7 +88,7 @@ export default function DeliveryStatus(props: any) {
         },
       ],
       onFilter: (value: any, record: any) => record.source.indexOf(value) === 0,
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <>
           {record.source === "rejected" ? (
             <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
@@ -107,8 +107,8 @@ export default function DeliveryStatus(props: any) {
       dataIndex: "lastStatus",
       key: "detail",
       width: "50%",
-      render: (text: any, record: any) => {
-        return text || record.reason;
+      render: (_text: any, record: any) => {
+        return _text || record.reason;
       },
     },
   ];

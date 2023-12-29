@@ -1,5 +1,12 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Descriptions, DescriptionsProps, Form, Input, Table } from "antd";
+import {
+  Descriptions,
+  DescriptionsProps,
+  Form,
+  Input,
+  Skeleton,
+  Table,
+} from "antd";
 import axios from "axios";
 import {
   BarElement,
@@ -18,6 +25,7 @@ import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
+import Loading from "../helpers/Loading";
 
 ChartJS.register(
   CategoryScale,
@@ -31,14 +39,45 @@ ChartJS.register(
 
 export default function ExchangePointDetail() {
   const { state } = useLocation();
-  const { exchangePoint } = state;
+  const { exchangePoint, manager } = state;
 
   const [sentPackages, setSentPackages] = useState([]);
   const [receivedPackages, setReceivedPackages] = useState([]);
 
+  const [exchangePointData, setExchangePointData] = useState(exchangePoint);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (manager) {
+      service.get(`${manager}/exchange-point`).then((res) => {
+        setExchangePointData(res.data.results);
+      });
+
+      setLoading(true);
+      axios
+        .all([
+          service.get(`${manager}/sent-packages`),
+          service.get(`${manager}/received-packages`),
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            const sent = res1.data.results.map((item: { id: any }) => ({
+              ...item,
+              key: item.id,
+            }));
+            setSentPackages(sent);
+            const received = res2.data.results.map((item: { id: any }) => ({
+              ...item,
+              key: item.id,
+            }));
+            setReceivedPackages(received);
+            setLoading(false);
+          }),
+        );
+      return;
+    }
+
     setLoading(true);
     axios
       .all([
@@ -73,26 +112,46 @@ export default function ExchangePointDetail() {
   const exchangePointDetail: DescriptionsProps["items"] = [
     {
       key: "1",
-      label: "ExchangePoint's name",
-      children: exchangePoint.id,
-      span: 2,
+      label: "ID",
+      children: exchangePointData ? (
+        exchangePointData.id
+      ) : (
+        <Skeleton active paragraph={{ rows: 1, width: "100%" }} title={false} />
+      ),
+      span: 1,
     },
     {
       key: "2",
       label: "Location",
-      children: exchangePoint.location,
+      children: exchangePointData ? (
+        exchangePointData.location
+      ) : (
+        <Skeleton active paragraph={{ rows: 1, width: "100%" }} title={false} />
+      ),
       span: 2,
     },
     {
       key: "3",
       label: "Managed by",
-      children: exchangePoint.manager ? exchangePoint.manager.fullName : null,
-      span: 2,
+      children: exchangePointData ? (
+        exchangePointData.manager ? (
+          exchangePointData.manager.fullName
+        ) : null
+      ) : (
+        <Skeleton active paragraph={{ rows: 1, width: "100%" }} title={false} />
+      ),
+      span: 1,
     },
     {
       key: "4",
       label: "Email",
-      children: exchangePoint.manager ? exchangePoint.manager.email : null,
+      children: exchangePointData ? (
+        exchangePointData.manager ? (
+          exchangePointData.manager.email
+        ) : null
+      ) : (
+        <Skeleton active paragraph={{ rows: 1, width: "100%" }} title={false} />
+      ),
       span: 2,
     },
   ];
@@ -116,7 +175,7 @@ export default function ExchangePointDetail() {
       dataIndex: "timestamp",
       key: "timestamp",
       width: "20%",
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <>
           {record.timestamp
             ? moment(record.timestamp).format("DD-MM-YYYY [at] HH:mm")
@@ -146,7 +205,7 @@ export default function ExchangePointDetail() {
       ],
       onFilter: (value: any, record: any) => record.source.indexOf(value) === 0,
 
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <>
           {record.source === "sent" ? (
             <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
@@ -434,7 +493,8 @@ export default function ExchangePointDetail() {
           </div>
         </div>
 
-        <div className="flex min-h-[300px] basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[60%]">
+        <div className="relative flex min-h-[300px] basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[60%]">
+          {loading && <Loading relative />}
           <Bar data={barChartData} options={barOptions} />
         </div>
       </div>

@@ -1,10 +1,9 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Descriptions, Form, Input, Space, Table } from "antd";
+import { Descriptions, Form, Input, Table } from "antd";
 import axios from "axios";
 import moment from "moment";
 import PropTypes from "prop-types";
-import { useEffect, useRef, useState } from "react";
-import Highlighter from "react-highlight-words";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import {
@@ -18,6 +17,7 @@ import {
   SUCCESS_STATE,
 } from "../helpers/constants";
 import service from "../helpers/service";
+import { sortByString } from "../helpers/helpers";
 
 export default function PackageManagement(props: any) {
   const { role } = props;
@@ -144,7 +144,7 @@ export default function PackageManagement(props: any) {
       dataIndex: "timestamp",
       key: "timestamp",
       width: "20%",
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <>
           {record.timestamp
             ? moment(record.timestamp).format("DD-MM-YYYY [at] HH:mm")
@@ -174,7 +174,7 @@ export default function PackageManagement(props: any) {
       ],
       onFilter: (value: any, record: any) => record.source.indexOf(value) === 0,
 
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <>
           {record.source === "sent" ? (
             <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
@@ -200,15 +200,13 @@ export default function PackageManagement(props: any) {
       title: "Sender Name",
       dataIndex: "senderName",
       key: "senderName",
-      sorter: (a: { senderName: string }, b: { senderName: any }) =>
-        a.senderName.localeCompare(b.senderName),
+      sorter: sortByString("senderName"),
     },
     {
       title: "Receiver Name",
       dataIndex: "receiverName",
       key: "receiverName",
-      sorter: (c: { receiverName: string }, d: { receiverName: any }) =>
-        c.receiverName.localeCompare(d.receiverName),
+      sorter: sortByString("receiverName"),
     },
     {
       title: "Package Type",
@@ -247,7 +245,7 @@ export default function PackageManagement(props: any) {
       ],
       onFilter: (value: any, record: any) =>
         record.generalState.indexOf(value) === 0,
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <>
           {record.generalState === SUCCESS_STATE ? (
             <div className="rounded-lg bg-[#9bd1f5] px-2 py-1 text-center font-bold">
@@ -509,12 +507,14 @@ export default function PackageManagement(props: any) {
   useEffect(() => {
     if (role !== LEADER_ROLE) return;
 
-    const resultsByLeader = dataOfAll.reverse().filter((item: any) =>
-      item.id
-        .toString()
-        .toLowerCase()
-        .includes(searchQueryByLeader.toLowerCase().trim()),
-    );
+    const resultsByLeader = dataOfAll
+      .reverse()
+      .filter((item: any) =>
+        item.id
+          .toString()
+          .toLowerCase()
+          .includes(searchQueryByLeader.toLowerCase().trim()),
+      );
 
     if (resultsByLeader.length !== searchResultByLeader.length) {
       setSearchResultByLeader(resultsByLeader);
@@ -523,12 +523,14 @@ export default function PackageManagement(props: any) {
 
   useEffect(() => {
     if (role === LEADER_ROLE) return;
-    const results = historyData.reverse().filter((item: any) =>
-      item.id
-        .toString()
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase().trim()),
-    );
+    const results = historyData
+      .reverse()
+      .filter((item: any) =>
+        item.id
+          .toString()
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase().trim()),
+      );
 
     if (results.length !== searchResult.length) {
       setSearchResult(results);

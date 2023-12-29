@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InviteUserModal from "../components/InviteUserModal";
 import SkeletonTable from "../components/SkeletonTable";
+import { ImNewTab } from "react-icons/im";
 import {
   EE_ROLE,
   EM_ROLE,
@@ -257,19 +258,13 @@ function Managers(props: any) {
         ],
         onFilter: (value: any, record: any) => record.role.indexOf(value) === 0,
       }),
-      render: (text: string, record: any) => roleNormalize.get(record.role),
+      render: (_text: string, record: any) => roleNormalize.get(record.role),
     },
     {
       title: "Joining Date",
       dataIndex: "startWorkingDate",
       key: "startWorkingDate",
-      sorter: (
-        a: { startWorkingDate: string | number | Date },
-        b: {
-          id(id: any): import("react").Key;
-          startWorkingDate: string | number | Date;
-        },
-      ) => {
+      sorter: (a: any, b: any) => {
         return (
           moment(a.startWorkingDate).valueOf() -
           moment(b.startWorkingDate).valueOf()
@@ -281,7 +276,7 @@ function Managers(props: any) {
     {
       title: "Action",
       key: "action",
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <div className="flex justify-center">
           <Tooltip title="Remove user">
             <Popconfirm
@@ -313,7 +308,7 @@ function Managers(props: any) {
       width: "20%",
       render: (fullName: any, record: any) => (
         <div
-          className="cursor-pointer hover:text-btnColor hover:font-bold"
+          className="cursor-pointer hover:font-bold hover:text-btnColor"
           onClick={() => navigate(`/users/${record.id}`)}
         >
           {fullName}
@@ -359,7 +354,7 @@ function Managers(props: any) {
         ],
         onFilter: (value: any, record: any) => record.role.indexOf(value) === 0,
       }),
-      render: (text: string, record: any) => roleNormalize.get(record.role),
+      render: (_text: string, record: any) => roleNormalize.get(record.role),
     },
     {
       title: "Joining Date",
@@ -421,42 +416,72 @@ function Managers(props: any) {
             </div>
           </div>
         )}
-        
+
         {role === "GATHER_MANAGER" && (
-          <div
-            className="mb-4 flex justify-between items-center rounded-md bg-white px-5 shadow-lg w-[98%] mx-auto"
-          >
+          <div className="mx-auto mb-4 flex w-[98%] items-center justify-between rounded-md bg-white px-5 shadow-lg">
             <div className="flex flex-col">
-              <div className="text-xl">
-                <span className="font-bold">Gather Point: {' '}</span>
-                {profileUser.departmentId}
+              <div className="flex items-center gap-3 text-xl">
+                <div>
+                  <span className="font-bold">Gather Point: </span>
+                  {profileUser.departmentId}
+                </div>
+                <Tooltip title="View detail">
+                  <ImNewTab
+                    className="cursor-pointer hover:text-btnColor"
+                    onClick={() =>
+                      navigate(`/gather-points/${profileUser.departmentId}`, {
+                        state: { manager: "/gth-manager" },
+                      })
+                    }
+                  />
+                </Tooltip>
               </div>
               <div className="mt-3 text-xl">
-                <span className="font-bold">Number Of Employees: {' '}</span>
+                <span className="font-bold">Number Of Employees: </span>
                 {geCount}
               </div>
             </div>
-            
-            <img src="/src/assets/GE.svg" width={100} height={100} className="m-3"/>
+
+            <img
+              src="/src/assets/GE.svg"
+              width={100}
+              height={100}
+              className="m-3"
+            />
           </div>
         )}
 
         {role === "EXCHANGE_MANAGER" && (
-          <div
-            className="mb-4 flex justify-between items-center rounded-md bg-white px-5 shadow-lg w-[98%] mx-auto"
-          >
+          <div className="mx-auto mb-4 flex w-[98%] items-center justify-between rounded-md bg-white px-5 shadow-lg">
             <div className="flex flex-col">
-              <div className="text-xl">
-                <span className="font-bold">Exchange Point: {' '}</span>
-                {profileUser.departmentId}
+              <div className="flex items-center gap-3 text-xl">
+                <div>
+                  <span className="font-bold">Exchange Point: </span>
+                  {profileUser.departmentId}
+                </div>
+                <Tooltip title="View detail">
+                  <ImNewTab
+                    className="cursor-pointer hover:text-btnColor"
+                    onClick={() =>
+                      navigate(`/exchange-points/${profileUser.departmentId}`, {
+                        state: { manager: "/ex-manager" },
+                      })
+                    }
+                  />
+                </Tooltip>
               </div>
               <div className="mt-3 text-xl">
-                <span className="font-bold">Number Of Employees: {' '}</span>
+                <span className="font-bold">Number Of Employees: </span>
                 {eeCount}
               </div>
             </div>
-            
-            <img src="/src/assets/EE.svg" width={100} height={100} className="m-3"/>
+
+            <img
+              src="/src/assets/EE.svg"
+              width={100}
+              height={100}
+              className="m-3"
+            />
           </div>
         )}
 

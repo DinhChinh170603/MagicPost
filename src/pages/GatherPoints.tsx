@@ -36,21 +36,32 @@ export default function GatherPoints() {
       dataIndex: "id",
       key: "id",
       sorter: sortByString("id"),
-      width: "15%",
+      render: (_text: string, record: any) => {
+        return (
+          <div
+            onClick={() => {
+              navigate(`/gather-points/${record.id}`, {
+                state: { gatherPoint: record },
+              });
+            }}
+            className="cursor-pointer hover:text-btnColor"
+          >
+            {record.id}
+          </div>
+        );
+      },
     },
     {
       title: "Manager",
       dataIndex: "manager",
       key: "manager",
-      width: "20%",
-      render: (text: string, record: any) => record.manager?.fullName,
+      render: (_text: string, record: any) => record.manager?.fullName,
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
       sorter: sortByString("location"),
-      width: "20%",
       filters: [
         {
           text: "Hải Phòng",
