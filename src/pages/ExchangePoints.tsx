@@ -175,10 +175,6 @@ export default function ExchangePoints() {
       });
   }, []);
 
-  const handleModalSubmit = () => {
-    setModalFinished((prev) => !prev);
-  };
-
   //search
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
