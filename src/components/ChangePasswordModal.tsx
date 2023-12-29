@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { Button, Form, Input, Modal } from "antd";
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { toast } from "react-toastify";
 import { FIELD_REQUIRED } from "../helpers/constants";
 import service from "../helpers/service";
-import { toast } from "react-toastify";
 
 export default function ChangePasswordModal(props: any) {
   const [form] = Form.useForm();

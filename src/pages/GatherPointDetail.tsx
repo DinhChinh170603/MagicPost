@@ -1,5 +1,12 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Descriptions, DescriptionsProps, Form, Input, Table } from "antd";
+import {
+  Descriptions,
+  DescriptionsProps,
+  Form,
+  Input,
+  Skeleton,
+  Table,
+} from "antd";
 import axios from "axios";
 import {
   BarElement,
@@ -18,6 +25,7 @@ import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SkeletonTable from "../components/SkeletonTable";
 import service from "../helpers/service";
+import Loading from "../helpers/Loading";
 
 ChartJS.register(
   CategoryScale,
@@ -28,18 +36,53 @@ ChartJS.register(
   Legend,
   Tooltip,
 );
-
-export default function GatherPointDetail() {
+function GatherPointDetail() {
   const { state } = useLocation();
-  const { gatherPoint } = state;
+  const { gatherPoint, manager } = state;
 
   const [sentPackages, setSentPackages] = useState([]);
   const [receivedPackages, setReceivedPackages] = useState([]);
 
-  const [loading, setLoading] = useState(false);
+  const [gatherPointData, setGatherPointData] = useState(gatherPoint);
+
+  const [dataLoading, setDataLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
+    if (manager) {
+      service
+        .get(`${manager}/gather-point`)
+        .then((res) => {
+          setGatherPointData(res.data.results);
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+        });
+
+      setDataLoading(true);
+      axios
+        .all([
+          service.get(`${manager}/sent-packages`),
+          service.get(`${manager}/received-packages`),
+        ])
+        .then(
+          axios.spread((res1, res2) => {
+            const sent = res1.data.results.map((item: { id: any }) => ({
+              ...item,
+              key: item.id,
+            }));
+            setSentPackages(sent);
+            const received = res2.data.results.map((item: { id: any }) => ({
+              ...item,
+              key: item.id,
+            }));
+            setReceivedPackages(received);
+            setDataLoading(false);
+          }),
+        );
+      return;
+    }
+
+    setDataLoading(true);
     axios
       .all([
         service.get(`/leader/gather-points-sent/${gatherPoint.id}`),
@@ -57,15 +100,15 @@ export default function GatherPointDetail() {
             key: item.id,
           }));
           setReceivedPackages(newData2);
-          setLoading(false);
+          setDataLoading(false);
         }),
         () => {
-          setLoading(false);
+          setDataLoading(false);
           toast.error("Something went wrong");
         },
       )
       .catch((err) => {
-        setLoading(false);
+        setDataLoading(false);
         toast.error(err.response.data.message);
       });
   }, []);
@@ -74,25 +117,45 @@ export default function GatherPointDetail() {
     {
       key: "1",
       label: "ID",
-      children: gatherPoint.id,
+      children: gatherPointData ? (
+        gatherPointData.id
+      ) : (
+        <Skeleton active paragraph={{ rows: 1, width: "100%" }} title={false} />
+      ),
       span: 1,
     },
     {
       key: "2",
       label: "Location",
-      children: gatherPoint.location,
+      children: gatherPointData ? (
+        gatherPointData.location
+      ) : (
+        <Skeleton active paragraph={{ rows: 1, width: "100%" }} title={false} />
+      ),
       span: 2,
     },
     {
       key: "3",
       label: "Managed by",
-      children: gatherPoint.manager ? gatherPoint.manager.fullName : null,
+      children: gatherPointData ? (
+        gatherPointData.manager ? (
+          gatherPointData.manager.fullName
+        ) : null
+      ) : (
+        <Skeleton active paragraph={{ rows: 1, width: "100%" }} title={false} />
+      ),
       span: 1,
     },
     {
       key: "4",
       label: "Email",
-      children: gatherPoint.manager ? gatherPoint.manager.email : null,
+      children: gatherPointData ? (
+        gatherPointData.manager ? (
+          gatherPointData.manager.email
+        ) : null
+      ) : (
+        <Skeleton active paragraph={{ rows: 1, width: "100%" }} title={false} />
+      ),
       span: 2,
     },
   ];
@@ -116,7 +179,7 @@ export default function GatherPointDetail() {
       dataIndex: "timestamp",
       key: "timestamp",
       width: "20%",
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <>
           {record.timestamp
             ? moment(record.timestamp).format("DD-MM-YYYY [at] HH:mm")
@@ -146,7 +209,7 @@ export default function GatherPointDetail() {
       ],
       onFilter: (value: any, record: any) => record.source.indexOf(value) === 0,
 
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <>
           {record.source === "sent" ? (
             <div className="rounded-lg bg-[#ffb1c2] px-2 py-1 text-center font-bold">
@@ -340,7 +403,7 @@ export default function GatherPointDetail() {
   const labels = extractMonthLabels();
 
   const countPackagesByMonth = (data: any) => {
-    const packagesByMonth : any = {};
+    const packagesByMonth: any = {};
 
     data.forEach((item: any) => {
       const timestampDate = new Date(item.timestamp);
@@ -434,7 +497,8 @@ export default function GatherPointDetail() {
           </div>
         </div>
 
-        <div className="flex min-h-[300px] basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[60%]">
+        <div className="relative flex min-h-[300px] basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[60%]">
+          {dataLoading && <Loading relative />}
           <Bar data={barChartData} options={barOptions} />
         </div>
       </div>
@@ -459,7 +523,7 @@ export default function GatherPointDetail() {
           </Form.Item>
         </Form>
 
-        <SkeletonTable loading={loading} columns={columns}>
+        <SkeletonTable loading={dataLoading} columns={columns}>
           <Table
             scroll={{ x: 800 }}
             className="w-full"
@@ -478,3 +542,5 @@ export default function GatherPointDetail() {
     </>
   );
 }
+
+export default GatherPointDetail;

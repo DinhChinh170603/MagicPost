@@ -22,21 +22,33 @@ export default function ExchangePoints() {
       dataIndex: "id",
       key: "id",
       sorter: sortByString("id"),
-      width: "15%",
+      render: (_text: string, record: any) => {
+        return (
+          <div
+            onClick={() => {
+              navigate(`/exchange-points/${record.id}`, {
+                state: { exchangePoint: record },
+              });
+            }}
+            className="cursor-pointer hover:text-btnColor"
+          >
+            {record.id}
+          </div>
+        );
+      },
     },
     {
       title: "Manager",
       dataIndex: "manager",
       key: "manager",
-      width: "20%",
-      render: (text: string, record: any) => record.manager?.fullName,
+      sorter: sortByString("manager"),
+      render: (_text: string, record: any) => record.manager?.fullName,
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
       sorter: sortByString("location"),
-      width: "15%",
       filters: [
         {
           text: "Hải Phòng",
@@ -63,11 +75,10 @@ export default function ExchangePoints() {
         record.location.indexOf(value) === 0,
     },
     {
-      title: "Link with Gather",
+      title: "Linked Gather Point",
       dataIndex: "linkedGatherPoints",
       key: "linkedGatherPoints",
-      width: "20%",
-      render: (text: string, record: any) => {
+      render: (_text: string, record: any) => {
         return record.linkedGatherPoint ? (
           <Tag
             onClick={() => {

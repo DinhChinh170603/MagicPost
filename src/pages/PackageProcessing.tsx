@@ -142,7 +142,7 @@ export default function PackageProcessing(props: any) {
           {
             title: "",
             key: "print",
-            render: (text: any, record: any) => (
+            render: (_text: any, record: any) => (
               <Tooltip title="Print Invoice">
                 <FiPrinter
                   size={20}
@@ -205,7 +205,7 @@ export default function PackageProcessing(props: any) {
     {
       title: "Action",
       key: "action",
-      render: (text: any, record: any) => {
+      render: (_text: any, record: any) => {
         const getActionButton = () => {
           if (record.to === "Client") {
             return (
