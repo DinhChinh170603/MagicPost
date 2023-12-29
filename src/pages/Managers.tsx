@@ -52,7 +52,7 @@ function Managers(props: any) {
       setRoleAPI("/gth-manager");
     }
 
-    if (role && role === LEADER_ROLE) {
+    if (role && role === LEADER_ROLE && roleAPI === "/leader") {
       fetchDepartments();
     } else {
       setColumns(columnsWithoutAction);
