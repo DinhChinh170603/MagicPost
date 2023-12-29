@@ -59,114 +59,124 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col lg:flex-row">
+    <div className="flex h-screen w-full flex-col xl:flex-row bg-bgColor" style = {{backgroundImage: "url('/assets/BG_lookup.png')", backgroundSize: 'cover'}}>
       <div
-        className="flex flex-1 flex-col items-center justify-center bg-gray-300 md:flex-col"
-        style={{
-          backgroundImage: "url('/assets/BG.png')",
-          backgroundSize: "100% 100%",
-        }}
+        className="flex-1 flex-col items-center justify-center hidden xl:flex"
+        // style={{
+        //   backgroundImage: "url('/src/assets/BG.png')",
+        //   backgroundSize: "100% 100%",
+        // }}
       >
-        <img src={logo} className="h-[50%] animate-updown" alt="logo" />
-        <b className="text-[70px] max-lg:-mt-5 max-lg:text-[50px]">
+        <img src={logo} className="h-[60%] animate-updown xl:h-[57%] hidden xl:block" alt="logo" />
+        {/* <b className="text-[70px] max-lg:-mt-5 max-lg:text-[50px]">
           Magic Post
-        </b>
+        </b> */}
       </div>
 
       {!forgotPassword ? (
-        <Form form={form} onFinish={onFinish} className="flex flex-1">
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <span className="mb-4 text-3xl font-bold">Login</span>
+        <Form form={form} onFinish={onFinish} className="flex flex-1 justify-center">
+          <div className="flex w-[90%] flex-col items-center justify-center">
+            <b className="text-[50px] mb-4 items-center justify-center flex xl:hidden">
+              Magic Post
+            </b>
+            <div className="bg-white w-full p-8 rounded-xl shadow-lg xl:w-[70%]">
+              <span className="mb-4 text-3xl font-bold flex justify-center ">Login</span>
 
-            <Form.Item
-              name="email"
-              className="w-[80%] md:w-[50%]"
-              rules={[
-                { required: true, message: "Please enter your email!" },
-                { type: "email", message: "Please enter a valid email!" },
-              ]}
-            >
-              <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="Email"
-                className="py-2"
-              />
-            </Form.Item>
-
-            {/* Password Field */}
-            <Form.Item
-              name="password"
-              className="w-[80%] md:w-[50%]"
-              rules={[
-                { required: true, message: "Please enter your password!" },
-              ]}
-            >
-              <Input.Password
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                placeholder="Password"
-                className="py-2"
-              />
-            </Form.Item>
-
-            <Form.Item className="w-[20%]">
-              <Button
-                type="primary"
-                htmlType="submit"
+              <Form.Item
+                name="email"
                 className="w-full"
-                loading={loading}
+                rules={[
+                  { required: true, message: "Please enter your email!" },
+                  { type: "email", message: "Please enter a valid email!" },
+                ]}
               >
-                Login
-              </Button>
-            </Form.Item>
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Email"
+                  className="py-2"
+                />
+              </Form.Item>
 
-            <div className="-mt-4 mb-3 w-[38%] text-center">
-              <span
-                className="cursor-pointer text-base text-[#4c56df] hover:underline"
-                onClick={() => setForgotPassword(true)}
+              {/* Password Field */}
+              <Form.Item
+                name="password"
+                className="w-full"
+                rules={[
+                  { required: true, message: "Please enter your password!" },
+                ]}
               >
-                Forgot Password?
-              </span>
+                <Input.Password
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  placeholder="Password"
+                  className="py-2"
+                />
+              </Form.Item>
+
+              <Form.Item className="w-full justify-center flex">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="w-full"
+                  loading={loading}
+                >
+                  Login
+                </Button>
+              </Form.Item>
+
+              <div className="-mt-4 mb-3 w-full text-center">
+                <span
+                  className="cursor-pointer text-base text-[#4c56df] hover:underline"
+                  onClick={() => setForgotPassword(true)}
+                >
+                  Forgot Password?
+                </span>
+              </div>
             </div>
           </div>
         </Form>
       ) : (
-        <Form form={form} onFinish={onFinish} className="flex flex-1 flex-col">
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <span className="mb-4 text-3xl font-bold">Forget Password</span>
+        <Form form={form} onFinish={onFinish} className="flex flex-1 justify-center">
+          <div className="flex w-[90%] flex-col items-center justify-center">
+            <b className="text-[50px] mb-4 items-center justify-center flex xl:hidden">
+              Magic Post
+            </b>
+            <div className="bg-white w-full p-8 rounded-xl shadow-lg xl:w-[70%]">
+              <span className="mb-4 text-3xl font-bold flex justify-center">Forget Password</span>
 
-            <Form.Item
-              name="email"
-              className="w-[80%] md:w-[50%]"
-              rules={[
-                { required: true, message: "Please enter your email!" },
-                { type: "email", message: "Please enter a valid email!" },
-              ]}
-            >
-              <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="Email"
-                className="py-2"
-              />
-            </Form.Item>
-
-            <Form.Item className="w-40">
-              <Button
-                type="primary"
-                htmlType="submit"
+              <Form.Item
+                name="email"
                 className="w-full"
-                loading={loading}
+                rules={[
+                  { required: true, message: "Please enter your email!" },
+                  { type: "email", message: "Please enter a valid email!" },
+                ]}
               >
-                Reset password
-              </Button>
-            </Form.Item>
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Email"
+                  className="py-2"
+                />
+              </Form.Item>
 
-            <div className="-mt-4 mb-3 w-[38%] text-center">
-              <span
-                className="cursor-pointer text-base text-[#4c56df] hover:underline"
-                onClick={() => setForgotPassword(false)}
-              >
-                Back to Login
-              </span>
+              <Form.Item className="w-full flex justify-center">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="w-full"
+                  loading={loading}
+                >
+                  Reset password
+                </Button>
+              </Form.Item>
+
+              <div className="-mt-4 mb-3 w-full text-center">
+                <span
+                  className="cursor-pointer text-base text-[#4c56df] hover:underline"
+                  onClick={() => setForgotPassword(false)}
+                >
+                  Back to Login
+                </span>
+              </div>
             </div>
           </div>
         </Form>
