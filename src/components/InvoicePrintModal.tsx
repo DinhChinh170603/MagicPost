@@ -37,7 +37,7 @@ export default function InvoicePrintModal(props: any) {
           className="item-center flex flex-col justify-center"
         >
           <div className="flex items-center justify-around">
-            <img src="/public/logo_edit.png" width={160} height={130} className="ml-4"/>
+            <img src="/assets/logo_edit.png" width={160} height={130} className="ml-4"/>
             <div className="flex flex-col items-center">
               <QRCode size={130} value={"http://magicpost.com/package-detail/" + data.id} />
               <p className="text-md">{data.id}</p>

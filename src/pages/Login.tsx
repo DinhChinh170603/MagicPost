@@ -2,7 +2,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import React from "react";
 import { toast } from "react-toastify";
-import logo from "/public/logo_animate.gif";
+import logo from "/assets/logo_animate.gif";
 import service from "../helpers/service";
 
 export default function Login() {
@@ -59,11 +59,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col xl:flex-row bg-bgColor" style = {{backgroundImage: "url('/public/BG_lookup.png')", backgroundSize: 'cover'}}>
+    <div className="flex h-screen w-full flex-col xl:flex-row bg-bgColor" style = {{backgroundImage: "url('/assets/BG_lookup.png')", backgroundSize: 'cover'}}>
       <div
         className="flex-1 flex-col items-center justify-center hidden xl:flex"
         // style={{
-        //   backgroundImage: "url('/src/public/BG.png')",
+        //   backgroundImage: "url('/src/assets/BG.png')",
         //   backgroundSize: "100% 100%",
         // }}
       >

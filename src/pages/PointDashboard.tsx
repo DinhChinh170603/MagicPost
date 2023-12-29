@@ -201,7 +201,7 @@ export default function PointDashboard() {
           Welcome back, {profileUser.fullName}
         </span>
         <img
-          src="/public/logo_edit.png"
+          src="/assets/logo_edit.png"
           width={130}
           height={100}
           className="ml-auto"
@@ -233,7 +233,7 @@ export default function PointDashboard() {
             className="ml-auto"
             width={70}
             height={70}
-            src="/public/pending.svg"
+            src="/assets/pending.svg"
           />
         </div>
         <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
@@ -247,7 +247,7 @@ export default function PointDashboard() {
             className="ml-auto"
             width={70}
             height={70}
-            src="/public/inprogress.svg"
+            src="/assets/inprogress.svg"
           />
         </div>
         <div className="flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md md:basis-[46%] xl:basis-[30%]">
@@ -261,7 +261,7 @@ export default function PointDashboard() {
             className="ml-auto"
             width={70}
             height={70}
-            src="/public/received.svg"
+            src="/assets/received.svg"
           />
         </div>
       </div>

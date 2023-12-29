@@ -10,12 +10,12 @@ import { TbPackageImport, TbTruckDelivery } from "react-icons/tb";
 import { NavLink } from "react-router-dom";
 import { EE_ROLE, LEADER_ROLE } from "../helpers/constants";
 import { roleNormalize } from "../helpers/helpers";
-import exchangeEmp from "/public/EC_EM_logo.png";
-import exchangeMana from "/public/EC_MN_logo.png";
-import gatherEmp from "/public/GT_EM_logo.png";
-import gatherMana from "/public/GT_MN_logo.png";
-import leader from "/public/leader_logo.png";
-import simpleLogo from "/public/simpleLogo.png";
+import exchangeEmp from "/assets/EC_EM_logo.png";
+import exchangeMana from "/assets/EC_MN_logo.png";
+import gatherEmp from "/assets/GT_EM_logo.png";
+import gatherMana from "/assets/GT_MN_logo.png";
+import leader from "/assets/leader_logo.png";
+import simpleLogo from "/assets/simpleLogo.png";
 
 const Sidebar = (props: any) => {
   const activeStyle =
