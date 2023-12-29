@@ -1,5 +1,5 @@
 import { UserAddOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Table, Tooltip } from "antd";
+import { Button, Popconfirm, Table, Tooltip, Input } from "antd";
 import axios from "axios";
 import moment from "moment";
 import PropTypes from "prop-types";
@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { SearchOutlined } from "@ant-design/icons";
 import InviteUserModal from "../components/InviteUserModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { ImNewTab } from "react-icons/im";
@@ -379,6 +380,23 @@ function Managers(props: any) {
 
   const [columns, setColumns] = useState(columnsWithAction);
 
+  //search
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    const results = data.filter((item: any) =>
+      item.fullName
+        .toString()
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase().trim()),
+    );
+
+    if (results.length !== searchResult.length) {
+      setSearchResult(results);
+    }
+  }, [searchQuery, data]);
+
   return (
     <>
       <div className="pb-4">
@@ -497,11 +515,24 @@ function Managers(props: any) {
         </div>
 
         <div className="rounded-xl bg-white p-3 shadow-lg">
+          <div className="mb-4 flex w-full items-center justify-center rounded-lg bg-white">
+            <Input
+              placeholder="Package ID"
+              className="w-[30%] px-2 py-1"
+              suffix={
+                <div className="rounded-l px-2 py-1">
+                  <SearchOutlined className="transition-all duration-300" />
+                </div>
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           <SkeletonTable className="w-full" loading={loading} columns={columns}>
             <Table
               className="w-full"
               columns={columns}
-              dataSource={data}
+              dataSource={searchResult}
               rowKey={(record) => String(record.id)}
               pagination={pagination}
               scroll={{ x: 800 }}
