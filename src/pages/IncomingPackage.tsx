@@ -159,7 +159,7 @@ export default function IncomingPackage(props: any) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button type="primary" onClick={() => setOpen(true)} loading={loading}>
+            <Button type="primary" onClick={() => setOpen(true)} className="hidden" loading={loading}>
               Bulk Receive
             </Button>
           </div>

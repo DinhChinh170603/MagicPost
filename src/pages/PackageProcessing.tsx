@@ -307,7 +307,7 @@ export default function PackageProcessing(props: any) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button type="primary" onClick={() => setActionModalOpen(true)} loading={loading}>
+            <Button type="primary" onClick={() => setActionModalOpen(true)} className="hidden" loading={loading}>
               Bulk Action
             </Button>
           </div>
