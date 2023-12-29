@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import service from "../helpers/service";
 
 interface ModalProps {
-  onSubmit: () => void;
   exchangePointsList: any;
   gatherPointsList: any;
   isOpen: boolean;
@@ -14,7 +13,6 @@ interface ModalProps {
 const { Option } = Select;
 
 const EstablishConnectionModal: React.FC<ModalProps> = ({
-  onSubmit,
   exchangePointsList,
   gatherPointsList,
   isOpen,
@@ -39,7 +37,6 @@ const EstablishConnectionModal: React.FC<ModalProps> = ({
           toast.success(res.data.message);
           setModalOpen(false);
           form.resetFields();
-          onSubmit(); // to update the table by callback
         } else {
           toast.error(res.data.message);
         }

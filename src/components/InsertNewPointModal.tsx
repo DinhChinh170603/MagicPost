@@ -1,21 +1,22 @@
 import { Modal as AntModal, Button, Form, Input, Select } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { cities } from "../helpers/location";
 import service from "../helpers/service";
+import { LEADER_ROLE } from "../helpers/constants";
 
 interface ModalProps {
-  onSubmit: () => void;
   apiEndpoint: string;
   isOpen: boolean;
   setModalOpen: (isOpen: boolean) => void;
+  onAddPointSuccess: (point: any) => void;
 }
 
 const InsertNewPointModal: React.FC<ModalProps> = ({
-  onSubmit,
   apiEndpoint,
   isOpen,
   setModalOpen,
+  onAddPointSuccess,
 }) => {
   const [form] = Form.useForm();
 
@@ -23,6 +24,32 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
   const [selectedCity, setSelectedCity] = useState<any>(null);
 
   const [loading, setLoading] = useState(false);
+
+  const [dataLoading, setDataLoading] = useState(false);
+  const [employees, setEmployees] = useState<any>([]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setDataLoading(true);
+    service
+      .get("/leader/subordinates")
+      .then((res) => {
+        if (res.data.status === 200) {
+          setEmployees(
+            res.data.results.filter(
+              (e: any) =>
+                e.role !== LEADER_ROLE &&
+                (e.departmentId === null || e.departmentId === ""),
+            ),
+          );
+          setDataLoading(false);
+        }
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        setDataLoading(false);
+      });
+  }, [isOpen]);
 
   const handleCityChange = (cityName: string) => {
     const districts = getDistrictsByCityName(cityName);
@@ -54,7 +81,7 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
   };
 
   const onFinish = () => {
-    const { name, city, district } = form.getFieldsValue();
+    const { name, city, district, manager } = form.getFieldsValue();
     const location = district + ", " + city;
 
     setLoading(true);
@@ -63,6 +90,7 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
       .post(apiEndpoint, {
         name: name,
         location: location,
+        managerId: manager ? manager : null,
       })
       .then((res) => {
         setLoading(false);
@@ -70,7 +98,7 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
           toast.success(res.data.message);
           setModalOpen(false);
           form.resetFields();
-          onSubmit(); // to update the table by callback
+          onAddPointSuccess(res.data.results);
         } else {
           toast.error(res.data.message);
         }
@@ -83,27 +111,30 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
 
   return (
     <>
-      <Form id="pointForm" form={form} layout="vertical" onFinish={onFinish}>
-        <AntModal
-          style={{ top: 30 }}
-          open={isOpen}
-          onCancel={handleModalClose}
-          footer={[
-            <Button key="cancel" onClick={handleModalClose}>
-              Cancel
-            </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              loading={loading}
-              htmlType="submit"
-              form="pointForm"
-            >
-              Submit
-            </Button>,
-          ]}
-        >
-          <div className="mb-8 text-2xl font-bold">{apiEndpoint === "/exchange-point" ? "Create an Exchange Point" : "Create a Gather Point"}</div>
+      <AntModal
+        open={isOpen}
+        onCancel={handleModalClose}
+        footer={[
+          <Button key="cancel" onClick={handleModalClose}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            loading={loading}
+            htmlType="submit"
+            form="pointForm"
+          >
+            Submit
+          </Button>,
+        ]}
+      >
+        <Form id="pointForm" form={form} layout="vertical" onFinish={onFinish}>
+          <div className="text-2xl font-bold">
+            {apiEndpoint === "/exchange-point"
+              ? "Create an Exchange Point"
+              : "Create a Gather Point"}
+          </div>
           <Form.Item
             className="mb-8 w-[70%] flex-1"
             name="name"
@@ -141,8 +172,22 @@ const InsertNewPointModal: React.FC<ModalProps> = ({
               ))}
             </Select>
           </Form.Item>
-        </AntModal>
-      </Form>
+
+          <Form.Item
+            className="mb-8 w-[70%] flex-1"
+            name="manager"
+            label="Manager"
+          >
+            <Select disabled={dataLoading}>
+              {employees.map((employee: any) => (
+                <Select.Option key={employee.id} value={employee.id}>
+                  {employee.fullName}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </AntModal>
     </>
   );
 };

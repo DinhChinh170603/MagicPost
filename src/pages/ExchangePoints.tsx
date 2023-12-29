@@ -1,5 +1,5 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Table, Tag } from "antd";
+import { Button, Popconfirm, Table, Tag, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -7,14 +7,33 @@ import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
 import service from "../helpers/service";
+import { AiOutlineDelete } from "react-icons/ai";
 
 export default function ExchangePoints() {
   const navigate = useNavigate();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
 
   const [modalPointOpen, setModalPointOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [modalFinished, setModalFinished] = useState(false);
+
+  const removePoint = (id: string) => {
+    setLoading(true);
+    service
+      .delete(`/leader/exchange-point/${id}`)
+      .then((res) => {
+        setLoading(false);
+        if (res.status === 200) {
+          toast.success(res.data.message);
+          setData((data: any) => data.filter((item: any) => item.id !== id));
+        } else {
+          toast.error(res.data.message);
+        }
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        setLoading(false);
+      });
+  };
 
   const columns = [
     {
@@ -95,6 +114,32 @@ export default function ExchangePoints() {
         );
       },
     },
+    {
+      title: "Action",
+      key: "action",
+      render: (_text: string, record: any) => {
+        return (
+          <div className="flex justify-center">
+            <Tooltip title="Remove point">
+              <Popconfirm
+                title="Remove exchange point"
+                description="Are you sure you want to remove this exchange point?"
+                onConfirm={() => removePoint(record.id)}
+                placement="left"
+                okText="Yes"
+                cancelText="No"
+              >
+                <AiOutlineDelete
+                  color="red"
+                  size={20}
+                  className="cursor-pointer"
+                />
+              </Popconfirm>
+            </Tooltip>
+          </div>
+        );
+      },
+    },
   ];
 
   const pagination = {
@@ -104,6 +149,10 @@ export default function ExchangePoints() {
     pageSizeOptions: ["5", "10", "20", "30"],
     showTotal: (total: number, range: number[]) =>
       `${range[0]}-${range[1]} of ${total} items`,
+  };
+
+  const onAddPointSuccess = (point: any) => {
+    setData([point, ...data]);
   };
 
   useEffect(() => {
@@ -123,11 +172,8 @@ export default function ExchangePoints() {
         toast.error(err);
         setLoading(false);
       });
-  }, [modalFinished]);
+  }, []);
 
-  const handleModalSubmit = () => {
-    setModalFinished((prev) => !prev);
-  };
   return (
     <div className="pb-4">
       <div className="mb-4 flex max-md:flex-col max-md:gap-4">
@@ -153,10 +199,10 @@ export default function ExchangePoints() {
         </SkeletonTable>
       </div>
       <InsertNewPointModal
-        onSubmit={handleModalSubmit}
         apiEndpoint="/leader/exchange-point"
         isOpen={modalPointOpen}
         setModalOpen={setModalPointOpen}
+        onAddPointSuccess={onAddPointSuccess}
       />
     </div>
   );
