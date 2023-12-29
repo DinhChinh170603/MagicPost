@@ -2,7 +2,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import React from "react";
 import { toast } from "react-toastify";
-import logo from "../assets/logo_animate.gif";
+import logo from "/assets/logo_animate.gif";
 import service from "../helpers/service";
 
 export default function Login() {
@@ -63,7 +63,7 @@ export default function Login() {
       <div
         className="flex flex-1 flex-col items-center justify-center bg-gray-300 md:flex-col"
         style={{
-          backgroundImage: "url('/src/assets/BG.png')",
+          backgroundImage: "url('/assets/BG.png')",
           backgroundSize: "100% 100%",
         }}
       >
