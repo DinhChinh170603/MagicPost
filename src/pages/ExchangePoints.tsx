@@ -1,8 +1,9 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Table, Tag } from "antd";
+import { Button, Table, Tag, Input } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { SearchOutlined } from "@ant-design/icons";
 import InsertNewPointModal from "../components/InsertNewPointModal";
 import SkeletonTable from "../components/SkeletonTable";
 import { sortByString } from "../helpers/helpers";
@@ -128,6 +129,24 @@ export default function ExchangePoints() {
   const handleModalSubmit = () => {
     setModalFinished((prev) => !prev);
   };
+
+  //search
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    const results = data.filter((item: any) =>
+      item.id
+        .toString()
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase().trim()),
+    );
+
+    if (results.length !== searchResult.length) {
+      setSearchResult(results);
+    }
+  }, [searchQuery, data]);
+
   return (
     <div className="pb-4">
       <div className="mb-4 flex max-md:flex-col max-md:gap-4">
@@ -142,11 +161,24 @@ export default function ExchangePoints() {
         </Button>
       </div>
       <div className="rounded-xl bg-white p-3 shadow-lg">
+        <div className="mb-4 flex w-full items-center justify-center rounded-lg bg-white">
+          <Input
+            placeholder="Package ID"
+            className="w-[97%] px-2 py-1 md:w-[30%]"
+            suffix={
+              <div className="rounded-l px-2 py-1">
+                <SearchOutlined className="transition-all duration-300" />
+              </div>
+            }
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
         <SkeletonTable loading={loading} columns={columns}>
           <Table
             scroll={{ x: 800 }}
             columns={columns}
-            dataSource={data}
+            dataSource={searchResult}
             rowKey={(record) => String(record.id)}
             pagination={pagination}
           />
