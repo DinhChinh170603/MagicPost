@@ -302,7 +302,7 @@ export default function DeliveryStatus(props: any) {
             className="ml-auto py-1"
             width={80}
             height={80}
-            src="/assets/successful.svg"
+            src="/public/successful.svg"
           />
         </div>
         <div className="mb-2 flex basis-[98%] items-center border border-gray-300 bg-white p-3 px-5 shadow-md xl:basis-[47%]">
@@ -314,7 +314,7 @@ export default function DeliveryStatus(props: any) {
             className="ml-auto py-1"
             width={80}
             height={80}
-            src="/assets/rejected.svg"
+            src="/public/rejected.svg"
           />
         </div>
       </div>

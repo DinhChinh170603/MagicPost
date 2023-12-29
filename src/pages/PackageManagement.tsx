@@ -584,28 +584,28 @@ export default function PackageManagement(props: any) {
             <div className="mb-4 ml-3 text-3xl font-bold">All Packages</div>
             <div className="mb-4 flex w-full flex-wrap justify-evenly">
               <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-                <img src="/assets/total.svg" width={70} height={70} />
+                <img src="/public/total.svg" width={70} height={70} />
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold">{totalCount}</span>
                   <span className="text-sm">Total</span>
                 </div>
               </div>
               <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-                <img src="/assets/successful.svg" width={70} height={70} />
+                <img src="/public/successful.svg" width={70} height={70} />
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold">{successfulCount}</span>
                   <span className="text-sm">Successful</span>
                 </div>
               </div>
               <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-                <img src="/assets/rejected.svg" width={70} height={70} />
+                <img src="/public/rejected.svg" width={70} height={70} />
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold">{rejectedCount}</span>
                   <span className="text-sm">Rejected</span>
                 </div>
               </div>
               <div className="flex basis-[98%] items-center gap-3 bg-white px-5 py-3 shadow-lg sm:basis-[45%] xl:basis-[23%]">
-                <img src="/assets/inprogress.svg" width={70} height={70} />
+                <img src="/public/inprogress.svg" width={70} height={70} />
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold">{inProgressCount}</span>
                   <span className="text-sm">In Progress</span>

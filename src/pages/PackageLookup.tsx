@@ -64,10 +64,10 @@ export default function PackageLookup() {
   };
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center gap-5 bg-[#f1f5f9] max-lg:flex-col" style = {{backgroundImage: "url('/assets/BG_lookup.png')", backgroundSize: 'cover'}}>
+    <div className="flex h-screen w-screen items-center justify-center gap-5 bg-[#f1f5f9] max-lg:flex-col" style = {{backgroundImage: "url('/public/BG_lookup.png')", backgroundSize: 'cover'}}>
       <div className="flex flex-col items-center">
         <img
-          src="/assets/logo_animate.gif"
+          src="/public/logo_animate.gif"
           className="h-[30vh] object-cover animate-updown lg:h-[60vh]"
         />
         <h1 className="text-[80px] font-bold max-lg:-mt-5 max-lg:text-[50px]">

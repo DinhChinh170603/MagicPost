@@ -479,7 +479,7 @@ function GatherPointDetail() {
               className="ml-auto"
               width={70}
               height={70}
-              src="/assets/inprogress.svg"
+              src="/public/inprogress.svg"
             />
           </div>
 
@@ -492,7 +492,7 @@ function GatherPointDetail() {
               className="ml-auto"
               width={70}
               height={70}
-              src="/assets/received.svg"
+              src="/public/received.svg"
             />
           </div>
         </div>
